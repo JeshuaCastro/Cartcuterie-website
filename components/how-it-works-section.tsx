@@ -8,20 +8,20 @@ const steps = [
   {
     number: "01",
     title: "Choose Your Cart Top",
-    description: "Select your cart base — from sleek bar top to chic umbrella style.",
-    image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/bar-top-qIfi5wMC8rFO0Y568bTrqtEPXCgcyC.jpg",
+    description: "Select your cart base — from classic stripes to vinyl finishes.",
+    image: "/images/Green-mobile-cart.jpg",
   },
   {
     number: "02",
     title: "Add a Design Theme",
     description: "Match your event with a curated or custom decor style.",
-    image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/floral%20design-9KpOs1iAgKfujQCVjKb8L0OOwjM7eI.jpg",
+    image: "/images/Flower-cart-design.jpg",
   },
   {
     number: "03",
     title: "Include Catering Services",
     description: "Complete your setup with food, drinks, or treats tailored to your vibe.",
-    image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Catering-2-m7P1lYQu7A8VtxpGuBGiTSnoLXM9xj.jpeg",
+    image: "/images/Charcuterie.JPG",
   },
 ]
 

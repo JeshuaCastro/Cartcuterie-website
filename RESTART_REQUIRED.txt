@@ -1,0 +1,32 @@
+⚠️  IMPORTANT: RESTART REQUIRED ⚠️
+
+Your .env.local file has been updated, but Next.js needs to be restarted to load the new environment variables.
+
+STEPS TO FIX:
+
+1. Stop the development server (Ctrl+C in the terminal)
+
+2. Restart it with:
+   npm run dev
+
+3. Refresh your browser and try the "Generate AI Visualization" button again
+
+WHY THIS HAPPENS:
+Next.js only loads environment variables when the server starts. Changes to .env.local won't take effect until you restart the dev server.
+
+TROUBLESHOOTING:
+If you still get a 401 error after restarting:
+
+1. Check your OpenAI account has billing enabled:
+   https://platform.openai.com/account/billing
+
+2. Verify the API key is valid:
+   https://platform.openai.com/api-keys
+
+3. Generate a new API key if needed and update .env.local
+
+4. Make sure there are NO quotes around the API key in .env.local:
+   ✅ OPENAI_API_KEY=sk-proj-abc123...
+   ❌ OPENAI_API_KEY="sk-proj-abc123..."
+
+5. Restart the dev server again after any changes

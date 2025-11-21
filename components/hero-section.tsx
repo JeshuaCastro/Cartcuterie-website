@@ -22,7 +22,7 @@ export function HeroSection() {
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-background" />
 
-        <div className="absolute inset-0 flex items-center justify-center opacity-5">
+        <div className="absolute inset-0 flex items-center justify-center opacity-20">
           <div className="relative w-[600px] h-[200px]">
             <Image src="/images/cartcuterie-logo.png" alt="" fill className="object-contain" />
           </div>

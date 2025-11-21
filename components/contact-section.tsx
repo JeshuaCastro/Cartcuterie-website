@@ -27,13 +27,11 @@ export function ContactSection() {
       }
       const cartTopNames: Record<string, string> = {
         classic: "Classic",
-        umbrella: "Umbrella",
-        "bar-top": "Bar Top",
+        "stripe-cloth": "Stripe Cloth Roof",
+        "stripe-vinyl": "Stripe Vinyl Roof",
       }
       const designNames: Record<string, string> = {
         floral: "Floral",
-        boho: "Boho",
-        modern: "Modern",
         custom: "Custom",
       }
       const cateringNames: Record<string, string> = {
@@ -50,6 +48,7 @@ export function ContactSection() {
       if (cartData.catering.length > 0) {
         summary += ` · Add-ons: ${cartData.catering.map((id) => cateringNames[id] || id).join(", ")}`
       }
+      if (cartData.logo) summary += ` · Logo Uploaded`
 
       let message = "I'm interested in the following cart configuration:\n\n"
       if (cartData.cartType) message += `Cart Type: ${cartTypeNames[cartData.cartType] || cartData.cartType}\n`
@@ -58,6 +57,7 @@ export function ContactSection() {
       if (cartData.catering.length > 0) {
         message += `Catering Options: ${cartData.catering.map((id) => cateringNames[id] || id).join(", ")}\n`
       }
+      if (cartData.logo) message += `Branding: Custom logo uploaded\n`
       message += "\nPlease provide more details about pricing and availability."
 
       setFormMessage(message)
@@ -133,6 +133,12 @@ export function ContactSection() {
                       <p className="font-bold text-sm">{cartData.catering.length} selected</p>
                     </div>
                   )}
+                  {cartData.logo && (
+                    <div className="text-center">
+                      <p className="text-xs text-muted-foreground mb-1">Branding</p>
+                      <p className="font-bold text-sm">Logo Uploaded</p>
+                    </div>
+                  )}
                 </div>
               </CardContent>
             </Card>
@@ -157,8 +163,8 @@ export function ContactSection() {
                 </div>
                 <div>
                   <p className="font-bold text-foreground mb-1">Phone</p>
-                  <a href="tel:8184223138" className="text-muted-foreground hover:text-accent transition-colors">
-                    (818) 422-3138
+                  <a href="tel:8185726316" className="text-muted-foreground hover:text-accent transition-colors">
+                    (818) 572-6316
                   </a>
                 </div>
               </div>
@@ -170,10 +176,10 @@ export function ContactSection() {
                 <div>
                   <p className="font-bold text-foreground mb-1">Email</p>
                   <a
-                    href="mailto:info@cartcuterie.com"
+                    href="mailto:cartcuteriela@gmail.com"
                     className="text-muted-foreground hover:text-accent transition-colors"
                   >
-                    info@cartcuterie.com
+                    cartcuteriela@gmail.com
                   </a>
                 </div>
               </div>
