@@ -10,21 +10,24 @@ import { TestimonialsSection } from "@/components/testimonials-section"
 import { ContactSection } from "@/components/contact-section"
 import { Footer } from "@/components/footer"
 import { CartBuilderProvider } from "@/components/cart-builder-context"
+import { ErrorBoundary } from "@/components/error-boundary"
 
 export default function Home() {
   return (
-    <CartBuilderProvider>
-      <main className="min-h-screen">
-        <Navbar />
-        <HeroSection />
-        <HowItWorksSection />
-        <CartBuilderSection />
-        <GallerySection />
-        <PricingSection />
-        <TestimonialsSection />
-        <ContactSection />
-        <Footer />
-      </main>
-    </CartBuilderProvider>
+    <ErrorBoundary>
+      <CartBuilderProvider>
+        <main className="min-h-screen">
+          <Navbar />
+          <HeroSection />
+          <HowItWorksSection />
+          <CartBuilderSection />
+          <GallerySection />
+          <PricingSection />
+          <TestimonialsSection />
+          <ContactSection />
+          <Footer />
+        </main>
+      </CartBuilderProvider>
+    </ErrorBoundary>
   )
 }

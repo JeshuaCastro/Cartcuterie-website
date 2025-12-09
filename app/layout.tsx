@@ -20,7 +20,13 @@ export const metadata: Metadata = {
   title: "Cartcuterie | Luxury Mobile Catering Carts in Los Angeles",
   description:
     "Premium mobile catering and event cart service for weddings, corporate events, and upscale parties across Los Angeles, Ventura & Orange County.",
-  generator: "v0.app",
+  keywords: ["catering", "mobile cart", "Los Angeles catering", "event catering", "wedding cart", "charcuterie cart"],
+  authors: [{ name: "Cartcuterie" }],
+  openGraph: {
+    title: "Cartcuterie | Luxury Mobile Catering Carts",
+    description: "Premium mobile catering carts for unforgettable events in Los Angeles",
+    type: "website",
+  },
 }
 
 export default function RootLayout({

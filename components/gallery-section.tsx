@@ -8,90 +8,105 @@ import { Instagram, X, ChevronLeft, ChevronRight } from "lucide-react"
 const galleryImages = [
   {
     src: "/images/yellow-mobile-cart.jpg",
+    title: "Yellow Mobile Cart",
     caption: "Yellow Mobile Cart",
     category: "Mobile Carts",
     location: "Los Angeles, CA",
   },
   {
     src: "/images/catering-3.jpg",
+    title: "Patisserie Cart",
     caption: "Patisserie Cart",
     category: "Events",
     location: "Pasadena, CA",
   },
   {
     src: "/images/Green-mobile-cart.jpg",
+    title: "Green Mobile Cart",
     caption: "Green Mobile Cart",
     category: "Mobile Carts",
     location: "Santa Monica, CA",
   },
   {
     src: "/images/mate-juice-cart.jpg",
+    title: "Mate Juice Cart",
     caption: "Mate Juice Cart",
     category: "Corporate",
     location: "Venice, CA",
   },
   {
     src: "/images/Better-me-cart.JPG",
+    title: "BetterMe Event",
     caption: "BetterMe Event",
     category: "Corporate",
     location: "Beverly Hills, CA",
   },
   {
     src: "/images/spotify-event.jpg",
+    title: "Spotify Event",
     caption: "Spotify Event",
     category: "Corporate",
     location: "Los Angeles, CA",
   },
   {
     src: "/images/custom-cart-design.jpg",
+    title: "Custom Branding",
     caption: "Custom Branding",
     category: "Corporate",
     location: "Downtown LA",
   },
   {
     src: "/images/alice-olivia.jpg",
+    title: "Alice + Olivia",
     caption: "Alice + Olivia",
     category: "Fashion",
     location: "West Hollywood, CA",
   },
   {
     src: "/images/catering-2.jpeg",
+    title: "Catering Service",
     caption: "Catering Service",
     category: "Parties",
     location: "Santa Monica, CA",
   },
   {
     src: "/images/Popcorn-cart.jpg",
+    title: "Popcorn Cart",
     caption: "Popcorn Cart",
     category: "Snacks",
     location: "Hollywood, CA",
   },
   {
     src: "/images/nudestix.jpg",
+    title: "Nudestix Event",
     caption: "Nudestix Event",
     category: "Beauty",
     location: "Los Angeles, CA",
   },
   {
     src: "/images/sendero-cart.jpg",
+    title: "Sendero Event",
     caption: "Sendero Event",
     category: "Corporate",
     location: "Los Angeles, CA",
   },
   {
     src: "/images/malibu-event.jpg",
+    title: "Private Event",
     caption: "Private Event",
     category: "Parties",
     location: "Malibu, CA",
   },
   {
     src: "/images/Charcuterie.JPG",
+    title: "Charcuterie Spread",
     caption: "Charcuterie Spread",
     category: "Catering",
     location: "Los Angeles, CA",
   },
   {
     src: "/images/popcorn.JPG",
+    title: "Popcorn Treats",
     caption: "Popcorn Treats",
     category: "Snacks",
     location: "Los Angeles, CA",
@@ -191,10 +206,12 @@ export function GallerySection() {
           <div className="relative w-full h-full max-w-6xl max-h-[90vh] flex flex-col items-center justify-center">
             <div className="relative w-full h-full">
               <Image
-                src={galleryImages[currentImageIndex].src || "/placeholder.svg"}
-                alt={galleryImages[currentImageIndex].caption}
+                src={galleryImages[currentImageIndex].src}
+                alt={`${galleryImages[currentImageIndex].title} - Full view of ${galleryImages[currentImageIndex].category} cart at event`}
                 fill
+                sizes="90vw"
                 className="object-contain"
+                priority
               />
             </div>
             <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6 text-white text-center">

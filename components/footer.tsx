@@ -89,10 +89,12 @@ export function Footer() {
                   className="relative aspect-square rounded-lg overflow-hidden group"
                 >
                   <Image
-                    src={src || "/placeholder.svg"}
-                    alt={`Instagram post ${index + 1}`}
+                    src={src}
+                    alt={`Cartcuterie Instagram post ${index + 1} - luxury catering cart event`}
                     fill
+                    sizes="(max-width: 768px) 50vw, 15vw"
                     className="object-cover group-hover:scale-110 transition-transform duration-300"
+                    loading="lazy"
                   />
                 </a>
               ))}

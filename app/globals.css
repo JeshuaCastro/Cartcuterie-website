@@ -179,18 +179,39 @@ html {
 
 .animate-fade-in-up {
   animation: fadeInUp 0.8s ease-out forwards;
+  will-change: transform, opacity;
 }
 
 .animate-float {
   animation: float 3s ease-in-out infinite;
+  will-change: transform;
 }
 
 .animate-slide-in-right {
   animation: slideInRight 0.5s ease-out forwards;
+  will-change: transform, opacity;
 }
 
 .animate-slide-in-left {
   animation: slideInLeft 0.5s ease-out forwards;
+  will-change: transform, opacity;
+}
+
+/* Remove will-change after animation completes for better performance */
+.animate-fade-in-up,
+.animate-slide-in-right,
+.animate-slide-in-left {
+  animation-fill-mode: both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-in-up,
+  .animate-float,
+  .animate-slide-in-right,
+  .animate-slide-in-left {
+    animation: none;
+    will-change: auto;
+  }
 }
 
 /* Added smooth touch interactions for mobile */
@@ -217,5 +238,21 @@ html {
 @supports (-webkit-overflow-scrolling: touch) {
   body {
     -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* GPU acceleration for transforms and animations */
+.group:hover img,
+[class*="hover:scale"],
+[class*="group-hover:scale"] {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/* Optimize animations for 60fps */
+@media (prefers-reduced-motion: no-preference) {
+  * {
+    scroll-behavior: smooth;
   }
 }

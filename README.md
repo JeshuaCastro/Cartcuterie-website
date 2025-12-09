@@ -1,30 +1,50 @@
-# Cartcuterie website design
+# Cartcuterie Website
 
-*Automatically synced with your [v0.app](https://v0.app) deployments*
+Luxury mobile catering carts for unforgettable events across Los Angeles.
 
-[![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=for-the-badge&logo=vercel)](https://vercel.com/jeshuacastro2007-1586s-projects/v0-cartcuterie-website-design)
-[![Built with v0](https://img.shields.io/badge/Built%20with-v0.app-black?style=for-the-badge)](https://v0.app/chat/khrC45oZWle)
+## About
 
-## Overview
+Cartcuterie specializes in custom mobile catering carts featuring charcuterie, desserts, beverages, and more. Our interactive cart builder allows clients to design their perfect cart with AI-powered visualization.
 
-This repository will stay in sync with your deployed chats on [v0.app](https://v0.app).
-Any changes you make to your deployed app will be automatically pushed to this repository from [v0.app](https://v0.app).
+## Features
 
-## Deployment
+- Interactive cart customization builder
+- AI-powered cart visualization using OpenAI DALL-E
+- Real-time color and design preview
+- Logo upload and overlay
+- Mobile-responsive design
+- Contact form integration
 
-Your project is live at:
+## Tech Stack
 
-**[https://vercel.com/jeshuacastro2007-1586s-projects/v0-cartcuterie-website-design](https://vercel.com/jeshuacastro2007-1586s-projects/v0-cartcuterie-website-design)**
+- Next.js 15
+- React 19
+- TypeScript
+- Tailwind CSS
+- OpenAI API (Image Editing)
+- Sharp (Image Processing)
 
-## Build your app
+## Getting Started
 
-Continue building your app on:
+1. Clone the repository
+2. Install dependencies:
+   ```bash
+   npm install --legacy-peer-deps
+   ```
+3. Create a `.env.local` file with your OpenAI API key:
+   ```
+   OPENAI_API_KEY=your_api_key_here
+   ```
+4. Run the development server:
+   ```bash
+   npm run dev
+   ```
+5. Open [http://localhost:3000](http://localhost:3000)
 
-**[https://v0.app/chat/khrC45oZWle](https://v0.app/chat/khrC45oZWle)**
+## Environment Variables
 
-## How It Works
+- `OPENAI_API_KEY` - Required for AI cart generation
 
-1. Create and modify your project using [v0.app](https://v0.app)
-2. Deploy your chats from the v0 interface
-3. Changes are automatically pushed to this repository
-4. Vercel deploys the latest version from this repository
+## License
+
+© 2025 Cartcuterie. All rights reserved.

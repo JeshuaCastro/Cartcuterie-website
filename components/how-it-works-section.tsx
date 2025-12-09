@@ -8,14 +8,14 @@ const steps = [
   {
     number: "01",
     title: "Choose Your Cart Top",
-    description: "Select your cart base — from classic stripes to vinyl finishes.",
-    image: "/images/Green-mobile-cart.jpg",
+    description: "Select your cart base — from sleek bar top to chic umbrella style.",
+    image: "/images/mate-juice-cart.jpg",
   },
   {
     number: "02",
     title: "Add a Design Theme",
     description: "Match your event with a curated or custom decor style.",
-    image: "/images/Flower-cart-design.jpg",
+    image: "/images/catering-3.jpg",
   },
   {
     number: "03",
@@ -46,10 +46,15 @@ export function HowItWorksSection() {
             >
               <div className="relative h-64 overflow-hidden">
                 <Image
-                  src={step.image || "/placeholder.svg"}
-                  alt={step.title}
+                  src={step.image}
+                  alt={`Step ${step.number}: ${step.title} - ${step.description}`}
                   fill
+                  sizes="(max-width: 768px) 100vw, 33vw"
                   className="object-cover group-hover:scale-105 transition-transform duration-500"
+                  loading="lazy"
+                  style={{
+                    objectPosition: index === 0 ? 'center 20%' : index === 2 ? 'center 80%' : 'center center'
+                  }}
                 />
                 <div className="absolute top-4 left-4 w-16 h-16 bg-accent rounded-full flex items-center justify-center shadow-lg">
                   <span className="font-serif text-2xl font-bold text-foreground">{step.number}</span>

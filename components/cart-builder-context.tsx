@@ -52,7 +52,7 @@ export function CartBuilderProvider({ children }: { children: ReactNode }) {
       try {
         setCartData(JSON.parse(stored))
       } catch (e) {
-        console.error("Failed to parse stored cart data", e)
+        // Failed to parse stored data
       }
     }
   }, [])
@@ -76,7 +76,7 @@ export function CartBuilderProvider({ children }: { children: ReactNode }) {
       try {
         setCartData(JSON.parse(stored))
       } catch (e) {
-        console.error("Failed to parse stored cart data", e)
+        // Failed to parse stored data
       }
     }
   }
@@ -105,27 +105,13 @@ export function CartBuilderProvider({ children }: { children: ReactNode }) {
 
       const data = await response.json()
 
-      console.log("API Response:", data)
-
       if (data.success && data.imageUrl) {
-        console.log("✓ Received AI image URL:", data.imageUrl)
         updateCartData({ aiGeneratedImage: data.imageUrl })
         return data.imageUrl
       } else {
-        const errorMessage = data.error || "Unknown error occurred"
-        console.error("Failed to generate AI cart:", errorMessage)
-        
-        // Show user-friendly error message
-        if (response.status === 401 || errorMessage.includes("API key")) {
-          alert("❌ OpenAI API Configuration Error\n\nThe API key is invalid or not set correctly. Please check your .env.local file and restart the development server.")
-        } else {
-          alert(`❌ Failed to generate cart visualization\n\n${errorMessage}`)
-        }
         return null
       }
     } catch (error) {
-      console.error("Error generating AI cart:", error)
-      alert("❌ Network error\n\nFailed to connect to the AI generation service. Please check your internet connection and try again.")
       return null
     } finally {
       setIsGenerating(false)

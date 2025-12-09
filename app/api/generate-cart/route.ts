@@ -5,12 +5,16 @@ import path from "path"
 import sharp from "sharp"
 import { Buffer } from "buffer"
 
+const isDev = process.env.NODE_ENV === "development"
+const log = (...args: any[]) => isDev && console.log(...args)
+const logError = (...args: any[]) => console.error(...args) // Keep errors in production
+
 export async function POST(req: NextRequest) {
   try {
     const apiKey = process.env.OPENAI_API_KEY
 
     if (!apiKey) {
-      console.error("OPENAI_API_KEY is not set in environment variables")
+      logError("OPENAI_API_KEY is not set in environment variables")
       return NextResponse.json(
         {
           success: false,
@@ -27,13 +31,13 @@ export async function POST(req: NextRequest) {
     const body = await req.json()
     const { cartType, cartTop, design, colors, logo, cateringItems } = body
 
-    console.log("=== AI CART GENERATION REQUEST ===")
-    console.log("Cart Type:", cartType)
-    console.log("Cart Top:", cartTop)
-    console.log("Design:", design)
-    console.log("Colors:", colors)
-    console.log("Catering:", cateringItems)
-    console.log("=================================")
+    log("=== AI CART GENERATION REQUEST ===")
+    log("Cart Type:", cartType)
+    log("Cart Top:", cartTop)
+    log("Design:", design)
+    log("Colors:", colors)
+    log("Catering:", cateringItems)
+    log("=================================")
 
     // Determine which base image to use
     const baseImagePath =
@@ -41,11 +45,11 @@ export async function POST(req: NextRequest) {
         ? path.join(process.cwd(), "public/images/Classic-cart-ai-base.jpg")
         : path.join(process.cwd(), "public/images/yellow-mobile-cart.jpg")
 
-    console.log("Selected base image path:", baseImagePath)
+    log("Selected base image path:", baseImagePath)
 
     // Check if base image exists
     if (!fs.existsSync(baseImagePath)) {
-      console.error(`Base image not found at: ${baseImagePath}`)
+      logError(`Base image not found at: ${baseImagePath}`)
       return NextResponse.json(
         {
           success: false,
@@ -55,7 +59,7 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    console.log("✓ Base image file exists")
+    log("✓ Base image file exists")
 
     // Process image to make it square and convert to PNG with alpha channel (required by OpenAI)
     const processedImageBuffer = await sharp(baseImagePath)
@@ -85,9 +89,9 @@ export async function POST(req: NextRequest) {
       .toBuffer()
 
     const maskFile = new File([new Uint8Array(whiteMaskBuffer)], "mask.png", { type: "image/png" })
-    console.log("✓ Created 1024x1024 transparent mask (exact dimensions match)")
+    log("✓ Created 1024x1024 transparent mask (exact dimensions match)")
 
-    console.log(`Processing ${cartType} cart with:`, {
+    log(`Processing ${cartType} cart with:`, {
       cartTop,
       design,
       colors,
@@ -100,9 +104,10 @@ export async function POST(req: NextRequest) {
     const roofStripeColor = colors?.roofColor || accentColor
 
     const structuralInstructions: string[] = [
-      "Keep cart geometry identical to the reference photo — same perspective and proportions.",
-      "Keep both wheels exactly as shown with the original spoke pattern and bright white paint.",
-      "Keep legs, side shelf, and handle in their original positions; recolor only, never reshape or remove.",
+      "CRITICAL: Preserve the exact cart body dimensions, wheel size, and proportions from the original image.",
+      "Keep both wheels EXACTLY as shown: same size, spoke pattern, and bright white color - never change wheel appearance.",
+      "Maintain the cart body at its original scale - do not enlarge, shrink, or distort the main structure.",
+      "Keep legs, side shelf, handle, and frame in their exact original positions and dimensions.",
     ]
 
     const stylingInstructions: string[] = []
@@ -125,9 +130,9 @@ export async function POST(req: NextRequest) {
       stylingInstructions.push("Keep the cart body bright white and pristine while leaving the wheel color untouched.")
     }
 
-    stylingInstructions.push(`Add ${accentColor} accents to trim moulding, canopy posts, and vertical supports — never paint the wheels.`)
+    stylingInstructions.push(`Add ${accentColor} accents to trim moulding, canopy posts, and vertical supports — keep wheels pure white.`)
     stylingInstructions.push("Keep the left side shelf fully attached with its original outline, ready for staging items.")
-    stylingInstructions.push("Do not alter the cart frame, wheels, legs, or side table; only layer color and decor onto the structure.")
+    stylingInstructions.push("IMPORTANT: Preserve cart body proportions exactly - only add paint, decor, and staging items without changing structure size.")
 
     const decorInstructions: string[] = []
     if (design === "floral") {
@@ -137,7 +142,7 @@ export async function POST(req: NextRequest) {
     }
 
     if (logo) {
-      decorInstructions.push("Keep the front panel clean so the uploaded client logo can sit prominently in the center.")
+      decorInstructions.push("CRITICAL: Apply a custom business logo as a professional vinyl decal on the center front panel - it must look like high-quality printed graphics permanently adhered to the cart body, matching the surface contours perfectly.")
     }
 
     if (cateringItems && cateringItems.length > 0) {
@@ -164,7 +169,7 @@ export async function POST(req: NextRequest) {
 
     const stagingInstructions: string[] = [
       "Set the cart inside an upscale indoor wedding or event space with soft ambient lighting and subtle guests in the background.",
-      "Match the reference camera angle so the upgraded styling is obvious while the structure stays identical.",
+      "Maintain the exact camera angle and cart scale from the reference photo - only enhance styling, never resize the cart.",
     ]
 
     const rebuildInstructions = () => [
@@ -204,7 +209,7 @@ export async function POST(req: NextRequest) {
       }
 
       if (removedStep) {
-        console.warn("Removed prompt step to meet length limit:", removedStep)
+        log("Removed prompt step to meet length limit:", removedStep)
       }
 
       promptSteps = rebuildInstructions()
@@ -212,13 +217,13 @@ export async function POST(req: NextRequest) {
     }
 
     if (prompt.length > 1000) {
-      console.warn("Prompt still above hard limit; truncating tail.")
+      log("Prompt still above hard limit; truncating tail.")
       prompt = `${prompt.slice(0, 995)}...`
     }
 
-    console.log(`Prompt length: ${prompt.length}`)
+    log(`Prompt length: ${prompt.length}`)
 
-    console.log("EDIT PROMPT:", prompt)
+    log("EDIT PROMPT:", prompt)
 
     // Use DALL-E 2 for image editing (DALL-E 3 doesn't support editing)
     // CRITICAL: Include mask parameter to force edits to apply
@@ -232,13 +237,13 @@ export async function POST(req: NextRequest) {
     })
 
     if (!response?.data || response.data.length === 0) {
-      console.error("OpenAI edit response had no data", response)
+      logError("OpenAI edit response had no data", response)
       throw new Error("OpenAI returned an empty response payload")
     }
 
     const editedResult = response.data[0]
     const resultKeys = Object.keys(editedResult || {})
-    console.log("OpenAI edit response keys:", resultKeys)
+    log("OpenAI edit response keys:", resultKeys)
 
     let imageUrl = editedResult?.url ?? null
     const base64Image = editedResult?.b64_json ?? null
@@ -253,64 +258,22 @@ export async function POST(req: NextRequest) {
         const arrayBuffer = await imageResponse.arrayBuffer()
         finalImageBuffer = Buffer.from(arrayBuffer)
       } catch (fetchError) {
-        console.error("Failed to fetch image from URL", fetchError)
+        logError("Failed to fetch image from URL", fetchError)
       }
     }
 
     if (!finalImageBuffer) {
-      console.error("OpenAI edit response missing usable image data", editedResult)
+      logError("OpenAI edit response missing usable image data", editedResult)
       throw new Error("No image content returned from OpenAI")
     }
 
-    // If a logo was uploaded, overlay it onto the cart front panel
-    if (logo) {
-      try {
-        const logoMatch = logo.match(/^data:(image\/[a-zA-Z+]+);base64,(.+)$/)
-        if (logoMatch) {
-          const [, , logoBase64] = logoMatch
-          const logoBuffer = Buffer.from(logoBase64, "base64")
-
-          // Resize logo to fit nicely on the cart front panel (approximate positioning)
-          const logoWidth = 720
-          const logoHeight = 320
-
-          const processedLogo = await sharp(logoBuffer)
-            .resize({
-              width: logoWidth,
-              height: logoHeight,
-              fit: "contain",
-              background: { r: 255, g: 255, b: 255, alpha: 0 },
-            })
-            .png()
-            .toBuffer()
-
-          const logoLeft = Math.round((1024 - logoWidth) / 2)
-          const logoTop = 520
-
-          finalImageBuffer = await sharp(finalImageBuffer)
-            .composite([
-              {
-                input: processedLogo,
-                top: logoTop,
-                left: logoLeft,
-              },
-            ])
-            .png()
-            .toBuffer()
-
-          console.log("✓ Overlayed uploaded logo onto edited cart image")
-        } else {
-          console.warn("Logo format unsupported; expected base64 data URI")
-        }
-      } catch (logoError) {
-        console.error("Failed to overlay logo onto image", logoError)
-      }
-    }
+    // Logo is now generated directly by AI into the image, no post-processing overlay needed
+    log("✓ AI will generate logo directly on cart surface")
 
     const finalImageBase64 = finalImageBuffer.toString("base64")
     imageUrl = `data:image/png;base64,${finalImageBase64}`
 
-    console.log("✓ AI Edit Complete! Returning image result")
+    log("✓ AI Edit Complete! Returning image result")
 
     return NextResponse.json({
       success: true,
@@ -318,11 +281,11 @@ export async function POST(req: NextRequest) {
       prompt: prompt,
     })
   } catch (error: any) {
-    console.error("Error editing cart image:", error)
+    logError("Error editing cart image:", error)
 
     // Enhanced error logging
     if (error.status === 401) {
-      console.error("Authentication failed. API key is invalid or expired.")
+      logError("Authentication failed. API key is invalid or expired.")
     }
 
     return NextResponse.json(

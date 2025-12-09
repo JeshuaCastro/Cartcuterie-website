@@ -16,6 +16,8 @@ export function ContactSection() {
   const { cartData, resetCartData } = useCartBuilder()
   const [formMessage, setFormMessage] = useState("")
   const [showCartSummary, setShowCartSummary] = useState(false)
+  const [errors, setErrors] = useState<Record<string, string>>({})
+  const [touched, setTouched] = useState<Record<string, boolean>>({})
 
   useEffect(() => {
     if (cartData.cartType || cartData.cartTop || cartData.design || cartData.catering.length > 0) {
@@ -27,11 +29,13 @@ export function ContactSection() {
       }
       const cartTopNames: Record<string, string> = {
         classic: "Classic",
-        "stripe-cloth": "Stripe Cloth Roof",
-        "stripe-vinyl": "Stripe Vinyl Roof",
+        umbrella: "Umbrella",
+        "bar-top": "Bar Top",
       }
       const designNames: Record<string, string> = {
         floral: "Floral",
+        boho: "Boho",
+        modern: "Modern",
         custom: "Custom",
       }
       const cateringNames: Record<string, string> = {
@@ -48,7 +52,6 @@ export function ContactSection() {
       if (cartData.catering.length > 0) {
         summary += ` · Add-ons: ${cartData.catering.map((id) => cateringNames[id] || id).join(", ")}`
       }
-      if (cartData.logo) summary += ` · Logo Uploaded`
 
       let message = "I'm interested in the following cart configuration:\n\n"
       if (cartData.cartType) message += `Cart Type: ${cartTypeNames[cartData.cartType] || cartData.cartType}\n`
@@ -57,21 +60,92 @@ export function ContactSection() {
       if (cartData.catering.length > 0) {
         message += `Catering Options: ${cartData.catering.map((id) => cateringNames[id] || id).join(", ")}\n`
       }
-      if (cartData.logo) message += `Branding: Custom logo uploaded\n`
       message += "\nPlease provide more details about pricing and availability."
 
       setFormMessage(message)
     }
   }, [cartData])
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    const formData = new FormData(e.currentTarget)
+    const newErrors: Record<string, string> = {}
+
+    // Validate required fields
+    const name = formData.get("name") as string
+    const email = formData.get("email") as string
+    const eventType = formData.get("event-type") as string
+    const phone = formData.get("phone") as string
+    const eventDate = formData.get("event-date") as string
+    const location = formData.get("location") as string
+    const message = formData.get("message") as string
+
+    if (!name || name.trim().length < 2) {
+      newErrors.name = "Name must be at least 2 characters"
+    }
+    
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      newErrors.email = "Please enter a valid email address"
+    }
+
+    if (!eventType) {
+      newErrors.eventType = "Please select an event type"
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors)
+      return
+    }
+
+    setErrors({})
+    
+    // Create detailed email content
+    const emailSubject = `New Contact Form - ${name} - ${eventType}`
+    let emailBody = `New Contact Form Submission\n\n`
+    emailBody += `Name: ${name}\n`
+    emailBody += `Email: ${email}\n`
+    emailBody += `Phone: ${phone || "Not provided"}\n`
+    emailBody += `Event Type: ${eventType}\n`
+    emailBody += `Event Date: ${eventDate || "Not provided"}\n`
+    emailBody += `Location: ${location || "Not provided"}\n\n`
+    
+    if (cartData.cartType || cartData.design || cartData.catering.length > 0) {
+      emailBody += `Cart Configuration:\n`
+      if (cartData.cartType) emailBody += `- Cart Type: ${cartData.cartType === "classic" ? "Classic" : "Mobile"}\n`
+      if (cartData.cartTop) emailBody += `- Cart Top: ${cartData.cartTop}\n`
+      if (cartData.design) emailBody += `- Design: ${cartData.design}\n`
+      if (cartData.catering.length > 0) {
+        emailBody += `- Add-ons: ${cartData.catering.join(", ")}\n`
+      }
+      emailBody += `\n`
+    }
+    
+    emailBody += `Message:\n${message || "No message provided"}\n\n`
+    emailBody += `---\nSubmitted: ${new Date().toLocaleString("en-US", { timeZone: "America/Los_Angeles" })}`
+    
+    // Open mailto link to send email
+    const mailtoLink = `mailto:cartcuteriela@gmail.com?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`
+    window.location.href = mailtoLink
+    
     setSubmitted(true)
+    
+    // Store form reference before timeout
+    const form = e.currentTarget
+    
     setTimeout(() => {
       setSubmitted(false)
       resetCartData()
       setShowCartSummary(false)
+      if (form) {
+        form.reset()
+      }
+      setFormMessage("")
+      setTouched({})
     }, 5000)
+  }
+
+  const handleBlur = (field: string) => {
+    setTouched({ ...touched, [field]: true })
   }
 
   const scrollToBuilder = () => {
@@ -131,12 +205,6 @@ export function ContactSection() {
                     <div className="text-center">
                       <p className="text-xs text-muted-foreground mb-1">Add-ons</p>
                       <p className="font-bold text-sm">{cartData.catering.length} selected</p>
-                    </div>
-                  )}
-                  {cartData.logo && (
-                    <div className="text-center">
-                      <p className="text-xs text-muted-foreground mb-1">Branding</p>
-                      <p className="font-bold text-sm">Logo Uploaded</p>
                     </div>
                   )}
                 </div>
@@ -216,24 +284,46 @@ export function ContactSection() {
                   <div className="grid md:grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <Label htmlFor="name">Name *</Label>
-                      <Input id="name" required className="rounded-lg min-h-[48px]" />
+                      <Input 
+                        id="name" 
+                        name="name"
+                        required 
+                        className={`rounded-lg min-h-[48px] ${touched.name && errors.name ? 'border-red-500' : ''}`}
+                        onBlur={() => handleBlur('name')}
+                      />
+                      {touched.name && errors.name && (
+                        <p className="text-xs text-red-500 mt-1">{errors.name}</p>
+                      )}
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="email">Email *</Label>
-                      <Input id="email" type="email" required className="rounded-lg min-h-[48px]" />
+                      <Input 
+                        id="email" 
+                        name="email"
+                        type="email" 
+                        required 
+                        className={`rounded-lg min-h-[48px] ${touched.email && errors.email ? 'border-red-500' : ''}`}
+                        onBlur={() => handleBlur('email')}
+                      />
+                      {touched.email && errors.email && (
+                        <p className="text-xs text-red-500 mt-1">{errors.email}</p>
+                      )}
                     </div>
                   </div>
 
                   <div className="space-y-2">
                     <Label htmlFor="phone">Phone</Label>
-                    <Input id="phone" type="tel" className="rounded-lg min-h-[48px]" />
+                    <Input id="phone" name="phone" type="tel" className="rounded-lg min-h-[48px]" />
                   </div>
 
                   <div className="grid md:grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <Label htmlFor="event-type">Event Type *</Label>
-                      <Select required>
-                        <SelectTrigger id="event-type" className="rounded-lg min-h-[48px]">
+                      <Select name="event-type" required onValueChange={() => handleBlur('eventType')}>
+                        <SelectTrigger 
+                          id="event-type" 
+                          className={`rounded-lg min-h-[48px] ${touched.eventType && errors.eventType ? 'border-red-500' : ''}`}
+                        >
                           <SelectValue placeholder="Select event type" />
                         </SelectTrigger>
                         <SelectContent>
@@ -243,22 +333,26 @@ export function ContactSection() {
                           <SelectItem value="other">Other</SelectItem>
                         </SelectContent>
                       </Select>
+                      {touched.eventType && errors.eventType && (
+                        <p className="text-xs text-red-500 mt-1">{errors.eventType}</p>
+                      )}
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="event-date">Event Date</Label>
-                      <Input id="event-date" type="date" className="rounded-lg min-h-[48px]" />
+                      <Input id="event-date" name="event-date" type="date" className="rounded-lg min-h-[48px]" />
                     </div>
                   </div>
 
                   <div className="space-y-2">
                     <Label htmlFor="location">Location</Label>
-                    <Input id="location" placeholder="Event location" className="rounded-lg min-h-[48px]" />
+                    <Input id="location" name="location" placeholder="Event location" className="rounded-lg min-h-[48px]" />
                   </div>
 
                   <div className="space-y-2">
                     <Label htmlFor="message">Message</Label>
                     <Textarea
                       id="message"
+                      name="message"
                       placeholder="Tell us about your event vision..."
                       rows={6}
                       className="rounded-lg resize-none"

@@ -1,7 +1,6 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { Sparkles } from "lucide-react"
 import Image from "next/image"
 
 export function HeroSection() {
@@ -17,12 +16,13 @@ export function HeroSection() {
           src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/hero-ricTHuFPG1mAlvztk2ioj1hZ59oqUe.jpg"
           alt="Luxury catering cart at event"
           fill
+          sizes="100vw"
           className="object-cover"
           priority
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-background" />
 
-        <div className="absolute inset-0 flex items-center justify-center opacity-20">
+        <div className="absolute inset-0 flex items-center justify-center opacity-5">
           <div className="relative w-[600px] h-[200px]">
             <Image src="/images/cartcuterie-logo.png" alt="" fill className="object-contain" />
           </div>
@@ -43,10 +43,9 @@ export function HeroSection() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-4">
             <Button
               size="lg"
-              className="bg-foreground text-background hover:bg-foreground/90 hover:shadow-[0_0_30px_rgba(203,182,130,0.5)] transition-all duration-300 text-lg px-8 py-6 rounded-xl group"
+              className="bg-foreground text-background hover:bg-foreground/90 hover:shadow-[0_0_30px_rgba(203,182,130,0.5)] transition-all duration-300 text-lg px-8 py-6 rounded-xl"
               onClick={() => scrollToSection("cart-builder")}
             >
-              <Sparkles className="mr-2 h-5 w-5 group-hover:animate-pulse" />
               Build Your Cart
             </Button>
 
@@ -59,18 +58,6 @@ export function HeroSection() {
               View Gallery
             </Button>
           </div>
-
-          {/* Floating Icon */}
-          <div className="pt-12 animate-float">
-            <div className="inline-block text-accent text-6xl">✨</div>
-          </div>
-        </div>
-      </div>
-
-      {/* Scroll Indicator */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 animate-bounce">
-        <div className="w-6 h-10 border-2 border-white/50 rounded-full flex items-start justify-center p-2">
-          <div className="w-1.5 h-3 bg-white/50 rounded-full" />
         </div>
       </div>
     </section>
