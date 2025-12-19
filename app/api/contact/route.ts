@@ -17,11 +17,15 @@ export async function POST(req: NextRequest) {
     const brevoApiKey = process.env.BREVO_API_KEY
     if (!brevoApiKey) {
       console.error("BREVO_API_KEY is not set in environment variables")
+      console.error("Available env vars:", Object.keys(process.env).filter(k => k.includes('BREVO') || k.includes('API')))
       return NextResponse.json(
-        { success: false, error: "Email service not configured" },
+        { success: false, error: "Email service not configured - API key missing from environment" },
         { status: 500 }
       )
     }
+    
+    // Log successful key detection (partial)
+    console.log("✓ BREVO_API_KEY found in environment variables")
 
     // Create email content for the business owner
     const emailContent = `
