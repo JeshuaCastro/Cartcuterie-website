@@ -54,8 +54,8 @@ Submitted at: ${new Date().toLocaleString("en-US", { timeZone: "America/Los_Ange
       },
       body: JSON.stringify({
         sender: {
-          name: "Cartcuterie Website",
-          email: "noreply@cartcuterie.com",
+          name: "Cartcuterie",
+          email: "cartcuteriela@gmail.com",
         },
         to: [
           {
@@ -111,7 +111,7 @@ Submitted at: ${new Date().toLocaleString("en-US", { timeZone: "America/Los_Ange
       body: JSON.stringify({
         sender: {
           name: "Cartcuterie",
-          email: "noreply@cartcuterie.com",
+          email: "cartcuteriela@gmail.com",
         },
         to: [
           {
