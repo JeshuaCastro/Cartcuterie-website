@@ -99,49 +99,50 @@ export function ContactSection() {
 
     setErrors({})
     
-    // Create detailed email content
-    const emailSubject = `New Contact Form - ${name} - ${eventType}`
-    let emailBody = `New Contact Form Submission\n\n`
-    emailBody += `Name: ${name}\n`
-    emailBody += `Email: ${email}\n`
-    emailBody += `Phone: ${phone || "Not provided"}\n`
-    emailBody += `Event Type: ${eventType}\n`
-    emailBody += `Event Date: ${eventDate || "Not provided"}\n`
-    emailBody += `Location: ${location || "Not provided"}\n\n`
-    
-    if (cartData.cartType || cartData.design || cartData.catering.length > 0) {
-      emailBody += `Cart Configuration:\n`
-      if (cartData.cartType) emailBody += `- Cart Type: ${cartData.cartType === "classic" ? "Classic" : "Mobile"}\n`
-      if (cartData.cartTop) emailBody += `- Cart Top: ${cartData.cartTop}\n`
-      if (cartData.design) emailBody += `- Design: ${cartData.design}\n`
-      if (cartData.catering.length > 0) {
-        emailBody += `- Add-ons: ${cartData.catering.join(", ")}\n`
+    try {
+      // Send form data to Brevo API via our backend
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name,
+          email,
+          phone,
+          eventType,
+          eventDate,
+          location,
+          message,
+        }),
+      })
+
+      const result = await response.json()
+
+      if (!response.ok) {
+        setErrors({ submit: result.error || "Failed to send email. Please try again." })
+        return
       }
-      emailBody += `\n`
+
+      setSubmitted(true)
+      
+      // Store form reference before timeout
+      const form = e.currentTarget
+      
+      setTimeout(() => {
+        setSubmitted(false)
+        resetCartData()
+        setShowCartSummary(false)
+        if (form) {
+          form.reset()
+        }
+        setFormMessage("")
+        setTouched({})
+      }, 5000)
+    } catch (error) {
+      console.error("Form submission error:", error)
+      setErrors({ submit: "An error occurred. Please try again." })
     }
-    
-    emailBody += `Message:\n${message || "No message provided"}\n\n`
-    emailBody += `---\nSubmitted: ${new Date().toLocaleString("en-US", { timeZone: "America/Los_Angeles" })}`
-    
-    // Open mailto link to send email
-    const mailtoLink = `mailto:cartcuteriela@gmail.com?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`
-    window.location.href = mailtoLink
-    
-    setSubmitted(true)
-    
-    // Store form reference before timeout
-    const form = e.currentTarget
-    
-    setTimeout(() => {
-      setSubmitted(false)
-      resetCartData()
-      setShowCartSummary(false)
-      if (form) {
-        form.reset()
-      }
-      setFormMessage("")
-      setTouched({})
-    }, 5000)
   }
 
   const handleBlur = (field: string) => {
@@ -281,6 +282,11 @@ export function ContactSection() {
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-6">
+                  {errors.submit && (
+                    <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                      <p className="text-sm text-red-800">{errors.submit}</p>
+                    </div>
+                  )}
                   <div className="grid md:grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <Label htmlFor="name">Name *</Label>
