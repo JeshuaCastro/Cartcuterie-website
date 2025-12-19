@@ -356,8 +356,8 @@ export function CartBuilderSection() {
                         >
                           <div className="relative h-64 md:h-80">
                             <Image
-                              src={cart.image || "/placeholder.svg"}
-                              alt={cart.name}
+                              src={cart.image}
+                              alt={`${cart.name} - ${cart.description}`}
                               fill
                               className="object-cover"
                               loading="lazy"
@@ -950,6 +950,8 @@ export function CartBuilderSection() {
                     </div>
                   </div>
                 )}
+
+
 
                 <div className="flex justify-between items-center mt-8 md:mt-12 pt-6 md:pt-8 border-t border-border gap-4">
                   <Button
