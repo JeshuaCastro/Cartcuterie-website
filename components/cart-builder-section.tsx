@@ -363,11 +363,6 @@ export function CartBuilderSection() {
                               sizes="(max-width: 768px) 100vw, 50vw"
                               priority={index < 2}
                             />
-                              fill
-                              className="object-cover"
-                              loading="lazy"
-                              sizes="(max-width: 768px) 80vw, 40vw"
-                            />
                             {selectedCartType === cart.id && <div className="absolute inset-0 bg-accent/20" />}
                           </div>
                           <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 to-transparent p-6">
