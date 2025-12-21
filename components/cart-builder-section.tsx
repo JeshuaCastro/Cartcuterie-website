@@ -186,7 +186,7 @@ export function CartBuilderSection() {
 
   const getCartSteps = () => {
     if (selectedCartType === "mobile") return 7
-    if (selectedCartType === "ice-cream") return 4 // Roof decor, colors, and review
+    if (selectedCartType === "ice-cream") return 6 // Roof decor, design, colors, logo, and review
     return 8 // Classic cart
   }
   
@@ -219,23 +219,31 @@ export function CartBuilderSection() {
       updateCartData({ cartType: selectedCartType })
       nextStep = 1
     }
-    // Ice Cream Cart: Step 1 is Roof Decor, Step 2 is Colors, Step 3 is Review
+    // Ice Cream Cart: Step 1 is Roof Decor, Step 2 is Design, Step 3 is Colors, Step 4 is Logo, Step 5 is Review
     else if (isIceCreamCart) {
       if (step === 0) {
         nextStep = 1 // Go to roof decor selection
       } else if (step === 1) {
         if (selectedRoofDecor) {
           updateCartData({ roofDecor: selectedRoofDecor })
-          // Skip colors step if plain is selected, go to review
-          if (selectedRoofDecor === "plain") {
-            nextStep = 3 // Skip colors, go to review
-          } else {
-            nextStep = 2 // Go to colors
-          }
+          // Plain roof skips colors only, not design
+          nextStep = 2 // Always go to design
         } else {
           return
         }
       } else if (step === 2) {
+        if (selectedDesign) {
+          updateCartData({ design: selectedDesign })
+          // Check if plain roof was selected earlier - if so, skip colors
+          if (selectedRoofDecor === "plain") {
+            nextStep = 4 // Skip colors, go to logo
+          } else {
+            nextStep = 3 // Go to colors
+          }
+        } else {
+          return
+        }
+      } else if (step === 3) {
         updateCartData({
           colors: {
             primary: primaryColor,
@@ -243,8 +251,11 @@ export function CartBuilderSection() {
             roofColor: roofColor,
           },
         })
-        nextStep = 3 // Go to review
-      } else if (step === 3) {
+        nextStep = 4 // Go to logo
+      } else if (step === 4) {
+        updateCartData({ logo: uploadedLogo })
+        nextStep = 5 // Go to review
+      } else if (step === 5) {
         scrollToContact()
         return
       }
@@ -255,12 +266,8 @@ export function CartBuilderSection() {
         // Mobile: step 1 is roof decor
         if (selectedRoofDecor) {
           updateCartData({ roofDecor: selectedRoofDecor })
-          // Skip design if plain is selected
-          if (selectedRoofDecor === "plain") {
-            nextStep = 3 // Skip design, go to colors
-          } else {
-            nextStep = 2 // Go to design
-          }
+          // Plain roof always goes to design (doesn't skip design)
+          nextStep = 2 // Go to design
         } else {
           return
         }
@@ -280,7 +287,12 @@ export function CartBuilderSection() {
         // Mobile: step 2 is design
         if (selectedDesign) {
           updateCartData({ design: selectedDesign })
-          nextStep = 3 // Goes to colors
+          // Check if plain roof was selected earlier - if so, skip colors
+          if (selectedRoofDecor === "plain") {
+            nextStep = 4 // Skip colors, go to catering
+          } else {
+            nextStep = 3 // Go to colors
+          }
         } else {
           return
         }
@@ -288,12 +300,8 @@ export function CartBuilderSection() {
         // Classic: step 2 is roof decor
         if (selectedRoofDecor) {
           updateCartData({ roofDecor: selectedRoofDecor })
-          // Skip design if plain is selected
-          if (selectedRoofDecor === "plain") {
-            nextStep = 4 // Skip design, go to colors
-          } else {
-            nextStep = 3 // Go to design
-          }
+          // Plain roof always goes to design (doesn't skip design)
+          nextStep = 3 // Go to design
         } else {
           return
         }
@@ -315,7 +323,12 @@ export function CartBuilderSection() {
         // Classic: step 3 is design
         if (selectedDesign) {
           updateCartData({ design: selectedDesign })
-          nextStep = 4 // Goes to colors
+          // Check if plain roof was selected earlier - if so, skip colors
+          if (selectedRoofDecor === "plain") {
+            nextStep = 5 // Skip colors, go to catering
+          } else {
+            nextStep = 4 // Go to colors
+          }
         } else {
           return
         }
@@ -865,6 +878,53 @@ export function CartBuilderSection() {
                   </div>
                 )}
 
+                {/* Ice Cream Design Step - Step 2 */}
+                {step === 2 && isIceCreamCart && (
+                  <div
+                    className="space-y-6 md:space-y-8 animate-fade-in-up"
+                    role="region"
+                    aria-label="Build your ice cream cart step 2: Choose design style"
+                  >
+                    <h3 className="text-2xl md:text-3xl font-bold text-foreground text-center">
+                      Choose Your Design Style
+                    </h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+                      {designStyles.map((design) => (
+                        <button
+                          key={design.id}
+                          onClick={() => {
+                            setSelectedDesign(design.id)
+                            setTimeout(() => handleNext(), 100)
+                          }}
+                          tabIndex={0}
+                          aria-selected={selectedDesign === design.id}
+                          className={`relative group overflow-hidden rounded-xl transition-all duration-300 min-h-[48px] focus:outline-none focus:ring-4 focus:ring-accent ${
+                            selectedDesign === design.id
+                              ? "ring-[3px] ring-accent shadow-xl -translate-y-1.5"
+                              : "hover:scale-105 hover:shadow-lg active:scale-95"
+                          }`}
+                          style={{ boxShadow: "0 8px 18px rgba(12,12,12,0.08)", borderRadius: "12px" }}
+                        >
+                          <div className="relative h-64 md:h-80">
+                            <Image
+                              src={design.image || "/placeholder.svg"}
+                              alt={design.name}
+                              fill
+                              className="object-cover"
+                              loading="lazy"
+                              sizes="(max-width: 768px) 80vw, 40vw"
+                            />
+                            {selectedDesign === design.id && <div className="absolute inset-0 bg-accent/20" />}
+                          </div>
+                          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 to-transparent p-6">
+                            <p className="text-xl md:text-2xl font-bold text-white mb-1">{design.name}</p>
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
                 {step === 3 && isMobileCart && (
                   <div
                     className="space-y-6 md:space-y-8 animate-fade-in-up"
@@ -966,11 +1026,11 @@ export function CartBuilderSection() {
                   </div>
                 )}
 
-                {step === 2 && isIceCreamCart && (
+                {step === 3 && isIceCreamCart && (
                   <div
                     className="space-y-6 md:space-y-8 animate-fade-in-up"
                     role="region"
-                    aria-label="Build your ice cream cart step 2: Customize colors"
+                    aria-label="Build your ice cream cart step 3: Customize colors"
                   >
                     <h3 className="text-2xl md:text-3xl font-bold text-foreground text-center">
                       Customize Your Colors
@@ -1030,7 +1090,91 @@ export function CartBuilderSection() {
                   </div>
                 )}
 
-                {step === 4 && !isMobileCart && (
+                {/* Ice Cream Logo Step - Step 4 */}
+                {step === 4 && isIceCreamCart && (
+                  <div
+                    className="space-y-6 md:space-y-8 animate-fade-in-up"
+                    role="region"
+                    aria-label="Build your ice cream cart step 4: Upload your logo"
+                  >
+                    <h3 className="text-2xl md:text-3xl font-bold text-foreground text-center">
+                      Add Your Logo or Branding
+                    </h3>
+                    <p className="text-center text-muted-foreground max-w-lg mx-auto">
+                      Upload your logo or custom branding to personalize your cart (optional).
+                    </p>
+
+                    <div className="space-y-6 max-w-2xl mx-auto">
+                      <div className="relative">
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={(e) => {
+                            const file = e.target.files?.[0]
+                            if (file) {
+                              const reader = new FileReader()
+                              reader.onloadend = () => {
+                                setUploadedLogo(reader.result as string)
+                                updateCartData({ logo: reader.result as string })
+                              }
+                              reader.readAsDataURL(file)
+                            }
+                          }}
+                          className="hidden"
+                          id="ice-logo-upload"
+                        />
+                        <label
+                          htmlFor="ice-logo-upload"
+                          className="flex flex-col items-center justify-center p-8 border-2 border-dashed border-border rounded-xl cursor-pointer hover:border-accent transition-colors min-h-[200px]"
+                        >
+                          {uploadedLogo ? (
+                            <div className="relative w-full h-48">
+                              <Image
+                                src={uploadedLogo}
+                                alt="Uploaded logo"
+                                fill
+                                className="object-contain"
+                              />
+                            </div>
+                          ) : (
+                            <>
+                              <svg
+                                className="w-16 h-16 text-muted-foreground mb-4"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+                                />
+                              </svg>
+                              <p className="text-foreground font-medium mb-1">Click to upload your logo</p>
+                              <p className="text-sm text-muted-foreground">PNG, JPG or SVG (max. 5MB)</p>
+                            </>
+                          )}
+                        </label>
+                      </div>
+
+                      {uploadedLogo && (
+                        <Button
+                          variant="outline"
+                          onClick={() => {
+                            setUploadedLogo(null)
+                            updateCartData({ logo: null })
+                          }}
+                          className="w-full"
+                        >
+                          Remove Logo
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {step === 4 && !isMobileCart && !isIceCreamCart && (
                   <div
                     className="space-y-6 md:space-y-8 animate-fade-in-up"
                     role="region"
@@ -1126,7 +1270,7 @@ export function CartBuilderSection() {
                   </div>
                 )}
 
-                {step === 4 && isMobileCart && (
+                {step === 4 && isMobileCart && !isIceCreamCart && (
                   <div
                     className="space-y-6 md:space-y-8 animate-fade-in-up"
                     role="region"
@@ -1157,7 +1301,7 @@ export function CartBuilderSection() {
                   </div>
                 )}
 
-                {step === 5 && !isMobileCart && (
+                {step === 5 && !isMobileCart && !isIceCreamCart && (
                   <div
                     className="space-y-6 md:space-y-8 animate-fade-in-up"
                     role="region"
@@ -1188,7 +1332,7 @@ export function CartBuilderSection() {
                   </div>
                 )}
 
-                {step === 5 && isMobileCart && (
+                {step === 5 && isMobileCart && !isIceCreamCart && (
                   <div
                     className="space-y-6 md:space-y-8 animate-fade-in-up"
                     role="region"
@@ -1262,7 +1406,7 @@ export function CartBuilderSection() {
                   </div>
                 )}
 
-                {step === 6 && !isMobileCart && (
+                {step === 6 && !isMobileCart && !isIceCreamCart && (
                   <div
                     className="space-y-6 md:space-y-8 animate-fade-in-up"
                     role="region"
@@ -1521,7 +1665,7 @@ export function CartBuilderSection() {
                           <Button
                             variant="ghost"
                             size="sm"
-                            onClick={() => jumpToSlide(isMobileCart ? 2 : 3)}
+                            onClick={() => jumpToSlide(isMobileCart ? 2 : isIceCreamCart ? 2 : 3)}
                             className="flex items-center gap-2"
                           >
                             <Edit2 className="h-4 w-4" />
@@ -1553,7 +1697,7 @@ export function CartBuilderSection() {
                                   <span className="text-xs text-muted-foreground">Accent</span>
                                 </div>
                               )}
-                              {roofColor && (
+                              {roofColor && !isIceCreamCart && (
                                 <div className="flex flex-col items-center gap-1">
                                   <div className="w-12 h-12 rounded-lg border-2 border-border shadow-sm relative overflow-hidden">
                                     <div
@@ -1573,7 +1717,7 @@ export function CartBuilderSection() {
                           <Button
                             variant="ghost"
                             size="sm"
-                            onClick={() => jumpToSlide(isMobileCart ? 3 : 4)}
+                            onClick={() => jumpToSlide(isMobileCart ? 3 : isIceCreamCart ? 3 : 4)}
                             className="flex items-center gap-2"
                           >
                             <Edit2 className="h-4 w-4" />
@@ -1582,31 +1726,33 @@ export function CartBuilderSection() {
                         </div>
                       )}
 
-                      <div className="flex items-start gap-4 p-4 bg-muted/50 rounded-xl">
-                        <div className="flex-1">
-                          <p className="text-sm text-muted-foreground mb-2">Catering Add-ons</p>
-                          {selectedCatering.length > 0 ? (
-                            <div className="space-y-1">
-                              {selectedCatering.map((id) => (
-                                <p key={id} className="font-bold text-foreground">
-                                  • {cateringOptions.find((o) => o.id === id)?.name}
-                                </p>
-                              ))}
-                            </div>
-                          ) : (
-                            <p className="text-muted-foreground italic">None selected</p>
-                          )}
+                      {!isIceCreamCart && (
+                        <div className="flex items-start gap-4 p-4 bg-muted/50 rounded-xl">
+                          <div className="flex-1">
+                            <p className="text-sm text-muted-foreground mb-2">Catering Add-ons</p>
+                            {selectedCatering.length > 0 ? (
+                              <div className="space-y-1">
+                                {selectedCatering.map((id) => (
+                                  <p key={id} className="font-bold text-foreground">
+                                    • {cateringOptions.find((o) => o.id === id)?.name}
+                                  </p>
+                                ))}
+                              </div>
+                            ) : (
+                              <p className="text-muted-foreground italic">None selected</p>
+                            )}
+                          </div>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => jumpToSlide(isMobileCart ? 4 : 5)}
+                            className="flex items-center gap-2"
+                          >
+                            <Edit2 className="h-4 w-4" />
+                            Edit
+                          </Button>
                         </div>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => jumpToSlide(isMobileCart ? 4 : 5)}
-                          className="flex items-center gap-2"
-                        >
-                          <Edit2 className="h-4 w-4" />
-                          Edit
-                        </Button>
-                      </div>
+                      )}
 
                       {uploadedLogo && (
                         <div className="flex items-center gap-4 p-4 bg-muted/50 rounded-xl">
@@ -1625,7 +1771,7 @@ export function CartBuilderSection() {
                           <Button
                             variant="ghost"
                             size="sm"
-                            onClick={() => jumpToSlide(isMobileCart ? 5 : 6)}
+                            onClick={() => jumpToSlide(isMobileCart ? 5 : isIceCreamCart ? 4 : 6)}
                             className="flex items-center gap-2"
                           >
                             <Edit2 className="h-4 w-4" />
