@@ -147,23 +147,24 @@ export function GallerySection() {
           <div className="w-24 h-1 bg-accent mx-auto rounded-full" />
         </div>
 
-        <div className="grid grid-cols-3 gap-1 md:gap-2 max-w-7xl mx-auto">
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-2 max-w-7xl mx-auto">
           {galleryImages.map((image, index) => (
             <button
               key={index}
               onClick={() => openLightbox(index)}
-              className="group relative overflow-hidden aspect-square bg-muted animate-fade-in-up"
+              className="group relative overflow-hidden aspect-square bg-muted animate-fade-in-up rounded-lg md:rounded-none"
               style={{ animationDelay: `${index * 50}ms` }}
             >
               <Image
                 src={image.src || "/placeholder.svg"}
                 alt={image.caption}
                 fill
-                className="object-cover group-hover:scale-110 transition-transform duration-700"
+                className="object-cover object-center md:object-center group-hover:scale-110 transition-transform duration-700"
+                sizes="(max-width: 768px) 50vw, 33vw"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 hidden md:block">
                 <div className="absolute bottom-0 left-0 right-0 p-3 md:p-6 text-white">
-                  <p className="font-serif text-sm md:text-xl font-bold mb-1">{image.category}</p>
+                  <p className="text-sm md:text-xl font-bold mb-1">{image.category}</p>
                   <p className="text-xs md:text-sm text-white/80">{image.location}</p>
                 </div>
               </div>
@@ -215,7 +216,7 @@ export function GallerySection() {
               />
             </div>
             <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6 text-white text-center">
-              <p className="font-serif text-xl md:text-2xl font-bold mb-2">
+              <p className="text-xl md:text-2xl font-bold mb-2">
                 {galleryImages[currentImageIndex].caption}
               </p>
               <p className="text-sm md:text-base text-white/80">

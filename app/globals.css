@@ -3,6 +3,14 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* iOS Safe Area Support */
+@supports (padding: max(0px)) {
+  body {
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
+}
+
 :root {
   /* Updated to Cartcuterie luxury brand colors */
   --background: oklch(0.985 0.005 85); /* Soft ivory #FAF8F6 */

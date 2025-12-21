@@ -337,17 +337,17 @@ export function CartBuilderSection() {
                     role="region"
                     aria-label="Build your cart step 1: Choose cart type"
                   >
-                    <h3 className="font-serif text-2xl md:text-3xl font-bold text-foreground text-center">
+                    <h3 className="text-2xl md:text-3xl font-bold text-foreground text-center">
                       Which cart type would you like?
                     </h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
-                      {cartTypes.map((cart) => (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
+                      {cartTypes.map((cart, index) => (
                         <button
                           key={cart.id}
                           onClick={() => setSelectedCartType(cart.id)}
                           tabIndex={0}
                           aria-selected={selectedCartType === cart.id}
-                          className={`relative group overflow-hidden rounded-xl transition-all duration-300 min-h-[48px] focus:outline-none focus:ring-4 focus:ring-accent ${
+                          className={`relative group overflow-hidden rounded-xl transition-all duration-300 min-h-[56px] md:min-h-[48px] touch-manipulation focus:outline-none focus:ring-4 focus:ring-accent ${
                             selectedCartType === cart.id
                               ? "ring-[3px] ring-accent shadow-xl -translate-y-1.5"
                               : "hover:scale-105 hover:shadow-lg active:scale-95"
@@ -359,6 +359,11 @@ export function CartBuilderSection() {
                               src={cart.image}
                               alt={`${cart.name} - ${cart.description}`}
                               fill
+                              className="object-cover object-center"
+                              sizes="(max-width: 768px) 100vw, 50vw"
+                              priority={index < 2}
+                            />
+                              fill
                               className="object-cover"
                               loading="lazy"
                               sizes="(max-width: 768px) 80vw, 40vw"
@@ -366,7 +371,7 @@ export function CartBuilderSection() {
                             {selectedCartType === cart.id && <div className="absolute inset-0 bg-accent/20" />}
                           </div>
                           <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 to-transparent p-6">
-                            <p className="font-serif text-xl md:text-2xl font-bold text-white mb-1">{cart.name}</p>
+                            <p className="text-xl md:text-2xl font-bold text-white mb-1">{cart.name}</p>
                             <p className="text-white/80 text-sm">{cart.description}</p>
                           </div>
                         </button>
@@ -381,7 +386,7 @@ export function CartBuilderSection() {
                     role="region"
                     aria-label="Build your cart step 2: Choose cart top"
                   >
-                    <h3 className="font-serif text-2xl md:text-3xl font-bold text-foreground text-center">
+                    <h3 className="text-2xl md:text-3xl font-bold text-foreground text-center">
                       Choose Your Cart Top
                     </h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
@@ -410,7 +415,7 @@ export function CartBuilderSection() {
                             {selectedCartTop === cart.id && <div className="absolute inset-0 bg-accent/20" />}
                           </div>
                           <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 to-transparent p-6">
-                            <p className="font-serif text-xl md:text-2xl font-bold text-white mb-1">{cart.name}</p>
+                            <p className="text-xl md:text-2xl font-bold text-white mb-1">{cart.name}</p>
                           </div>
                         </button>
                       ))}
@@ -424,7 +429,7 @@ export function CartBuilderSection() {
                     role="region"
                     aria-label="Build your cart step 3: Choose design style"
                   >
-                    <h3 className="font-serif text-2xl md:text-3xl font-bold text-foreground text-center">
+                    <h3 className="text-2xl md:text-3xl font-bold text-foreground text-center">
                       Choose Your Design Style
                     </h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
@@ -453,7 +458,7 @@ export function CartBuilderSection() {
                             {selectedDesign === design.id && <div className="absolute inset-0 bg-accent/20" />}
                           </div>
                           <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 to-transparent p-6">
-                            <p className="font-serif text-xl md:text-2xl font-bold text-white mb-1">{design.name}</p>
+                            <p className="text-xl md:text-2xl font-bold text-white mb-1">{design.name}</p>
                           </div>
                         </button>
                       ))}
@@ -467,7 +472,7 @@ export function CartBuilderSection() {
                     role="region"
                     aria-label="Build your cart step 4: Customize colors"
                   >
-                    <h3 className="font-serif text-2xl md:text-3xl font-bold text-foreground text-center">
+                    <h3 className="text-2xl md:text-3xl font-bold text-foreground text-center">
                       Customize Your Colors
                     </h3>
                     <p className="text-center text-muted-foreground max-w-lg mx-auto">
@@ -568,7 +573,7 @@ export function CartBuilderSection() {
                     role="region"
                     aria-label="Build your cart step 5: Add catering services"
                   >
-                    <h3 className="font-serif text-2xl md:text-3xl font-bold text-foreground text-center">
+                    <h3 className="text-2xl md:text-3xl font-bold text-foreground text-center">
                       Add Catering Services
                     </h3>
                     <div className="space-y-4 max-w-md mx-auto">
@@ -599,7 +604,7 @@ export function CartBuilderSection() {
                     role="region"
                     aria-label="Build your cart step 6: Add your branding"
                   >
-                    <h3 className="font-serif text-2xl md:text-3xl font-bold text-foreground text-center">
+                    <h3 className="text-2xl md:text-3xl font-bold text-foreground text-center">
                       Add Your Branding
                     </h3>
                     <p className="text-center text-muted-foreground max-w-md mx-auto">
@@ -673,7 +678,7 @@ export function CartBuilderSection() {
                     role="region"
                     aria-label="Build your cart step 7: Review and send"
                   >
-                    <h3 className="font-serif text-2xl md:text-3xl font-bold text-foreground text-center">
+                    <h3 className="text-2xl md:text-3xl font-bold text-foreground text-center">
                       Review Your Cart
                     </h3>
                     
@@ -924,7 +929,7 @@ export function CartBuilderSection() {
 
                       <div className="text-center p-4 bg-accent/10 rounded-xl">
                         <p className="text-sm text-muted-foreground">Package</p>
-                        <p className="font-serif text-xl font-bold text-accent">Custom Quote</p>
+                        <p className="text-xl font-bold text-accent">Custom Quote</p>
                       </div>
                     </div>
 
@@ -991,7 +996,7 @@ export function CartBuilderSection() {
             <div className="sticky top-24 space-y-6">
               <Card className="border-none shadow-2xl bg-card">
                 <CardContent className="p-8 space-y-6">
-                  <h4 className="font-serif text-2xl font-bold text-foreground text-center">Your Cart Preview</h4>
+                  <h4 className="text-2xl font-bold text-foreground text-center">Your Cart Preview</h4>
 
                   {selectedCartType && (
                     <div className="relative w-full h-64 rounded-xl overflow-hidden">

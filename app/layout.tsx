@@ -22,6 +22,12 @@ export const metadata: Metadata = {
     "Premium mobile catering and event cart service for weddings, corporate events, and upscale parties across Los Angeles, Ventura & Orange County.",
   keywords: ["catering", "mobile cart", "Los Angeles catering", "event catering", "wedding cart", "charcuterie cart"],
   authors: [{ name: "Cartcuterie" }],
+  viewport: {
+    width: "device-width",
+    initialScale: 1,
+    maximumScale: 5,
+    userScalable: true,
+  },
   openGraph: {
     title: "Cartcuterie | Luxury Mobile Catering Carts",
     description: "Premium mobile catering carts for unforgettable events in Los Angeles",

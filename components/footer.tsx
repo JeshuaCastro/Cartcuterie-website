@@ -64,7 +64,7 @@ export function Footer() {
 
           {/* Quick Links */}
           <div>
-            <h4 className="font-serif text-xl font-bold mb-4">Quick Links</h4>
+            <h4 className="text-xl font-bold mb-4">Quick Links</h4>
             <ul className="space-y-2">
               {footerLinks.map((link) => (
                 <li key={link.name}>
@@ -78,7 +78,7 @@ export function Footer() {
 
           {/* Instagram Preview */}
           <div>
-            <h4 className="font-serif text-xl font-bold mb-4">Follow Us</h4>
+            <h4 className="text-xl font-bold mb-4">Follow Us</h4>
             <div className="grid grid-cols-2 gap-2">
               {instagramImages.map((src, index) => (
                 <a

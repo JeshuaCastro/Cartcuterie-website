@@ -44,9 +44,23 @@ export function Navbar() {
           {/* Logo */}
           <button
             onClick={() => scrollToSection("hero")}
-            className={`relative flex-shrink-0 transition-all duration-300 ${isScrolled ? "h-8 w-32" : "h-12 w-48"}`}
+            className="flex-shrink-0 transition-all duration-300"
           >
-            <Image src="/images/cartcuterie-logo.png" alt="Cartcuterie" fill className="object-contain" priority />
+            <div className="text-center">
+              <div className={`font-bold tracking-widest transition-all duration-300 ${
+                isScrolled ? "text-base md:text-lg" : "text-lg md:text-xl"
+              } ${isScrolled ? "text-foreground" : "text-white"}`}>
+                CARTCUTERIE
+              </div>
+              <div className={`border-t transition-all duration-300 ${
+                isScrolled ? "border-foreground/30" : "border-white/30"
+              } my-1`}></div>
+              <div className={`font-serif text-xs tracking-tight transition-all duration-300 ${
+                isScrolled ? "text-muted-foreground" : "text-white/80"
+              }`}>
+                catering & rentals
+              </div>
+            </div>
           </button>
 
           {/* Desktop Navigation */}

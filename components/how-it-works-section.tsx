@@ -57,11 +57,11 @@ export function HowItWorksSection() {
                   }}
                 />
                 <div className="absolute top-4 left-4 w-16 h-16 bg-accent rounded-full flex items-center justify-center shadow-lg">
-                  <span className="font-serif text-2xl font-bold text-foreground">{step.number}</span>
+                  <span className="text-2xl font-bold text-foreground">{step.number}</span>
                 </div>
               </div>
               <CardContent className="p-8 space-y-3">
-                <h3 className="font-serif text-2xl font-bold text-foreground">{step.title}</h3>
+                <h3 className="text-2xl font-bold text-foreground">{step.title}</h3>
                 <p className="text-muted-foreground leading-relaxed">{step.description}</p>
               </CardContent>
             </Card>

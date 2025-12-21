@@ -38,7 +38,7 @@ export function TestimonialsSection() {
   return (
     <section className="py-24 md:py-32 bg-background relative overflow-hidden">
       {/* Decorative Quote Mark */}
-      <div className="absolute top-12 left-1/2 -translate-x-1/2 text-accent/10 text-[200px] font-serif leading-none pointer-events-none">
+      <div className="absolute top-12 left-1/2 -translate-x-1/2 text-accent/10 text-[200px] leading-none pointer-events-none">
         "
       </div>
 
@@ -60,7 +60,7 @@ export function TestimonialsSection() {
                   ))}
                 </div>
 
-                <blockquote className="text-xl md:text-2xl text-center text-foreground font-serif italic leading-relaxed">
+                <blockquote className="text-xl md:text-2xl text-center text-foreground italic leading-relaxed">
                   "{testimonials[currentIndex].text}"
                 </blockquote>
 

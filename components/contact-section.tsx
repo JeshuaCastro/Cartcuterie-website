@@ -159,7 +159,7 @@ export function ContactSection() {
     <section id="contact" className="py-12 md:py-24 lg:py-32 bg-muted/30">
       <div className="container mx-auto px-5 md:px-8 lg:px-12">
         <div className="text-center mb-8 md:mb-12 lg:mb-16 space-y-3 md:space-y-4">
-          <h2 className="text-3xl md:text-5xl lg:text-6xl font-bold text-foreground text-balance">
+          <h2 className="font-serif text-3xl md:text-5xl lg:text-6xl font-bold text-foreground text-balance">
             Let's Start Planning Your Cart
           </h2>
           <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto text-pretty leading-relaxed">
@@ -173,7 +173,7 @@ export function ContactSection() {
             <Card className="border-2 border-accent/50 bg-accent/5">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="font-serif text-xl font-bold text-foreground">Your Cart Summary</h3>
+                  <h3 className="text-xl font-bold text-foreground">Your Cart Summary</h3>
                   <div className="flex gap-2">
                     <Button variant="ghost" size="sm" onClick={scrollToBuilder} className="flex items-center gap-2">
                       <Edit2 className="h-4 w-4" />
@@ -277,7 +277,7 @@ export function ContactSection() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
                   </div>
-                  <h3 className="font-serif text-2xl font-bold text-foreground">Thank You!</h3>
+                  <h3 className="text-2xl font-bold text-foreground">Thank You!</h3>
                   <p className="text-muted-foreground">
                     Your inquiry has been received. We'll be in touch within 24 hours!
                   </p>

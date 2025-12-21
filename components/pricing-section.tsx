@@ -54,7 +54,7 @@ export function PricingSection() {
                 </div>
               )}
               <CardHeader className="text-center pb-6 pt-8">
-                <CardTitle className="font-serif text-2xl font-bold text-foreground mb-3">{pkg.name}</CardTitle>
+                <CardTitle className="text-2xl font-bold text-foreground mb-3 uppercase tracking-wide">{pkg.name}</CardTitle>
                 <p className="text-muted-foreground text-base leading-relaxed">{pkg.description}</p>
               </CardHeader>
               <CardContent className="space-y-4 pb-8">

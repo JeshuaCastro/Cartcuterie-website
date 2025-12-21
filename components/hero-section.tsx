@@ -17,8 +17,9 @@ export function HeroSection() {
           alt="Luxury catering cart at event"
           fill
           sizes="100vw"
-          className="object-cover"
+          className="object-cover object-center"
           priority
+          quality={90}
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-background" />
 
