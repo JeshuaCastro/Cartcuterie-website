@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
-import nodemailer from "nodemailer"
+import { Resend } from "resend"
+
+const resend = new Resend(process.env.RESEND_API_KEY)
 
 export async function POST(req: NextRequest) {
   try {
@@ -14,57 +16,19 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    // Get Gmail credentials from environment variables
-    const gmailUser = process.env.GMAIL_USER
-    const gmailPassword = process.env.GMAIL_APP_PASSWORD
-
-    if (!gmailUser || !gmailPassword) {
-      console.error("Gmail credentials not configured in environment variables")
+    // Check if API key is configured
+    if (!process.env.RESEND_API_KEY) {
+      console.error("Resend API key not configured")
       return NextResponse.json(
         { success: false, error: "Email service not configured" },
         { status: 500 }
       )
     }
 
-    console.log("Gmail credentials check:")
-    console.log("GMAIL_USER:", gmailUser)
-    console.log("GMAIL_APP_PASSWORD length:", gmailPassword?.length)
-    console.log("GMAIL_APP_PASSWORD (first 4 chars):", gmailPassword?.substring(0, 4))
-
-    // Create Nodemailer transporter
-    const transporter = nodemailer.createTransport({
-      host: "smtp.gmail.com",
-      port: 587,
-      secure: false,
-      auth: {
-        user: gmailUser,
-        pass: gmailPassword,
-      },
-    })
-
-    // Email to business owner
-    const businessEmailContent = `
-New Contact Form Submission from Cartcuterie Website
-
-Name: ${name}
-Email: ${email}
-Phone: ${phone || "Not provided"}
-Event Type: ${eventType}
-Event Date: ${eventDate || "Not provided"}
-Event Time: ${eventTime || "Not provided"}
-Location: ${location || "Not provided"}
-
-Message:
-${message || "No message provided"}
-
----
-Submitted at: ${new Date().toLocaleString("en-US", { timeZone: "America/Los_Angeles" })}
-    `.trim()
-
     // Send email to business owner
-    const businessEmail = await transporter.sendMail({
-      from: gmailUser,
-      to: gmailUser,
+    const businessEmail = await resend.emails.send({
+      from: "Cartcuterie <noreply@cartcuterie.la>",
+      to: "cartcuteriela@gmail.com",
       subject: `New Cart Inquiry from ${name}`,
       html: `
         <html>
@@ -75,7 +39,9 @@ Submitted at: ${new Date().toLocaleString("en-US", { timeZone: "America/Los_Ange
               <p><strong>Email:</strong> <a href="mailto:${email}">${email}</a></p>
               <p><strong>Phone:</strong> ${phone || "Not provided"}</p>
               <p><strong>Event Type:</strong> ${eventType}</p>
-              <p><strong>Event Date:</strong> ${eventDate || "Not provided"}</p>                <p><strong>Event Time:</strong> ${eventTime || "Not provided"}</p>              <p><strong>Location:</strong> ${location || "Not provided"}</p>
+              <p><strong>Event Date:</strong> ${eventDate || "Not provided"}</p>
+              <p><strong>Event Time:</strong> ${eventTime || "Not provided"}</p>
+              <p><strong>Location:</strong> ${location || "Not provided"}</p>
             </div>
             <h3>Message:</h3>
             <p>${message || "No message provided"}</p>
@@ -89,9 +55,14 @@ Submitted at: ${new Date().toLocaleString("en-US", { timeZone: "America/Los_Ange
       replyTo: email,
     })
 
+    if (businessEmail.error) {
+      console.error("Error sending business email:", businessEmail.error)
+      throw new Error(businessEmail.error.message)
+    }
+
     // Send confirmation email to customer
-    const confirmationEmail = await transporter.sendMail({
-      from: gmailUser,
+    const confirmationEmail = await resend.emails.send({
+      from: "Cartcuterie <noreply@cartcuterie.la>",
       to: email,
       subject: "We Received Your Cart Inquiry - Cartcuterie",
       html: `
@@ -103,13 +74,12 @@ Submitted at: ${new Date().toLocaleString("en-US", { timeZone: "America/Los_Ange
             <div style="background-color: #f5f5f5; padding: 20px; border-radius: 5px; margin: 20px 0;">
               <h3 style="margin-top: 0;">Your Inquiry Details:</h3>
               <p><strong>Event Type:</strong> ${eventType}</p>
-              <p><strong>Event Date:</strong> ${eventDate || "TBD"}</p>                <p><strong>Event Time:</strong> ${eventTime || "TBD"}</p>              <p><strong>Location:</strong> ${location || "TBD"}</p>
+              <p><strong>Event Date:</strong> ${eventDate || "TBD"}</p>
+              <p><strong>Event Time:</strong> ${eventTime || "TBD"}</p>
+              <p><strong>Location:</strong> ${location || "TBD"}</p>
             </div>
-            <p>If you have any questions in the meantime, feel free to reach out to us directly.</p>
-            <p style="margin-top: 30px;">
-              Best regards,<br>
-              <strong>The Cartcuterie Team</strong>
-            </p>
+            <p style="color: #666;">If you have any questions in the meantime, feel free to reply to this email or contact us directly.</p>
+            <p>Best regards,<br><strong>Cartcuterie Team</strong></p>
             <hr style="border: none; border-top: 1px solid #ddd; margin: 20px 0;">
             <p style="font-size: 12px; color: #999; text-align: center;">
               © 2025 Cartcuterie. All rights reserved.
@@ -119,23 +89,22 @@ Submitted at: ${new Date().toLocaleString("en-US", { timeZone: "America/Los_Ange
       `,
     })
 
-    // Log the submission
-    console.log("Contact form submission sent successfully:", {
-      name,
-      email,
-      eventType,
-      timestamp: new Date().toISOString(),
-    })
+    if (confirmationEmail.error) {
+      console.error("Error sending confirmation email:", confirmationEmail.error)
+      throw new Error(confirmationEmail.error.message)
+    }
 
-    // Return success
     return NextResponse.json({
       success: true,
-      message: "Form submitted successfully. We'll be in touch soon!",
+      message: "Emails sent successfully",
     })
-  } catch (error: any) {
+  } catch (error) {
     console.error("Error processing contact form:", error)
     return NextResponse.json(
-      { success: false, error: "Failed to process form submission" },
+      { 
+        success: false, 
+        error: error instanceof Error ? error.message : "Failed to send emails" 
+      },
       { status: 500 }
     )
   }

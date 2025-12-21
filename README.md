@@ -44,28 +44,21 @@ Cartcuterie specializes in custom mobile catering carts featuring charcuterie, d
 ## Environment Variables
 
 - `OPENAI_API_KEY` - Required for AI cart generation
-- `GMAIL_USER` - Gmail email address for sending contact form emails
-- `GMAIL_APP_PASSWORD` - 16-character Gmail App Password for SMTP authentication
+- `RESEND_API_KEY` - Required for sending contact form emails via Resend
 
-### Setting up Gmail App Password
+### Setting up Resend for Email
 
-1. Enable 2-Factor Authentication on your Google Account:
-   - Go to [myaccount.google.com](https://myaccount.google.com)
-   - Select "Security" from the left menu
-   - Enable 2-Step Verification if not already enabled
-
-2. Generate App Password:
-   - Go to [myaccount.google.com/apppasswords](https://myaccount.google.com/apppasswords)
-   - Select "Mail" as the app and "Windows Computer" (or your device type)
-   - Google will generate a 16-character password
-   - Copy this password and add it to `.env.local` as `GMAIL_APP_PASSWORD`
-
-3. Add to `.env.local`:
+1. Create a Resend account at [resend.com](https://resend.com)
+2. Get your API key from the dashboard
+3. Add your domain to Resend and configure DNS records (for verified sender domain)
+4. Add to `.env.local`:
    ```
    OPENAI_API_KEY=your_api_key_here
-   GMAIL_USER=your-email@gmail.com
-   GMAIL_APP_PASSWORD=your_16_char_app_password
+   RESEND_API_KEY=your_resend_api_key
    ```
+5. Deploy to Vercel and add the `RESEND_API_KEY` environment variable in Vercel dashboard
+
+Contact form emails will be sent from `noreply@cartcuterie.la` to both the business and customer.
 
 ## License
 
