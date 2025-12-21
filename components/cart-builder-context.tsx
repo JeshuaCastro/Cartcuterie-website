@@ -5,6 +5,7 @@ import { createContext, useContext, useState, useEffect, type ReactNode } from "
 export interface CartBuilderData {
   cartType: string
   cartTop: string
+  roofDecor: string
   design: string
   catering: string[]
   logo?: string | null
@@ -31,6 +32,7 @@ const CartBuilderContext = createContext<CartBuilderContextType | undefined>(und
 const initialCartData: CartBuilderData = {
   cartType: "",
   cartTop: "",
+  roofDecor: "",
   design: "",
   catering: [],
   logo: null,
@@ -96,6 +98,7 @@ export function CartBuilderProvider({ children }: { children: ReactNode }) {
         body: JSON.stringify({
           cartType: cartData.cartType,
           cartTop: cartData.cartTop,
+          roofDecor: cartData.roofDecor,
           design: cartData.design,
           colors: cartData.colors,
           logo: cartData.logo,

@@ -76,6 +76,46 @@ const galleryImages = [
     category: "Snacks",
     location: "Hollywood, CA",
   },
+  {    src: "/images/laneige-cart.JPG",
+    title: "Donut Cart",
+    caption: "Laneige Donut Shop - Premium Pastry Cart",
+    category: "Catering",
+    location: "Event Venue, CA",
+  },
+  {
+    src: "/images/petals-cart.JPG",
+    title: "Flower Cart",
+    caption: "Layla's Petals - Luxury Flower Display Cart",
+    category: "Catering",
+    location: "Indoor Event, CA",
+  },
+  {
+    src: "/images/tommy-cart.JPEG",
+    title: "Tommy Hilfiger Holiday Cart",
+    caption: "Tommy Hilfiger Holiday Pop-Up Experience",
+    category: "Corporate",
+    location: "Retail Pop-Up",
+  },
+  {    src: "/images/laneige-donut-cart.jpg",
+    title: "Donut Cart",
+    caption: "Laneige Donut Shop Cart",
+    category: "Catering",
+    location: "Event Venue, CA",
+  },
+  {
+    src: "/images/flower-cart-display.jpg",
+    title: "Flower Cart",
+    caption: "Layla's Petals - Flower Cart",
+    category: "Catering",
+    location: "Indoor Event, CA",
+  },
+  {
+    src: "/images/tommy-hilfiger-cart.jpg",
+    title: "Tommy Hilfiger Holiday Cart",
+    caption: "Tommy Hilfiger Holiday Pop-Up",
+    category: "Corporate",
+    location: "Retail Pop-Up",
+  },
   {
     src: "/images/nudestix.jpg",
     title: "Nudestix Event",
@@ -139,7 +179,7 @@ export function GallerySection() {
       <div className="container mx-auto px-4">
         <div className="text-center mb-16 space-y-4">
           <h2 className="font-serif text-4xl md:text-6xl font-bold text-foreground text-balance">
-            Events We've Styled
+            Events We've Done
           </h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto text-pretty leading-relaxed">
             From intimate weddings to grand celebrations

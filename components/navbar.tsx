@@ -26,6 +26,7 @@ export function Navbar() {
     { name: "Home", id: "hero" },
     { name: "How It Works", id: "how-it-works" },
     { name: "Build Cart", id: "cart-builder" },
+    { name: "Dimensions", id: "dimensions" },
     { name: "Gallery", id: "gallery" },
     { name: "Pricing", id: "pricing" },
     { name: "Contact", id: "contact" },

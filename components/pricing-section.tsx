@@ -6,8 +6,13 @@ import { Button } from "@/components/ui/button"
 const packages = [
   {
     name: "Cart Only Package",
-    description: "A beautifully styled cart with setup and breakdown.",
+    description: "Delivery, setup, and pickup included.",
     details: "Perfect for those who want to handle their own catering and styling details.",
+    pricing: [
+      { name: "Wooden Cart", price: "$425" },
+      { name: "Mobile Cart", price: "$500" },
+      { name: "Ice Cream Cart", price: "$850", note: "(freezer included)" },
+    ],
   },
   {
     name: "Cart + Design Package",
@@ -60,6 +65,19 @@ export function PricingSection() {
               <CardContent className="space-y-4 pb-8">
                 <div className="h-px bg-accent/30 w-16 mx-auto" />
                 <p className="text-muted-foreground text-sm leading-relaxed text-center px-4">{pkg.details}</p>
+                {pkg.pricing && (
+                  <div className="space-y-2 mt-6 pt-4 border-t border-border">
+                    {pkg.pricing.map((item, idx) => (
+                      <div key={idx} className="flex justify-between items-center text-sm">
+                        <span className="text-foreground font-medium">{item.name}</span>
+                        <div className="text-right">
+                          <span className="font-bold text-accent">{item.price}</span>
+                          {item.note && <p className="text-xs text-muted-foreground">{item.note}</p>}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </CardContent>
             </Card>
           ))}

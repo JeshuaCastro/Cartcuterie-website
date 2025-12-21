@@ -53,7 +53,7 @@ export function HowItWorksSection() {
                   className="object-cover group-hover:scale-105 transition-transform duration-500"
                   loading="lazy"
                   style={{
-                    objectPosition: index === 0 ? 'center 20%' : index === 2 ? 'center 80%' : 'center center'
+                    objectPosition: index === 0 ? 'center 20%' : index === 2 ? 'center left' : 'center center'
                   }}
                 />
                 <div className="absolute top-4 left-4 w-16 h-16 bg-accent rounded-full flex items-center justify-center shadow-lg">

@@ -375,15 +375,13 @@ export function ContactSection() {
                     />
                   </div>
 
-                  <div className="md:relative fixed bottom-0 left-0 right-0 md:p-0 p-4 bg-card md:bg-transparent md:shadow-none shadow-[0_-4px_12px_rgba(0,0,0,0.1)] z-10">
-                    <Button
-                      type="submit"
-                      size="lg"
-                      className="w-full bg-foreground text-background hover:bg-foreground/90 hover:shadow-[0_0_30px_rgba(203,182,130,0.5)] transition-all duration-300 text-lg rounded-xl min-h-[56px]"
-                    >
-                      Send Inquiry
-                    </Button>
-                  </div>
+                  <Button
+                    type="submit"
+                    size="lg"
+                    className="w-full bg-foreground text-background hover:bg-foreground/90 hover:shadow-[0_0_30px_rgba(203,182,130,0.5)] transition-all duration-300 text-lg rounded-xl min-h-[56px] mt-6"
+                  >
+                    Send Inquiry
+                  </Button>
                 </form>
               )}
             </CardContent>
