@@ -1,7 +1,7 @@
 "use client"
 
 import type React from "react"
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect, useRef, useCallback } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
@@ -75,6 +75,7 @@ export function CartBuilderSection() {
   const [isDragging, setIsDragging] = useState(false)
   const carouselRef = useRef<HTMLDivElement>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const sectionRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (cartData.cartType) setSelectedCartType(cartData.cartType)
@@ -90,8 +91,8 @@ export function CartBuilderSection() {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "ArrowLeft" && step > 0) {
-        setStep(step - 1)
-      } else if (e.key === "ArrowRight") {
+        handleBack()
+      } else if (e.key === "ArrowRight" && step < totalSteps - 1) {
         handleNext()
       } else if (e.key === "Enter") {
         handleNext()
@@ -99,7 +100,16 @@ export function CartBuilderSection() {
     }
     window.addEventListener("keydown", handleKeyDown)
     return () => window.removeEventListener("keydown", handleKeyDown)
-  }, [step, selectedCartType, selectedCartTop, selectedDesign])
+  }, [step])
+
+  // Scroll to section when step changes
+  useEffect(() => {
+    if (sectionRef.current) {
+      setTimeout(() => {
+        sectionRef.current?.scrollIntoView({ behavior: "smooth", block: "center" })
+      }, 100)
+    }
+  }, [step])
 
   const handleCateringToggle = (id: string) => {
     setSelectedCatering((prev) => (prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]))
@@ -137,25 +147,23 @@ export function CartBuilderSection() {
     document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })
   }
 
-  const handleNext = () => {
+  const handleNext = useCallback(() => {
+    let nextStep = step + 1
+    
     if (step === 0 && selectedCartType) {
-      // Save cart type to context
       updateCartData({ cartType: selectedCartType })
       if (shouldSkipCartTop) {
-        setStep(2)
+        nextStep = 2
       } else {
-        setStep(1)
+        nextStep = 1
       }
     } else if (step === 1 && selectedCartTop) {
-      // Save cart top to context
       updateCartData({ cartTop: selectedCartTop })
-      setStep(2)
+      nextStep = 2
     } else if (step === 2 && selectedDesign) {
-      // Save design to context
       updateCartData({ design: selectedDesign })
-      setStep(3)
+      nextStep = 3
     } else if (step === 3) {
-      // Save color customization
       updateCartData({
         colors: {
           primary: primaryColor,
@@ -163,27 +171,32 @@ export function CartBuilderSection() {
           roofColor: roofColor,
         },
       })
-      setStep(4)
+      nextStep = 4
     } else if (step === 4) {
-      // Save catering items
       updateCartData({ catering: selectedCatering })
-      setStep(5)
+      nextStep = 5
     } else if (step === 5) {
-      // Save logo
       updateCartData({ logo: uploadedLogo })
-      setStep(6)
+      nextStep = 6
     } else if (step === 6) {
       scrollToContact()
+      return
+    } else {
+      return
     }
-  }
 
-  const handleBack = () => {
+    if (nextStep < totalSteps) {
+      setStep(nextStep)
+    }
+  }, [step, selectedCartType, shouldSkipCartTop, selectedCartTop, selectedDesign, primaryColor, secondaryColor, roofColor, selectedCatering, uploadedLogo, updateCartData, totalSteps])
+
+  const handleBack = useCallback(() => {
     if (step === 2 && shouldSkipCartTop) {
       setStep(0)
     } else if (step > 0) {
       setStep(step - 1)
     }
-  }
+  }, [step, shouldSkipCartTop])
 
   const jumpToSlide = (slideIndex: number) => {
     setStep(slideIndex)
@@ -199,17 +212,18 @@ export function CartBuilderSection() {
   }
 
   const handleTouchEnd = () => {
-    if (!touchStart || !touchEnd) return
+    if (!touchStart || !touchEnd) {
+      setIsDragging(false)
+      return
+    }
 
     const distance = touchStart - touchEnd
-    const isLeftSwipe = distance > 50
-    const isRightSwipe = distance < -50
+    const isLeftSwipe = distance > 100 // Increased threshold from 50 to 100
+    const isRightSwipe = distance < -100 // Increased threshold from -50 to -100
 
     if (isLeftSwipe) {
       handleNext()
-    }
-
-    if (isRightSwipe) {
+    } else if (isRightSwipe) {
       handleBack()
     }
 
@@ -236,14 +250,12 @@ export function CartBuilderSection() {
     }
 
     const distance = touchStart - touchEnd
-    const isLeftSwipe = distance > 50
-    const isRightSwipe = distance < -50
+    const isLeftSwipe = distance > 100 // Increased threshold
+    const isRightSwipe = distance < -100 // Increased threshold
 
     if (isLeftSwipe) {
       handleNext()
-    }
-
-    if (isRightSwipe) {
+    } else if (isRightSwipe) {
       handleBack()
     }
 
@@ -252,54 +264,36 @@ export function CartBuilderSection() {
     setIsDragging(false)
   }
 
-  const displayStep =
-    step === 2 && shouldSkipCartTop
-      ? 2
-      : step === 3 && shouldSkipCartTop
-        ? 3
-        : step === 4 && shouldSkipCartTop
-          ? 4
-          : step === 5 && shouldSkipCartTop
-            ? 5
-            : step === 6 && shouldSkipCartTop
-              ? 6
-              : step + 1
-
-  const progress = (displayStep / totalSteps) * 100
-
   const getNextButtonText = () => {
-    if (step === 3) return "Continue to Catering"
-    if (step === 5) return "Review My Cart"
-    if (step === 6) return "Send Inquiry"
+    if (step === 0) return "Select Cart Type"
+    if (step === 1 && !shouldSkipCartTop) return "Select Cart Top"
+    if (step === 2) return "Select Design"
+    if (step === 3) return "Customize Colors"
+    if (step === 4) return "Add Catering"
+    if (step === 5) return "Add Logo"
+    if (step === 6) return "Send to Email"
     return "Next"
   }
 
   return (
-    <section id="cart-builder" className="py-12 md:py-24 lg:py-32 bg-muted/30">
-      <div className="container mx-auto px-5 md:px-8 lg:px-12">
-        <div className="text-center mb-8 md:mb-12 lg:mb-16 space-y-3 md:space-y-4">
-          <h2 className="font-serif text-3xl md:text-5xl lg:text-6xl font-bold text-foreground text-balance">
-            Build Your Perfect Cart
-          </h2>
-          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto text-pretty leading-relaxed">
-            Customize every detail to match your event vision
-          </p>
-          <div className="w-24 h-1 bg-accent mx-auto rounded-full" />
-        </div>
-
-        <div className="max-w-7xl mx-auto lg:grid lg:grid-cols-[60%_40%] lg:gap-12">
-          <div className="w-full">
-            <div className="mb-6 md:mb-8">
-              <div className="flex justify-between items-center mb-3">
-                <span className="text-sm font-medium text-muted-foreground">
-                  Step {displayStep} of {totalSteps}
-                </span>
-                <span className="text-sm font-medium text-muted-foreground">{Math.round(progress)}%</span>
+    <section ref={sectionRef} id="cart-builder" className="py-20 px-4 md:px-8 bg-background scroll-mt-20">
+      <div className="max-w-7xl mx-auto">
+        <div className="grid lg:grid-cols-3 gap-8">
+          <div className="lg:col-span-2">
+            <div className="mb-8">
+              <div className="flex items-center justify-between mb-2">
+                <h2 className="text-3xl md:text-4xl font-serif font-bold text-foreground">
+                  Build Your Cart
+                </h2>
+                <p className="text-sm text-muted-foreground">
+                  Step {step + 1} of {totalSteps}
+                </p>
               </div>
-              <div className="h-2 bg-card rounded-full overflow-hidden">
+
+              <div className="bg-muted rounded-full h-2 overflow-hidden">
                 <div
                   className="h-full bg-accent transition-all duration-500 ease-out"
-                  style={{ width: `${progress}%`, willChange: "transform" }}
+                  style={{ width: `${((step + 1) / totalSteps) * 100}%`, willChange: "transform" }}
                 />
               </div>
               <div className="flex justify-center gap-2 mt-4" role="tablist" aria-label="Cart builder steps">
@@ -330,7 +324,7 @@ export function CartBuilderSection() {
               onMouseLeave={() => setIsDragging(false)}
               style={{ cursor: isDragging ? "grabbing" : "grab" }}
             >
-              <CardContent className="p-5 md:p-8 lg:p-12">
+              <CardContent className="p-5 md:p-8 lg:p-12 min-h-96">
                 {step === 0 && (
                   <div
                     className="space-y-6 md:space-y-8 animate-fade-in-up"
@@ -344,7 +338,10 @@ export function CartBuilderSection() {
                       {cartTypes.map((cart, index) => (
                         <button
                           key={cart.id}
-                          onClick={() => setSelectedCartType(cart.id)}
+                          onClick={() => {
+                            setSelectedCartType(cart.id)
+                            setTimeout(() => handleNext(), 100)
+                          }}
                           tabIndex={0}
                           aria-selected={selectedCartType === cart.id}
                           className={`relative group overflow-hidden rounded-xl transition-all duration-300 min-h-[56px] md:min-h-[48px] touch-manipulation focus:outline-none focus:ring-4 focus:ring-accent ${
@@ -388,7 +385,10 @@ export function CartBuilderSection() {
                       {cartTops.map((cart) => (
                         <button
                           key={cart.id}
-                          onClick={() => setSelectedCartTop(cart.id)}
+                          onClick={() => {
+                            setSelectedCartTop(cart.id)
+                            setTimeout(() => handleNext(), 100)
+                          }}
                           tabIndex={0}
                           aria-selected={selectedCartTop === cart.id}
                           className={`relative group overflow-hidden rounded-xl transition-all duration-300 min-h-[48px] focus:outline-none focus:ring-4 focus:ring-accent ${
@@ -431,7 +431,10 @@ export function CartBuilderSection() {
                       {designStyles.map((design) => (
                         <button
                           key={design.id}
-                          onClick={() => setSelectedDesign(design.id)}
+                          onClick={() => {
+                            setSelectedDesign(design.id)
+                            setTimeout(() => handleNext(), 100)
+                          }}
                           tabIndex={0}
                           aria-selected={selectedDesign === design.id}
                           className={`relative group overflow-hidden rounded-xl transition-all duration-300 min-h-[48px] focus:outline-none focus:ring-4 focus:ring-accent ${
@@ -695,8 +698,11 @@ export function CartBuilderSection() {
                             },
                           })
                           // Small delay to ensure state is updated
-                          await new Promise(resolve => setTimeout(resolve, 100))
-                          await generateAICart()
+                          await new Promise(resolve => setTimeout(resolve, 200))
+                          const result = await generateAICart()
+                          if (!result) {
+                            alert("Failed to generate visualization. Please try again.")
+                          }
                         }}
                         disabled={isGenerating}
                         className="w-full bg-gradient-to-r from-accent to-accent/80 hover:from-accent/90 hover:to-accent/70 text-foreground font-bold rounded-xl min-h-[56px] text-lg shadow-lg hover:shadow-xl transition-all duration-300"
@@ -903,12 +909,17 @@ export function CartBuilderSection() {
 
                       {uploadedLogo && (
                         <div className="flex items-center gap-4 p-4 bg-muted/50 rounded-xl">
-                          <div className="relative w-20 h-20 rounded-lg overflow-hidden flex-shrink-0 bg-white">
-                            <Image src={uploadedLogo || "/placeholder.svg"} alt="Logo" fill className="object-contain" />
+                          <div className="relative w-20 h-20 rounded-lg overflow-hidden flex-shrink-0">
+                            <Image
+                              src={uploadedLogo}
+                              alt="Your logo"
+                              fill
+                              className="object-contain"
+                            />
                           </div>
                           <div className="flex-1">
-                            <p className="text-sm text-muted-foreground">Branding</p>
-                            <p className="font-bold text-foreground">Custom Logo Uploaded</p>
+                            <p className="text-sm text-muted-foreground">Logo/Branding</p>
+                            <p className="font-bold text-foreground">Custom Logo</p>
                           </div>
                           <Button
                             variant="ghost"
@@ -921,37 +932,9 @@ export function CartBuilderSection() {
                           </Button>
                         </div>
                       )}
-
-                      <div className="text-center p-4 bg-accent/10 rounded-xl">
-                        <p className="text-sm text-muted-foreground">Package</p>
-                        <p className="text-xl font-bold text-accent">Custom Quote</p>
-                      </div>
-                    </div>
-
-                    <div className="text-center">
-                      <Button
-                        variant="outline"
-                        onClick={() => {
-                          resetCartData()
-                          setStep(0)
-                          setSelectedCartType("")
-                          setSelectedCartTop("")
-                          setSelectedDesign("")
-                          setSelectedCatering([])
-                          setUploadedLogo(null)
-                          setPrimaryColor("#FFFFFF")
-                          setSecondaryColor("#FFD700")
-                          setRoofColor("#FFFFFF")
-                        }}
-                        className="text-sm"
-                      >
-                        Start New Build
-                      </Button>
                     </div>
                   </div>
                 )}
-
-
 
                 <div className="flex justify-between items-center mt-8 md:mt-12 pt-6 md:pt-8 border-t border-border gap-4">
                   <Button
