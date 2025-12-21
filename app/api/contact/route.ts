@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
 
     // Send email to business owner
     const businessEmail = await resend.emails.send({
-      from: "cartcuteriela@gmail.com",
+      from: "Cartcuterie <noreply@cartcuterie.com>",
       to: "cartcuteriela@gmail.com",
       subject: `New Cart Inquiry from ${name}`,
       html: `
@@ -62,7 +62,7 @@ export async function POST(req: NextRequest) {
 
     // Send confirmation email to customer
     const confirmationEmail = await resend.emails.send({
-      from: "cartcuteriela@gmail.com",
+      from: "Cartcuterie <noreply@cartcuterie.com>",
       to: email,
       subject: "We Received Your Cart Inquiry - Cartcuterie",
       html: `
