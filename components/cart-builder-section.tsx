@@ -30,21 +30,21 @@ const cartTops = [
   {
     id: "classic-roof",
     name: "Classic Roof",
-    image: "/images/mate-juice-cart.jpg",
+    image: "/images/classic-cart-top.jpg",
   },
   {
     id: "bar-top",
     name: "Bar Top",
-    image: "/images/Popcorn-cart.jpg",
+    image: "/images/wedding.jpg",
   },
   {
     id: "umbrella",
     name: "Umbrella",
-    image: "/images/Green-mobile-cart.jpg",
+    image: "/images/umbrella-top.jpg",
   },
 ]
 
-const roofDecors = [
+const roofDecorsClassic = [
   {
     id: "plain",
     name: "Plain",
@@ -61,6 +61,26 @@ const roofDecors = [
     image: "/images/yellow-mobile-cart.jpg",
   },
 ]
+
+const roofDecorsMobile = [
+  {
+    id: "plain",
+    name: "Plain",
+    image: "/images/mate-juice-cart.jpg",
+  },
+  {
+    id: "stripe-vinyl",
+    name: "Stripe Vinyl Roof",
+    image: "/images/laneige-cart.JPG",
+  },
+  {
+    id: "custom",
+    name: "Custom",
+    image: "/images/tommy-cart.JPEG",
+  },
+]
+
+const roofDecors = roofDecorsClassic
 
 const designStyles = [
   {
@@ -601,7 +621,53 @@ export function CartBuilderSection() {
                       Choose Your Roof Decor
                     </h3>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
-                      {roofDecors.map((decor) => (
+                      {roofDecorsClassic.map((decor) => (
+                        <button
+                          key={decor.id}
+                          onClick={() => {
+                            setSelectedRoofDecor(decor.id)
+                            setTimeout(() => handleNext(), 100)
+                          }}
+                          tabIndex={0}
+                          aria-selected={selectedRoofDecor === decor.id}
+                          className={`relative group overflow-hidden rounded-xl transition-all duration-300 min-h-[48px] focus:outline-none focus:ring-4 focus:ring-accent ${
+                            selectedRoofDecor === decor.id
+                              ? "ring-[3px] ring-accent shadow-xl -translate-y-1.5"
+                              : "hover:scale-105 hover:shadow-lg active:scale-95"
+                          }`}
+                          style={{ boxShadow: "0 8px 18px rgba(12,12,12,0.08)", borderRadius: "12px" }}
+                        >
+                          <div className="relative h-64 md:h-80">
+                            <Image
+                              src={decor.image || "/placeholder.svg"}
+                              alt={decor.name}
+                              fill
+                              className="object-cover"
+                              loading="lazy"
+                              sizes="(max-width: 768px) 80vw, 33vw"
+                            />
+                            {selectedRoofDecor === decor.id && <div className="absolute inset-0 bg-accent/20" />}
+                          </div>
+                          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 to-transparent p-6">
+                            <p className="text-xl md:text-2xl font-bold text-white mb-1">{decor.name}</p>
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {step === 1 && isMobileCart && (
+                  <div
+                    className="space-y-6 md:space-y-8 animate-fade-in-up"
+                    role="region"
+                    aria-label="Build your cart step 2: Choose roof decor"
+                  >
+                    <h3 className="text-2xl md:text-3xl font-bold text-foreground text-center">
+                      Choose Your Roof Decor
+                    </h3>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+                      {roofDecorsMobile.map((decor) => (
                         <button
                           key={decor.id}
                           onClick={() => {
