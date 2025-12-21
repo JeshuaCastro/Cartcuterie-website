@@ -77,6 +77,7 @@ export function ContactSection() {
     const eventType = formData.get("event-type") as string
     const phone = formData.get("phone") as string
     const eventDate = formData.get("event-date") as string
+    const eventTime = formData.get("event-time") as string
     const location = formData.get("location") as string
     const message = formData.get("message") as string
 
@@ -112,6 +113,7 @@ export function ContactSection() {
           phone,
           eventType,
           eventDate,
+          eventTime,
           location,
           message,
         }),
@@ -157,7 +159,7 @@ export function ContactSection() {
     <section id="contact" className="py-12 md:py-24 lg:py-32 bg-muted/30">
       <div className="container mx-auto px-5 md:px-8 lg:px-12">
         <div className="text-center mb-8 md:mb-12 lg:mb-16 space-y-3 md:space-y-4">
-          <h2 className="font-serif text-3xl md:text-5xl lg:text-6xl font-bold text-foreground text-balance">
+          <h2 className="text-3xl md:text-5xl lg:text-6xl font-bold text-foreground text-balance">
             Let's Start Planning Your Cart
           </h2>
           <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto text-pretty leading-relaxed">
@@ -218,7 +220,7 @@ export function ContactSection() {
           {/* Left Side - Info */}
           <div className="space-y-8">
             <div>
-              <h3 className="font-serif text-2xl font-bold text-foreground mb-4">Get in Touch</h3>
+              <h3 className="text-2xl font-bold text-foreground mb-4">Get in Touch</h3>
               <p className="text-muted-foreground leading-relaxed">
                 Whether you're planning an intimate gathering or a grand celebration, we're here to bring your vision to
                 life with our luxury mobile carts.
@@ -349,9 +351,15 @@ export function ContactSection() {
                     </div>
                   </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="location">Location</Label>
-                    <Input id="location" name="location" placeholder="Event location" className="rounded-lg min-h-[48px]" />
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="event-time">Event Time</Label>
+                      <Input id="event-time" name="event-time" type="time" className="rounded-lg min-h-[48px]" />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="location">Location</Label>
+                      <Input id="location" name="location" placeholder="Event location" className="rounded-lg min-h-[48px]" />
+                    </div>
                   </div>
 
                   <div className="space-y-2">

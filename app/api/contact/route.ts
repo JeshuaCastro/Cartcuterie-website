@@ -4,7 +4,7 @@ import nodemailer from "nodemailer"
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json()
-    const { name, email, phone, eventType, eventDate, location, message } = body
+    const { name, email, phone, eventType, eventDate, eventTime, location, message } = body
 
     // Validate required fields
     if (!name || !email || !eventType) {
@@ -44,6 +44,7 @@ Email: ${email}
 Phone: ${phone || "Not provided"}
 Event Type: ${eventType}
 Event Date: ${eventDate || "Not provided"}
+Event Time: ${eventTime || "Not provided"}
 Location: ${location || "Not provided"}
 
 Message:
@@ -67,8 +68,7 @@ Submitted at: ${new Date().toLocaleString("en-US", { timeZone: "America/Los_Ange
               <p><strong>Email:</strong> <a href="mailto:${email}">${email}</a></p>
               <p><strong>Phone:</strong> ${phone || "Not provided"}</p>
               <p><strong>Event Type:</strong> ${eventType}</p>
-              <p><strong>Event Date:</strong> ${eventDate || "Not provided"}</p>
-              <p><strong>Location:</strong> ${location || "Not provided"}</p>
+              <p><strong>Event Date:</strong> ${eventDate || "Not provided"}</p>                <p><strong>Event Time:</strong> ${eventTime || "Not provided"}</p>              <p><strong>Location:</strong> ${location || "Not provided"}</p>
             </div>
             <h3>Message:</h3>
             <p>${message || "No message provided"}</p>
@@ -96,8 +96,7 @@ Submitted at: ${new Date().toLocaleString("en-US", { timeZone: "America/Los_Ange
             <div style="background-color: #f5f5f5; padding: 20px; border-radius: 5px; margin: 20px 0;">
               <h3 style="margin-top: 0;">Your Inquiry Details:</h3>
               <p><strong>Event Type:</strong> ${eventType}</p>
-              <p><strong>Event Date:</strong> ${eventDate || "TBD"}</p>
-              <p><strong>Location:</strong> ${location || "TBD"}</p>
+              <p><strong>Event Date:</strong> ${eventDate || "TBD"}</p>                <p><strong>Event Time:</strong> ${eventTime || "TBD"}</p>              <p><strong>Location:</strong> ${location || "TBD"}</p>
             </div>
             <p>If you have any questions in the meantime, feel free to reach out to us directly.</p>
             <p style="margin-top: 30px;">
