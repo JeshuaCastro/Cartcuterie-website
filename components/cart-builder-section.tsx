@@ -186,7 +186,7 @@ export function CartBuilderSection() {
 
   const getCartSteps = () => {
     if (selectedCartType === "mobile") return 7
-    if (selectedCartType === "ice-cream") return 2 // Only roof top and color
+    if (selectedCartType === "ice-cream") return 3 // Roof top and colors (after cart type)
     return 8 // Classic cart
   }
   
@@ -219,15 +219,15 @@ export function CartBuilderSection() {
       updateCartData({ cartType: selectedCartType })
       nextStep = 1
     }
-    // Ice Cream Cart: Step 1 is Cart Top (roof selection), Step 2 is Colors
+    // Ice Cream Cart: Step 1 is Roof Decor, Step 2 is Colors
     else if (isIceCreamCart) {
       if (step === 0) {
-        nextStep = 1 // Go to cart top selection
+        nextStep = 1 // Go to roof decor selection
       } else if (step === 1) {
-        if (selectedCartTop) {
-          updateCartData({ cartTop: selectedCartTop })
+        if (selectedRoofDecor) {
+          updateCartData({ roofDecor: selectedRoofDecor })
           // Skip colors step if plain is selected
-          if (selectedCartTop === "plain") {
+          if (selectedRoofDecor === "plain") {
             scrollToContact()
             return
           }
@@ -462,7 +462,7 @@ export function CartBuilderSection() {
   const getNextButtonText = () => {
     if (step === 0) return "Select Cart Type"
     if (isIceCreamCart) {
-      if (step === 1) return "Select Roof Top"
+      if (step === 1) return "Select Roof Decor"
       if (step === 2) return "Customize Colors"
       return "Send to Email"
     }
@@ -547,7 +547,7 @@ export function CartBuilderSection() {
                     <h3 className="text-2xl md:text-3xl font-bold text-foreground text-center">
                       Which cart type would you like?
                     </h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8">
                       {cartTypes.map((cart, index) => (
                         <button
                           key={cart.id}
@@ -585,81 +585,49 @@ export function CartBuilderSection() {
                   </div>
                 )}
 
-                {step === 1 && (
+                {/* Step 1: Cart Top (Classic) OR Roof Decor (Mobile) OR Roof Top (Ice Cream) */}
+                {step === 1 && !isMobileCart && !isIceCreamCart && (
                   <div
                     className="space-y-6 md:space-y-8 animate-fade-in-up"
                     role="region"
-                    aria-label={isMobileCart ? "Build your cart step 2: Choose roof decor" : "Build your cart step 2: Choose cart top"}
+                    aria-label="Build your cart step 2: Choose cart top"
                   >
                     <h3 className="text-2xl md:text-3xl font-bold text-foreground text-center">
-                      {isMobileCart ? "Choose Your Roof Decor" : "Choose Your Cart Top"}
+                      Choose Your Cart Top
                     </h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 md:gap-8">
-                      {isMobileCart
-                        ? roofDecors.map((decor) => (
-                            <button
-                              key={decor.id}
-                              onClick={() => {
-                                setSelectedRoofDecor(decor.id)
-                                setTimeout(() => handleNext(), 100)
-                              }}
-                              tabIndex={0}
-                              aria-selected={selectedRoofDecor === decor.id}
-                              className={`relative group overflow-hidden rounded-xl transition-all duration-300 min-h-[48px] focus:outline-none focus:ring-4 focus:ring-accent ${
-                                selectedRoofDecor === decor.id
-                                  ? "ring-[3px] ring-accent shadow-xl -translate-y-1.5"
-                                  : "hover:scale-105 hover:shadow-lg active:scale-95"
-                              }`}
-                              style={{ boxShadow: "0 8px 18px rgba(12,12,12,0.08)", borderRadius: "12px" }}
-                            >
-                              <div className="relative h-64 md:h-80">
-                                <Image
-                                  src={decor.image || "/placeholder.svg"}
-                                  alt={decor.name}
-                                  fill
-                                  className="object-cover"
-                                  loading="lazy"
-                                  sizes="(max-width: 768px) 80vw, 40vw"
-                                />
-                                {selectedRoofDecor === decor.id && <div className="absolute inset-0 bg-accent/20" />}
-                              </div>
-                              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 to-transparent p-6">
-                                <p className="text-xl md:text-2xl font-bold text-white mb-1">{decor.name}</p>
-                              </div>
-                            </button>
-                          ))
-                        : cartTops.map((cart) => (
-                            <button
-                              key={cart.id}
-                              onClick={() => {
-                                setSelectedCartTop(cart.id)
-                                setTimeout(() => handleNext(), 100)
-                              }}
-                              tabIndex={0}
-                              aria-selected={selectedCartTop === cart.id}
-                              className={`relative group overflow-hidden rounded-xl transition-all duration-300 min-h-[48px] focus:outline-none focus:ring-4 focus:ring-accent ${
-                                selectedCartTop === cart.id
-                                  ? "ring-[3px] ring-accent shadow-xl -translate-y-1.5"
-                                  : "hover:scale-105 hover:shadow-lg active:scale-95"
-                              }`}
-                              style={{ boxShadow: "0 8px 18px rgba(12,12,12,0.08)", borderRadius: "12px" }}
-                            >
-                              <div className="relative h-64 md:h-80">
-                                <Image
-                                  src={cart.image || "/placeholder.svg"}
-                                  alt={cart.name}
-                                  fill
-                                  className="object-cover"
-                                  loading="lazy"
-                                  sizes="(max-width: 768px) 80vw, 40vw"
-                                />
-                                {selectedCartTop === cart.id && <div className="absolute inset-0 bg-accent/20" />}
-                              </div>
-                              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 to-transparent p-6">
-                                <p className="text-xl md:text-2xl font-bold text-white mb-1">{cart.name}</p>
-                              </div>
-                            </button>
-                          ))}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+                      {cartTops.map((cart) => (
+                        <button
+                          key={cart.id}
+                          onClick={() => {
+                            setSelectedCartTop(cart.id)
+                            setTimeout(() => handleNext(), 100)
+                          }}
+                          tabIndex={0}
+                          aria-selected={selectedCartTop === cart.id}
+                          className={`relative group overflow-hidden rounded-xl transition-all duration-300 min-h-[48px] focus:outline-none focus:ring-4 focus:ring-accent ${
+                            selectedCartTop === cart.id
+                              ? "ring-[3px] ring-accent shadow-xl -translate-y-1.5"
+                              : "hover:scale-105 hover:shadow-lg active:scale-95"
+                          }`}
+                          style={{ boxShadow: "0 8px 18px rgba(12,12,12,0.08)", borderRadius: "12px" }}
+                        >
+                          <div className="relative h-64 md:h-80 w-full">
+                            <Image
+                              src={cart.image || "/placeholder.svg"}
+                              alt={cart.name}
+                              fill
+                              className="object-cover object-center"
+                              loading="lazy"
+                              sizes="(max-width: 768px) 90vw, 33vw"
+                            />
+                            {selectedCartTop === cart.id && <div className="absolute inset-0 bg-accent/20" />}
+                          </div>
+                          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 to-transparent p-6">
+                            <p className="text-xl md:text-2xl font-bold text-white mb-1">{cart.name}</p>
+                          </div>
+                        </button>
+                      ))}
                     </div>
                   </div>
                 )}
@@ -760,23 +728,23 @@ export function CartBuilderSection() {
                   <div
                     className="space-y-6 md:space-y-8 animate-fade-in-up"
                     role="region"
-                    aria-label="Build your ice cream cart step 1: Choose roof top"
+                    aria-label="Build your ice cream cart step 1: Choose roof decor"
                   >
                     <h3 className="text-2xl md:text-3xl font-bold text-foreground text-center">
-                      Choose Your Roof Top
+                      Choose Your Roof Decor
                     </h3>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
-                      {cartTops.map((cart) => (
+                      {roofDecorsClassic.map((decor) => (
                         <button
-                          key={cart.id}
+                          key={decor.id}
                           onClick={() => {
-                            setSelectedCartTop(cart.id)
+                            setSelectedRoofDecor(decor.id)
                             setTimeout(() => handleNext(), 100)
                           }}
                           tabIndex={0}
-                          aria-selected={selectedCartTop === cart.id}
+                          aria-selected={selectedRoofDecor === decor.id}
                           className={`relative group overflow-hidden rounded-xl transition-all duration-300 min-h-[48px] focus:outline-none focus:ring-4 focus:ring-accent ${
-                            selectedCartTop === cart.id
+                            selectedRoofDecor === decor.id
                               ? "ring-[3px] ring-accent shadow-xl -translate-y-1.5"
                               : "hover:scale-105 hover:shadow-lg active:scale-95"
                           }`}
@@ -784,17 +752,17 @@ export function CartBuilderSection() {
                         >
                           <div className="relative h-64 md:h-80 w-full">
                             <Image
-                              src={cart.image || "/placeholder.svg"}
-                              alt={cart.name}
+                              src={decor.image || "/placeholder.svg"}
+                              alt={decor.name}
                               fill
                               className="object-cover object-center"
                               loading="lazy"
                               sizes="(max-width: 768px) 90vw, 33vw"
                             />
-                            {selectedCartTop === cart.id && <div className="absolute inset-0 bg-accent/20" />}
+                            {selectedRoofDecor === decor.id && <div className="absolute inset-0 bg-accent/20" />}
                           </div>
                           <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 to-transparent p-6">
-                            <p className="text-xl md:text-2xl font-bold text-white mb-1">{cart.name}</p>
+                            <p className="text-xl md:text-2xl font-bold text-white mb-1">{decor.name}</p>
                           </div>
                         </button>
                       ))}
@@ -1365,11 +1333,11 @@ export function CartBuilderSection() {
                   </div>
                 )}
 
-                {(step === 6 && isMobileCart) || (step === 7 && !isMobileCart) || (step === 2 && isIceCreamCart) ? (
+                {(step === 6 && isMobileCart) || (step === 7 && !isMobileCart) ? (
                   <div
                     className="space-y-6 md:space-y-8 animate-fade-in-up"
                     role="region"
-                    aria-label={isMobileCart ? "Build your cart step 7: Review and send" : isIceCreamCart ? "Build your ice cream cart step 3: Review and send" : "Build your cart step 8: Review and send"}
+                    aria-label={isMobileCart ? "Build your cart step 7: Review and send" : "Build your cart step 8: Review and send"}
                   >
                     <h3 className="text-2xl md:text-3xl font-bold text-foreground text-center">
                       Review Your Cart
@@ -1468,7 +1436,7 @@ export function CartBuilderSection() {
                         </Button>
                       </div>
 
-                      {(!isMobileCart || isIceCreamCart) && selectedCartTop && (
+                      {!isMobileCart && !isIceCreamCart && selectedCartTop && (
                         <div className="flex items-center gap-4 p-4 bg-muted/50 rounded-xl">
                           <div className="relative w-20 h-20 rounded-lg overflow-hidden flex-shrink-0">
                             <Image
@@ -1500,7 +1468,12 @@ export function CartBuilderSection() {
                         <div className="flex items-center gap-4 p-4 bg-muted/50 rounded-xl">
                           <div className="relative w-20 h-20 rounded-lg overflow-hidden flex-shrink-0">
                             <Image
-                              src={roofDecors.find((d) => d.id === selectedRoofDecor)?.image || "/placeholder.svg"}
+                              src={
+                                isMobileCart 
+                                  ? roofDecorsMobile.find((d) => d.id === selectedRoofDecor)?.image 
+                                  : roofDecorsClassic.find((d) => d.id === selectedRoofDecor)?.image 
+                                || "/placeholder.svg"
+                              }
                               alt="Roof decor"
                               fill
                               className="object-cover"
@@ -1509,7 +1482,9 @@ export function CartBuilderSection() {
                           <div className="flex-1">
                             <p className="text-sm text-muted-foreground">Roof Decor</p>
                             <p className="font-bold text-foreground">
-                              {roofDecors.find((d) => d.id === selectedRoofDecor)?.name}
+                              {isMobileCart 
+                                ? roofDecorsMobile.find((d) => d.id === selectedRoofDecor)?.name 
+                                : roofDecorsClassic.find((d) => d.id === selectedRoofDecor)?.name}
                             </p>
                           </div>
                           <Button
