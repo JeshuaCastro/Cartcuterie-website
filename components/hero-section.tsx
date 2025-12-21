@@ -13,15 +13,17 @@ export function HeroSection() {
       {/* Background Image */}
       <div className="absolute inset-0 z-0">
         <Image
-          src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/hero-ricTHuFPG1mAlvztk2ioj1hZ59oqUe.jpg"
+          src="/images/hero.jpg"
           alt="Luxury catering cart at event"
           fill
           sizes="100vw"
-          className="object-cover object-center"
+          className="object-cover object-[center_25%] scale-105"
           priority
-          quality={90}
+          quality={95}
+          unoptimized
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-background" />
+        {/* Reduced overlay for better cart visibility */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/10 to-black/30" />
 
         <div className="absolute inset-0 flex items-center justify-center opacity-5">
           <div className="relative w-[600px] h-[200px]">

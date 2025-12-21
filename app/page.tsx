@@ -7,6 +7,7 @@ import { CartBuilderSection } from "@/components/cart-builder-section"
 import { GallerySection } from "@/components/gallery-section"
 import { PricingSection } from "@/components/pricing-section"
 import { TestimonialsSection } from "@/components/testimonials-section"
+import { DimensionsSection } from "@/components/dimensions-section"
 import { ContactSection } from "@/components/contact-section"
 import { Footer } from "@/components/footer"
 import { CartBuilderProvider } from "@/components/cart-builder-context"
@@ -24,6 +25,7 @@ export default function Home() {
           <GallerySection />
           <PricingSection />
           <TestimonialsSection />
+          <DimensionsSection />
           <ContactSection />
           <Footer />
         </main>

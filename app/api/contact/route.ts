@@ -26,9 +26,16 @@ export async function POST(req: NextRequest) {
       )
     }
 
+    console.log("Gmail credentials check:")
+    console.log("GMAIL_USER:", gmailUser)
+    console.log("GMAIL_APP_PASSWORD length:", gmailPassword?.length)
+    console.log("GMAIL_APP_PASSWORD (first 4 chars):", gmailPassword?.substring(0, 4))
+
     // Create Nodemailer transporter
     const transporter = nodemailer.createTransport({
-      service: "gmail",
+      host: "smtp.gmail.com",
+      port: 587,
+      secure: false,
       auth: {
         user: gmailUser,
         pass: gmailPassword,
