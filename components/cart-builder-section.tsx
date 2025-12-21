@@ -70,19 +70,19 @@ const roofDecorsClassic = [
 
 const roofDecorsMobile = [
   {
-    id: "plain",
-    name: "Plain",
-    image: "/images/mate-juice-cart.jpg",
-  },
-  {
-    id: "stripe-vinyl",
-    name: "Stripe Vinyl Roof",
-    image: "/images/laneige-cart.JPG",
-  },
-  {
     id: "custom",
     name: "Custom",
     image: "/images/tommy-cart.JPEG",
+  },
+  {
+    id: "striped-roof",
+    name: "Striped Roof",
+    image: "/images/laneige-cart.JPG",
+  },
+  {
+    id: "plain",
+    name: "Plain Cart",
+    image: "/images/mate-juice-cart.jpg",
   },
 ]
 
@@ -186,7 +186,7 @@ export function CartBuilderSection() {
 
   const getCartSteps = () => {
     if (selectedCartType === "mobile") return 7
-    if (selectedCartType === "ice-cream") return 3 // Roof top and colors (after cart type)
+    if (selectedCartType === "ice-cream") return 4 // Roof decor, colors, and review
     return 8 // Classic cart
   }
   
@@ -219,19 +219,19 @@ export function CartBuilderSection() {
       updateCartData({ cartType: selectedCartType })
       nextStep = 1
     }
-    // Ice Cream Cart: Step 1 is Roof Decor, Step 2 is Colors
+    // Ice Cream Cart: Step 1 is Roof Decor, Step 2 is Colors, Step 3 is Review
     else if (isIceCreamCart) {
       if (step === 0) {
         nextStep = 1 // Go to roof decor selection
       } else if (step === 1) {
         if (selectedRoofDecor) {
           updateCartData({ roofDecor: selectedRoofDecor })
-          // Skip colors step if plain is selected
+          // Skip colors step if plain is selected, go to review
           if (selectedRoofDecor === "plain") {
-            scrollToContact()
-            return
+            nextStep = 3 // Skip colors, go to review
+          } else {
+            nextStep = 2 // Go to colors
           }
-          nextStep = 2 // Go to colors
         } else {
           return
         }
@@ -243,6 +243,8 @@ export function CartBuilderSection() {
             roofColor: roofColor,
           },
         })
+        nextStep = 3 // Go to review
+      } else if (step === 3) {
         scrollToContact()
         return
       }
@@ -464,7 +466,8 @@ export function CartBuilderSection() {
     if (isIceCreamCart) {
       if (step === 1) return "Select Roof Decor"
       if (step === 2) return "Customize Colors"
-      return "Send to Email"
+      if (step === 3) return "Send to Email"
+      return "Next"
     }
     if (step === 1) {
       return isMobileCart ? "Select Roof Decor" : "Select Cart Top"
@@ -1333,11 +1336,11 @@ export function CartBuilderSection() {
                   </div>
                 )}
 
-                {(step === 6 && isMobileCart) || (step === 7 && !isMobileCart) ? (
+                {(step === 6 && isMobileCart) || (step === 7 && !isMobileCart && !isIceCreamCart) || (step === 3 && isIceCreamCart) ? (
                   <div
                     className="space-y-6 md:space-y-8 animate-fade-in-up"
                     role="region"
-                    aria-label={isMobileCart ? "Build your cart step 7: Review and send" : "Build your cart step 8: Review and send"}
+                    aria-label={isMobileCart ? "Build your cart step 7: Review and send" : isIceCreamCart ? "Build your ice cream cart step 4: Review and send" : "Build your cart step 8: Review and send"}
                   >
                     <h3 className="text-2xl md:text-3xl font-bold text-foreground text-center">
                       Review Your Cart
@@ -1469,9 +1472,9 @@ export function CartBuilderSection() {
                           <div className="relative w-20 h-20 rounded-lg overflow-hidden flex-shrink-0">
                             <Image
                               src={
-                                isMobileCart 
+                                (isMobileCart 
                                   ? roofDecorsMobile.find((d) => d.id === selectedRoofDecor)?.image 
-                                  : roofDecorsClassic.find((d) => d.id === selectedRoofDecor)?.image 
+                                  : roofDecorsClassic.find((d) => d.id === selectedRoofDecor)?.image)
                                 || "/placeholder.svg"
                               }
                               alt="Roof decor"
