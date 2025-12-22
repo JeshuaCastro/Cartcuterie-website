@@ -585,7 +585,7 @@ export function CartBuilderSection() {
                               src={cart.image}
                               alt={`${cart.name} - ${cart.description}`}
                               fill
-                              className="object-cover object-center"
+                              className="object-contain bg-muted/20"
                               sizes="(max-width: 768px) 100vw, 50vw"
                               priority={index < 2}
                             />
@@ -633,7 +633,7 @@ export function CartBuilderSection() {
                               src={cart.image || "/placeholder.svg"}
                               alt={cart.name}
                               fill
-                              className="object-cover object-center"
+                              className="object-contain bg-muted/20"
                               loading="lazy"
                               sizes="(max-width: 768px) 90vw, 33vw"
                             />
@@ -679,7 +679,7 @@ export function CartBuilderSection() {
                               src={decor.image || "/placeholder.svg"}
                               alt={decor.name}
                               fill
-                              className="object-cover object-center"
+                              className="object-contain bg-muted/20"
                               loading="lazy"
                               sizes="(max-width: 768px) 90vw, 30vw"
                             />
@@ -725,7 +725,7 @@ export function CartBuilderSection() {
                               src={decor.image || "/placeholder.svg"}
                               alt={decor.name}
                               fill
-                              className="object-cover object-center"
+                              className="object-contain bg-muted/20"
                               loading="lazy"
                               sizes="(max-width: 768px) 90vw, 33vw"
                             />
@@ -771,7 +771,7 @@ export function CartBuilderSection() {
                               src={decor.image || "/placeholder.svg"}
                               alt={decor.name}
                               fill
-                              className="object-cover object-center"
+                              className="object-contain bg-muted/20"
                               loading="lazy"
                               sizes="(max-width: 768px) 90vw, 33vw"
                             />

@@ -228,7 +228,7 @@ export async function POST(req: NextRequest) {
     // Use DALL-E 2 for image editing (DALL-E 3 doesn't support editing)
     // CRITICAL: Include mask parameter to force edits to apply
     const response = await openai.images.edit({
-      model: "gpt-image-1",
+      model: "dall-e-2",
       image: imageFile as any,
       mask: maskFile as any, // Fully transparent mask makes entire image editable
       prompt,
