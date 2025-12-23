@@ -1,300 +1,297 @@
 import { NextRequest, NextResponse } from "next/server"
-import OpenAI from "openai"
 import fs from "fs"
 import path from "path"
-import sharp from "sharp"
-import { Buffer } from "buffer"
 
 const isDev = process.env.NODE_ENV === "development"
 const log = (...args: any[]) => isDev && console.log(...args)
-const logError = (...args: any[]) => console.error(...args) // Keep errors in production
+const logError = (...args: any[]) => console.error(...args)
 
 export async function POST(req: NextRequest) {
   try {
-    const apiKey = process.env.OPENAI_API_KEY
+    const apiKey = process.env.GOOGLE_GENERATIVE_AI_API_KEY
 
     if (!apiKey) {
-      logError("OPENAI_API_KEY is not set in environment variables")
+      logError("GOOGLE_GENERATIVE_AI_API_KEY is not set in environment variables")
       return NextResponse.json(
         {
           success: false,
-          error: "OpenAI API key is not configured. Please add OPENAI_API_KEY to your .env.local file.",
+          error: "Google API key is not configured. Please contact support.",
         },
         { status: 500 }
       )
     }
 
-    const openai = new OpenAI({
-      apiKey: apiKey,
-    })
-
     const body = await req.json()
-    const { cartType, cartTop, design, colors, logo, cateringItems } = body
+    const { cartType, cartTop, roofDecor, design, colors, logo, cateringItems } = body
 
-    log("=== AI CART GENERATION REQUEST ===")
+    log("=== AI CART GENERATION REQUEST (Gemini 3 Pro Image) ===")
     log("Cart Type:", cartType)
     log("Cart Top:", cartTop)
+    log("Roof Decor:", roofDecor)
     log("Design:", design)
     log("Colors:", colors)
+    log("Logo:", logo ? "Yes" : "No")
     log("Catering:", cateringItems)
-    log("=================================")
+    log("=======================================================")
+
+    // Validate cartType
+    if (!cartType) {
+      logError("Missing cartType in request body")
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Cart type is required",
+        },
+        { status: 400 }
+      )
+    }
 
     // Determine which base image to use
-    const baseImagePath =
-      cartType === "classic"
-        ? path.join(process.cwd(), "public/images/Classic-cart-ai-base.jpg")
-        : path.join(process.cwd(), "public/images/yellow-mobile-cart.jpg")
+    let baseImagePath: string
+    let imageFileName: string
+    
+    if (cartType === "classic") {
+      imageFileName = "Classic-cart-ai-base.jpg"
+    } else if (cartType === "ice-cream") {
+      imageFileName = "ice-cream-cart.jpg"
+    } else if (cartType === "mobile") {
+      imageFileName = "yellow-mobile-cart.jpg"
+    } else {
+      // Default to mobile if unknown type
+      logError(`Unknown cart type: ${cartType}, defaulting to mobile`)
+      imageFileName = "yellow-mobile-cart.jpg"
+    }
 
+    baseImagePath = path.join(process.cwd(), "public", "images", imageFileName)
     log("Selected base image path:", baseImagePath)
 
     // Check if base image exists
-    if (!fs.existsSync(baseImagePath)) {
-      logError(`Base image not found at: ${baseImagePath}`)
+    let imageBuffer: Buffer
+    try {
+      if (!fs.existsSync(baseImagePath)) {
+        logError(`Base image not found at: ${baseImagePath}`)
+        logError("Directory contents:", fs.readdirSync(path.join(process.cwd(), "public", "images")).join(", "))
+        return NextResponse.json(
+          {
+            success: false,
+            error: `Base image not found: ${imageFileName}`,
+          },
+          { status: 500 }
+        )
+      }
+
+      log("✓ Base image file exists")
+
+      // Read base image and convert to base64
+      imageBuffer = fs.readFileSync(baseImagePath)
+    } catch (fsError: any) {
+      logError("File system error:", fsError)
       return NextResponse.json(
         {
           success: false,
-          error: `Base image not found. Please ensure ${cartType === "classic" ? "Classic-cart-ai-base.jpg" : "yellow-mobile-cart.jpg"} exists in public/images/`,
+          error: `Failed to read image file: ${fsError.message}`,
         },
         { status: 500 }
       )
     }
 
-    log("✓ Base image file exists")
+    const base64Image = imageBuffer.toString("base64")
+    const imageMediaType = "image/jpeg"
 
-    // Process image to make it square and convert to PNG with alpha channel (required by OpenAI)
-    const processedImageBuffer = await sharp(baseImagePath)
-      .resize(1024, 1024, {
-        fit: "contain",
-        background: { r: 255, g: 255, b: 255, alpha: 1 },
-      })
-      .ensureAlpha()
-      .png()
-      .toBuffer()
+    log("✓ Base image converted to base64, size:", base64Image.length, "bytes")
 
-    // Create a File-like object for the OpenAI API
-    const imageFile = new File([new Uint8Array(processedImageBuffer)], "cart.png", { type: "image/png" })
-
-    // CRITICAL FIX #1: Create mask with EXACT same dimensions as processed image (1024x1024)
-    // The mask MUST be exactly the same size or the API silently fails
-    const whiteMaskBuffer = await sharp({
-      create: {
-        width: 1024,
-        height: 1024,
-        channels: 4,
-        background: { r: 0, g: 0, b: 0, alpha: 0 }, // Fully transparent so every pixel is editable
-      },
-    })
-      .ensureAlpha() // Ensure RGBA format
-      .png()
-      .toBuffer()
-
-    const maskFile = new File([new Uint8Array(whiteMaskBuffer)], "mask.png", { type: "image/png" })
-    log("✓ Created 1024x1024 transparent mask (exact dimensions match)")
-
-    log(`Processing ${cartType} cart with:`, {
-      cartTop,
-      design,
-      colors,
-      hasCatering: cateringItems?.length > 0,
-    })
-
-    // Build an aggressive, specific edit prompt while respecting the 1000 character limit
-    // DALL-E image editing requires concise yet forceful instructions
-    const accentColor = colors?.secondary || "#d4af37"
-    const roofStripeColor = colors?.roofColor || accentColor
-
-    const structuralInstructions: string[] = [
-      "CRITICAL: Preserve the exact cart body dimensions, wheel size, and proportions from the original image.",
-      "Keep both wheels EXACTLY as shown: same size, spoke pattern, and bright white color - never change wheel appearance.",
-      "Maintain the cart body at its original scale - do not enlarge, shrink, or distort the main structure.",
-      "Keep legs, side shelf, handle, and frame in their exact original positions and dimensions.",
-    ]
-
-    const stylingInstructions: string[] = []
-    if (cartType === "classic") {
-      if (cartTop === "stripe-cloth") {
-        stylingInstructions.push(`Add a cloth awning on the existing posts with bold stripes in ${roofStripeColor} and ${accentColor}.`)
-      } else if (cartTop === "stripe-vinyl") {
-        stylingInstructions.push(`Add a vinyl canopy on the existing posts with bold stripes in ${roofStripeColor} and ${accentColor}.`)
-      } else {
-        stylingInstructions.push(`Add a striped canopy on the existing posts with alternating ${roofStripeColor} and ${accentColor} bands.`)
-      }
-    } else if (cartTop) {
-      stylingInstructions.push(`Add a modern canopy using the current support frame and highlight it in ${roofStripeColor} and ${accentColor}.`)
-    }
-
+    // Build the prompt for Gemini 3 Pro Image
     const primaryColor = colors?.primary || "#FFFFFF"
+    const secondaryColor = colors?.secondary || "#FFD700"
+    const roofColor = colors?.roofColor || "#FFFFFF"
+
+    const instructions: string[] = [
+      "Generate a professional product photo of this catering cart with the following customizations:",
+    ]
+
+    // Color instructions
     if (primaryColor !== "#FFFFFF") {
-      stylingInstructions.push(`Repaint the body panels and countertop in ${primaryColor} while keeping the wheels bright white.`)
+      instructions.push(`Paint the main cart body in ${primaryColor}.`)
+    }
+    instructions.push(`Add ${secondaryColor} accents on trim, moulding, and decorative elements.`)
+
+    // Roof/canopy instructions
+    if (cartType === "classic" || cartType === "ice-cream") {
+      if (roofDecor === "stripe-cloth" || roofDecor === "stripe-vinyl") {
+        instructions.push(`Add a striped canopy with alternating ${roofColor} and ${secondaryColor} stripes.`)
+      } else if (roofDecor !== "plain") {
+        instructions.push(`Add a decorative canopy in ${roofColor} with ${secondaryColor} accents.`)
+      }
     } else {
-      stylingInstructions.push("Keep the cart body bright white and pristine while leaving the wheel color untouched.")
+      // Mobile cart
+      if (roofDecor === "striped-roof") {
+        instructions.push(`Add a modern striped canopy with ${roofColor} and ${secondaryColor} stripes.`)
+      } else if (roofDecor === "custom") {
+        instructions.push(`Add a custom-designed canopy featuring ${roofColor} and ${secondaryColor}.`)
+      }
     }
 
-    stylingInstructions.push(`Add ${accentColor} accents to trim moulding, canopy posts, and vertical supports — keep wheels pure white.`)
-    stylingInstructions.push("Keep the left side shelf fully attached with its original outline, ready for staging items.")
-    stylingInstructions.push("IMPORTANT: Preserve cart body proportions exactly - only add paint, decor, and staging items without changing structure size.")
-
-    const decorInstructions: string[] = []
+    // Design/decoration instructions
     if (design === "floral") {
-      decorInstructions.push(`Add lush ${accentColor} floral garlands along the roof edge and cascading arrangements on the front corners.`)
+      instructions.push(`Decorate with lush floral arrangements in ${secondaryColor} tones along the edges.`)
     } else if (design === "custom") {
-      decorInstructions.push("Add a centered framed branding panel ready for custom artwork.")
+      instructions.push("Include a centered branding panel area for custom artwork.")
     }
 
-    if (logo) {
-      decorInstructions.push("CRITICAL: Apply a custom business logo as a professional vinyl decal on the center front panel - it must look like high-quality printed graphics permanently adhered to the cart body, matching the surface contours perfectly.")
-    }
-
+    // Catering items
     if (cateringItems && cateringItems.length > 0) {
-      const cateringLabels: string[] = []
-      if (cateringItems.includes("charcuterie")) {
-        cateringLabels.push("artfully arranged charcuterie boards")
-      }
-      if (cateringItems.includes("dessert")) {
-        cateringLabels.push("tiered dessert stands with macarons and cupcakes")
-      }
-      if (cateringItems.includes("beverage")) {
-        cateringLabels.push("beverage dispensers with matching glassware")
-      }
-      if (cateringItems.includes("custom-catering")) {
-        cateringLabels.push("bespoke gourmet platters")
-      }
+      const items: string[] = []
+      if (cateringItems.includes("charcuterie")) items.push("charcuterie boards")
+      if (cateringItems.includes("flower")) items.push("flower arrangements")
+      if (cateringItems.includes("donut")) items.push("tiered donut displays")
+      if (cateringItems.includes("fruit")) items.push("fresh fruit platters")
+      if (cateringItems.includes("popcorn")) items.push("popcorn containers")
+      if (cateringItems.includes("candy")) items.push("candy jars")
+      if (cateringItems.includes("crepe")) items.push("crepe station setup")
+      if (cateringItems.includes("juice")) items.push("juice dispensers")
 
-      if (cateringLabels.length > 0) {
-        decorInstructions.push(`Stage ${cateringLabels.join(", ")} across the counter and shelves with abundant detail.`)
-      }
-    } else {
-      decorInstructions.push("Style the shelves with elegant serving props, linens, and decorative jars for a premium feel.")
-    }
-
-    const stagingInstructions: string[] = [
-      "Set the cart inside an upscale indoor wedding or event space with soft ambient lighting and subtle guests in the background.",
-      "Maintain the exact camera angle and cart scale from the reference photo - only enhance styling, never resize the cart.",
-    ]
-
-    const rebuildInstructions = () => [
-      ...structuralInstructions,
-      ...stylingInstructions,
-      ...decorInstructions,
-      ...stagingInstructions,
-    ]
-
-    const header = "IMPORTANT: Modify this image; do not return the original photo."
-    const priorityLine = "Keep the cart structure, then apply these styling upgrades:";
-    const footer = "Render as bright wedding/event photography with obvious, vibrant edits.";
-    const MAX_PROMPT_LENGTH = 900
-
-    const buildPrompt = (steps: string[]) => {
-      const body = steps.map((line, index) => `${index + 1}. ${line}`).join("\n")
-      return `${header}\n${priorityLine}\n${body}\n${footer}`.trim()
-    }
-
-    let promptSteps = rebuildInstructions()
-    if (promptSteps.length === 0) {
-      promptSteps = ["Decorate the cart with upscale event props for a luxury service."]
-    }
-
-    let prompt = buildPrompt(promptSteps)
-
-    while (prompt.length > MAX_PROMPT_LENGTH) {
-      let removedStep: string | undefined
-      if (stagingInstructions.length > 0) {
-        removedStep = stagingInstructions.pop()
-      } else if (decorInstructions.length > 0) {
-        removedStep = decorInstructions.pop()
-      } else if (stylingInstructions.length > structuralInstructions.length) {
-        removedStep = stylingInstructions.pop()
-      } else {
-        break
-      }
-
-      if (removedStep) {
-        log("Removed prompt step to meet length limit:", removedStep)
-      }
-
-      promptSteps = rebuildInstructions()
-      prompt = buildPrompt(promptSteps)
-    }
-
-    if (prompt.length > 1000) {
-      log("Prompt still above hard limit; truncating tail.")
-      prompt = `${prompt.slice(0, 995)}...`
-    }
-
-    log(`Prompt length: ${prompt.length}`)
-
-    log("EDIT PROMPT:", prompt)
-
-    // Use DALL-E 2 for image editing (DALL-E 3 doesn't support editing)
-    // CRITICAL: Include mask parameter to force edits to apply
-    const response = await openai.images.edit({
-      model: "dall-e-2",
-      image: imageFile as any,
-      mask: maskFile as any, // Fully transparent mask makes entire image editable
-      prompt,
-      n: 1,
-      size: "1024x1024",
-    })
-
-    if (!response?.data || response.data.length === 0) {
-      logError("OpenAI edit response had no data", response)
-      throw new Error("OpenAI returned an empty response payload")
-    }
-
-    const editedResult = response.data[0]
-    const resultKeys = Object.keys(editedResult || {})
-    log("OpenAI edit response keys:", resultKeys)
-
-    let imageUrl = editedResult?.url ?? null
-    const base64Image = editedResult?.b64_json ?? null
-
-    let finalImageBuffer: Buffer | null = null
-
-    if (base64Image) {
-      finalImageBuffer = Buffer.from(base64Image, "base64")
-    } else if (imageUrl) {
-      try {
-        const imageResponse = await fetch(imageUrl)
-        const arrayBuffer = await imageResponse.arrayBuffer()
-        finalImageBuffer = Buffer.from(arrayBuffer)
-      } catch (fetchError) {
-        logError("Failed to fetch image from URL", fetchError)
+      if (items.length > 0) {
+        instructions.push(`Display ${items.join(", ")} on the cart shelves and counter.`)
       }
     }
 
-    if (!finalImageBuffer) {
-      logError("OpenAI edit response missing usable image data", editedResult)
-      throw new Error("No image content returned from OpenAI")
+    instructions.push("Maintain the original cart structure, wheels, and proportions.")
+    instructions.push("Render as bright, upscale event photography with professional lighting.")
+    instructions.push("Make colors vivid and vibrant for a premium look.")
+
+    const prompt = instructions.join(" ")
+
+    log(`Prompt (${prompt.length} chars):`, prompt)
+
+    // Call Google Generative AI API with Gemini 3 Pro Image model
+    const response = await fetch(
+      "https://generativelanguage.googleapis.com/v1beta/models/gemini-3-pro-image-preview:generateContent",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-goog-api-key": apiKey,
+        },
+        body: JSON.stringify({
+          contents: [
+            {
+              parts: [
+                {
+                  text: prompt,
+                },
+                {
+                  inlineData: {
+                    mimeType: imageMediaType,
+                    data: base64Image,
+                  },
+                },
+              ],
+            },
+          ],
+          generationConfig: {
+            temperature: 0.4,
+            candidateCount: 1,
+          },
+        }),
+      }
+    )
+
+    const data = await response.json()
+
+    log("Google API Response status:", response.status)
+    log("Response keys:", data ? Object.keys(data) : "null")
+    if (data.candidates) {
+      log("Number of candidates:", data.candidates.length)
+      log("First candidate keys:", data.candidates[0] ? Object.keys(data.candidates[0]) : "none")
     }
 
-    // Logo is now generated directly by AI into the image, no post-processing overlay needed
-    log("✓ AI will generate logo directly on cart surface")
+    if (!response.ok) {
+      logError("Google API Error Response:", JSON.stringify(data, null, 2))
+      
+      // Provide more specific error messages
+      let errorMessage = "Failed to generate cart image"
+      if (data.error?.message) {
+        errorMessage = data.error.message
+      } else if (data.error?.status === "PERMISSION_DENIED") {
+        errorMessage = "API key does not have permission to access Gemini 3 Pro Image"
+      } else if (data.error?.status === "INVALID_ARGUMENT") {
+        errorMessage = "Invalid request format or parameters"
+      }
+      
+      return NextResponse.json(
+        {
+          success: false,
+          error: errorMessage,
+          details: isDev ? data : undefined,
+        },
+        { status: response.status }
+      )
+    }
 
-    const finalImageBase64 = finalImageBuffer.toString("base64")
-    imageUrl = `data:image/png;base64,${finalImageBase64}`
+    // Extract generated image from response
+    let generatedImageUrl: string | null = null
 
-    log("✓ AI Edit Complete! Returning image result")
+    // Look for image data in the response
+    if (data.candidates?.[0]?.content?.parts) {
+      log("Processing", data.candidates[0].content.parts.length, "parts in response")
+      
+      for (const part of data.candidates[0].content.parts) {
+        log("Part keys:", Object.keys(part))
+        
+        // Check for inline image data
+        if (part.inlineData) {
+          generatedImageUrl = `data:${part.inlineData.mimeType};base64,${part.inlineData.data}`
+          log("✓ Extracted base64 image data from response")
+          break
+        }
+        // Check for file data
+        if (part.fileData?.fileUri) {
+          generatedImageUrl = part.fileData.fileUri
+          log("✓ Extracted file URI from response:", generatedImageUrl)
+          break
+        }
+        // Check for text that might contain URL
+        if (part.text && !generatedImageUrl) {
+          const urlMatch = part.text.match(/https?:\/\/[^\s]+/)
+          if (urlMatch) {
+            generatedImageUrl = urlMatch[0]
+            log("✓ Extracted URL from text:", generatedImageUrl)
+            break
+          }
+        }
+      }
+    }
+
+    if (!generatedImageUrl) {
+      logError("No image found in Google API response")
+      logError("Full response structure:", JSON.stringify(data, null, 2))
+      logError("Full response:", JSON.stringify(data, null, 2))
+      return NextResponse.json(
+        {
+          success: false,
+          error: "No image generated in response. The AI model may not support image generation with this prompt.",
+          details: data,
+        },
+        { status: 500 }
+      )
+    }
+
+    log("✓ AI Generation Complete! Returning image result")
 
     return NextResponse.json({
       success: true,
-      imageUrl: imageUrl,
+      imageUrl: generatedImageUrl,
       prompt: prompt,
     })
   } catch (error: any) {
-    logError("Error editing cart image:", error)
-
-    // Enhanced error logging
-    if (error.status === 401) {
-      logError("Authentication failed. API key is invalid or expired.")
-    }
-
+    logError("Error in generate-cart:", error)
     return NextResponse.json(
       {
         success: false,
-        error: error.message || "Failed to edit cart image",
-        details: error.status ? `Status: ${error.status}` : undefined,
+        error: error.message || "Failed to generate cart image",
+        details: error.toString(),
       },
-      { status: error.status || 500 }
+      { status: 500 }
     )
   }
 }

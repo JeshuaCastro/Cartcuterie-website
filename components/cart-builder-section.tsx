@@ -1498,6 +1498,7 @@ export function CartBuilderSection() {
                           updateCartData({
                             cartType: selectedCartType,
                             cartTop: selectedCartTop,
+                            roofDecor: selectedRoofDecor,
                             design: selectedDesign,
                             catering: selectedCatering,
                             logo: uploadedLogo,
@@ -1548,7 +1549,7 @@ export function CartBuilderSection() {
                         </div>
                         
                         <Image
-                          src={cartData.aiGeneratedImage}
+                          src={cartData.aiGeneratedImage || "/placeholder.svg"}
                           alt="AI Generated Cart"
                           fill
                           className="object-cover"

@@ -90,6 +90,15 @@ export function CartBuilderProvider({ children }: { children: ReactNode }) {
   const generateAICart = async (): Promise<string | null> => {
     setIsGenerating(true)
     try {
+      console.log("Sending cart data to AI:", {
+        cartType: cartData.cartType,
+        cartTop: cartData.cartTop,
+        roofDecor: cartData.roofDecor,
+        design: cartData.design,
+        colors: cartData.colors,
+        catering: cartData.catering,
+      })
+
       const response = await fetch("/api/generate-cart", {
         method: "POST",
         headers: {
@@ -107,14 +116,19 @@ export function CartBuilderProvider({ children }: { children: ReactNode }) {
       })
 
       const data = await response.json()
+      console.log("AI generation response:", data)
 
       if (data.success && data.imageUrl) {
         updateCartData({ aiGeneratedImage: data.imageUrl })
         return data.imageUrl
       } else {
+        console.error("AI generation failed:", data.error, data.details)
+        alert(`AI generation failed: ${data.error || "Unknown error"}`)
         return null
       }
     } catch (error) {
+      console.error("AI generation error:", error)
+      alert(`Network error: ${error instanceof Error ? error.message : "Unknown error"}`)
       return null
     } finally {
       setIsGenerating(false)
