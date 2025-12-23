@@ -21,7 +21,7 @@ export function DimensionsSection() {
     {
       title: "Ice Cream Cart",
       description: "Premium freezer cart for frozen delights",
-      image: "/images/ice-cream-dimensions.jpg",
+      image: "/images/ice-cream-dimensions.JPEG",
     },
   ]
 
