@@ -142,11 +142,12 @@ export async function POST(req: NextRequest) {
     // Design/decoration instructions
     if (design === "floral") {
       instructions.push(
-        `Add elegant floral arrangements featuring white roses, cream hydrangeas, and delicate greenery. ` +
-        `Place flowers ONLY along the top edge and corners of the cart, creating a subtle accent. ` +
-        `DO NOT cover the cart body or sides with flowers. ` +
-        `Keep the cart structure and body clearly visible and clean. ` +
-        `The flowers should frame the cart, not overwhelm it.`
+        `Add MINIMAL floral arrangements as a delicate accent ONLY. ` +
+        `Place small clusters of white roses and greenery ONLY at the top corners of the cart canopy. ` +
+        `Use no more than 3-4 small flower clusters total. ` +
+        `DO NOT place flowers on the cart body, sides, shelves, or front. ` +
+        `Keep 95% of the cart completely clean and visible. ` +
+        `The cart structure must remain the focal point, not the flowers.`
       )
     } else if (design === "custom") {
       instructions.push("Include a centered branding panel area for custom artwork.")
@@ -171,7 +172,11 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    instructions.push("Maintain the original cart structure, wheels, and proportions.")
+    instructions.push("CRITICAL: Do NOT modify, alter, hollow out, or change the cart body structure in any way.")
+    instructions.push("CRITICAL: Do NOT make the cart transparent or see-through.")
+    instructions.push("CRITICAL: The cart body, shelves, wheels, and frame must remain completely solid and intact.")
+    instructions.push("ONLY apply color changes to the cart paint - structure must be preserved exactly.")
+    instructions.push("Maintain the original cart structure, wheels, and proportions perfectly.")
     instructions.push("Render as bright, upscale event photography with professional lighting.")
     instructions.push("Make colors vivid and vibrant for a premium look.")
 

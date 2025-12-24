@@ -823,7 +823,7 @@ export function CartBuilderSection() {
                               src={design.image || "/placeholder.svg"}
                               alt={design.name}
                               fill
-                              className={design.id === "floral" ? "object-contain scale-75" : "object-cover scale-75"}
+                              className={design.id === "floral" ? "object-contain" : "object-cover"}
                               loading="lazy"
                               sizes="(max-width: 768px) 80vw, 40vw"
                             />
@@ -869,7 +869,7 @@ export function CartBuilderSection() {
                               src={design.image || "/placeholder.svg"}
                               alt={design.name}
                               fill
-                              className={design.id === "floral" ? "object-contain scale-75" : "object-cover scale-75"}
+                              className={design.id === "floral" ? "object-contain" : "object-cover"}
                               loading="lazy"
                               sizes="(max-width: 768px) 80vw, 40vw"
                             />
@@ -916,7 +916,7 @@ export function CartBuilderSection() {
                               src={design.image || "/placeholder.svg"}
                               alt={design.name}
                               fill
-                              className={design.id === "floral" ? "object-contain scale-75" : "object-cover scale-75"}
+                              className={design.id === "floral" ? "object-contain" : "object-cover"}
                               loading="lazy"
                               sizes="(max-width: 768px) 80vw, 40vw"
                             />
