@@ -99,6 +99,11 @@ const designStyles = [
     name: "Custom",
     image: "/images/Popcorn-cart.jpg",
   },
+  {
+    id: "none",
+    name: "No Design",
+    image: "/images/mate-juice-cart.jpg",
+  },
 ]
 
 const cateringOptions = [
@@ -123,7 +128,7 @@ export function CartBuilderSection() {
   const [selectedCatering, setSelectedCatering] = useState<string[]>(cartData.catering || [])
   const [uploadedLogo, setUploadedLogo] = useState<string | null>(cartData.logo || null)
   const [primaryColor, setPrimaryColor] = useState(cartData.colors?.primary || "#FFFFFF")
-  const [secondaryColor, setSecondaryColor] = useState(cartData.colors?.secondary || "#FFD700")
+  const [secondaryColor, setSecondaryColor] = useState(cartData.colors?.secondary || "#FFFFFF")
   const [roofColor, setRoofColor] = useState(cartData.colors?.roofColor || "#FFFFFF")
   const [touchStart, setTouchStart] = useState(0)
   const [touchEnd, setTouchEnd] = useState(0)
@@ -158,14 +163,14 @@ export function CartBuilderSection() {
     return () => window.removeEventListener("keydown", handleKeyDown)
   }, [step])
 
-  // Scroll to section when step changes
-  useEffect(() => {
-    if (sectionRef.current) {
-      setTimeout(() => {
-        sectionRef.current?.scrollIntoView({ behavior: "smooth", block: "center" })
-      }, 100)
-    }
-  }, [step])
+  // Scroll to section when step changes - DISABLED to prevent auto-scroll
+  // useEffect(() => {
+  //   if (sectionRef.current) {
+  //     setTimeout(() => {
+  //       sectionRef.current?.scrollIntoView({ behavior: "smooth", block: "center" })
+  //     }, 100)
+  //   }
+  // }, [step])
 
   const handleCateringToggle = (id: string) => {
     setSelectedCatering((prev) => (prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]))
@@ -253,6 +258,7 @@ export function CartBuilderSection() {
         })
         nextStep = 4 // Go to logo
       } else if (step === 4) {
+        // Logo step is optional - can skip without uploading
         updateCartData({ logo: uploadedLogo })
         nextStep = 5 // Go to review
       } else if (step === 5) {
@@ -355,7 +361,7 @@ export function CartBuilderSection() {
     // Step 5: Add Catering (Classic only) OR Logo (Mobile)
     else if (step === 5) {
       if (isMobileCart) {
-        // Mobile: step 5 is logo
+        // Mobile: step 5 is logo (optional - can skip)
         updateCartData({ logo: uploadedLogo })
         nextStep = 6 // Goes to review
       } else {
@@ -795,7 +801,7 @@ export function CartBuilderSection() {
                     <h3 className="text-2xl md:text-3xl font-bold text-foreground text-center">
                       Choose Your Design Style
                     </h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
                       {designStyles.map((design) => (
                         <button
                           key={design.id}
@@ -817,7 +823,7 @@ export function CartBuilderSection() {
                               src={design.image || "/placeholder.svg"}
                               alt={design.name}
                               fill
-                              className="object-cover"
+                              className={design.id === "floral" ? "object-contain scale-75" : "object-cover scale-75"}
                               loading="lazy"
                               sizes="(max-width: 768px) 80vw, 40vw"
                             />
@@ -841,7 +847,7 @@ export function CartBuilderSection() {
                     <h3 className="text-2xl md:text-3xl font-bold text-foreground text-center">
                       Choose Your Design Style
                     </h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
                       {designStyles.map((design) => (
                         <button
                           key={design.id}
@@ -863,7 +869,7 @@ export function CartBuilderSection() {
                               src={design.image || "/placeholder.svg"}
                               alt={design.name}
                               fill
-                              className="object-cover"
+                              className={design.id === "floral" ? "object-contain scale-75" : "object-cover scale-75"}
                               loading="lazy"
                               sizes="(max-width: 768px) 80vw, 40vw"
                             />
@@ -888,7 +894,7 @@ export function CartBuilderSection() {
                     <h3 className="text-2xl md:text-3xl font-bold text-foreground text-center">
                       Choose Your Design Style
                     </h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
                       {designStyles.map((design) => (
                         <button
                           key={design.id}
@@ -910,7 +916,7 @@ export function CartBuilderSection() {
                               src={design.image || "/placeholder.svg"}
                               alt={design.name}
                               fill
-                              className="object-cover"
+                              className={design.id === "floral" ? "object-contain scale-75" : "object-cover scale-75"}
                               loading="lazy"
                               sizes="(max-width: 768px) 80vw, 40vw"
                             />

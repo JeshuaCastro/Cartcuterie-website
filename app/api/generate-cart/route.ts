@@ -109,33 +109,49 @@ export async function POST(req: NextRequest) {
       "Generate a professional product photo of this catering cart with the following customizations:",
     ]
 
-    // Color instructions
-    if (primaryColor !== "#FFFFFF") {
-      instructions.push(`Paint the main cart body in ${primaryColor}.`)
-    }
-    instructions.push(`Add ${secondaryColor} accents on trim, moulding, and decorative elements.`)
+    // Skip all color customizations if plain roof is selected
+    const isPlainRoof = roofDecor === "plain"
 
-    // Roof/canopy instructions
-    if (cartType === "classic" || cartType === "ice-cream") {
-      if (roofDecor === "stripe-cloth" || roofDecor === "stripe-vinyl") {
-        instructions.push(`Add a striped canopy with alternating ${roofColor} and ${secondaryColor} stripes.`)
-      } else if (roofDecor !== "plain") {
-        instructions.push(`Add a decorative canopy in ${roofColor} with ${secondaryColor} accents.`)
+    if (!isPlainRoof) {
+      // Color instructions
+      if (primaryColor !== "#FFFFFF") {
+        instructions.push(`Paint the main cart body in ${primaryColor}.`)
+      }
+      instructions.push(`Add ${secondaryColor} accents on trim, moulding, and decorative elements.`)
+
+      // Roof/canopy instructions
+      if (cartType === "classic" || cartType === "ice-cream") {
+        if (roofDecor === "stripe-cloth" || roofDecor === "stripe-vinyl") {
+          instructions.push(`Add a striped canopy with alternating ${roofColor} and ${secondaryColor} stripes.`)
+        } else if (roofDecor !== "plain") {
+          instructions.push(`Add a decorative canopy in ${roofColor} with ${secondaryColor} accents.`)
+        }
+      } else {
+        // Mobile cart
+        if (roofDecor === "striped-roof") {
+          instructions.push(`Add a modern striped canopy with ${roofColor} and ${secondaryColor} stripes.`)
+        } else if (roofDecor === "custom") {
+          instructions.push(`Add a custom-designed canopy featuring ${roofColor} and ${secondaryColor}.`)
+        }
       }
     } else {
-      // Mobile cart
-      if (roofDecor === "striped-roof") {
-        instructions.push(`Add a modern striped canopy with ${roofColor} and ${secondaryColor} stripes.`)
-      } else if (roofDecor === "custom") {
-        instructions.push(`Add a custom-designed canopy featuring ${roofColor} and ${secondaryColor}.`)
-      }
+      // Plain roof selected - keep cart in its natural state
+      instructions.push("Keep the cart in its clean, natural finish without color customization.")
     }
 
     // Design/decoration instructions
     if (design === "floral") {
-      instructions.push(`Decorate with lush floral arrangements in ${secondaryColor} tones along the edges.`)
+      instructions.push(
+        `Add elegant floral arrangements featuring white roses, cream hydrangeas, and delicate greenery. ` +
+        `Place flowers ONLY along the top edge and corners of the cart, creating a subtle accent. ` +
+        `DO NOT cover the cart body or sides with flowers. ` +
+        `Keep the cart structure and body clearly visible and clean. ` +
+        `The flowers should frame the cart, not overwhelm it.`
+      )
     } else if (design === "custom") {
       instructions.push("Include a centered branding panel area for custom artwork.")
+    } else if (design === "none") {
+      instructions.push("Keep the cart clean and minimal with no additional decorative elements.")
     }
 
     // Catering items
