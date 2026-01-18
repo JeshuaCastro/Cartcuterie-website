@@ -81,12 +81,29 @@ export function BaliCartBuilderSection() {
 
   const totalSteps = 5 // cart, wording, colors, catering, review
 
+  const scrollToBuilder = () => {
+    const builder = document.getElementById("cart-builder")
+    if (builder) {
+      const yOffset = -100 // Offset for navbar
+      const y = builder.getBoundingClientRect().top + window.pageYOffset + yOffset
+      window.scrollTo({ top: y, behavior: "smooth" })
+    }
+  }
+
   const handleNext = () => {
-    if (step < totalSteps) setStep(step + 1)
+    if (step < totalSteps) {
+      setStep(step + 1)
+      // Scroll to top of cart builder on mobile
+      setTimeout(() => scrollToBuilder(), 100)
+    }
   }
 
   const handlePrevious = () => {
-    if (step > 1) setStep(step - 1)
+    if (step > 1) {
+      setStep(step - 1)
+      // Scroll to top of cart builder on mobile
+      setTimeout(() => scrollToBuilder(), 100)
+    }
   }
 
   const handleCartTypeSelect = (typeId: string) => {
@@ -515,7 +532,7 @@ export function BaliCartBuilderSection() {
                               {cartData.cartType || "Not selected"}
                             </p>
                           </div>
-                          <Button variant="ghost" size="sm" onClick={() => setStep(1)} className="h-8 text-xs">
+                          <Button variant="ghost" size="sm" onClick={() => { setStep(1); setTimeout(() => scrollToBuilder(), 100) }} className="h-8 text-xs">
                             Edit
                           </Button>
                         </div>
@@ -534,7 +551,7 @@ export function BaliCartBuilderSection() {
                                 <p className="text-sm md:text-lg text-amber-900 italic">No custom wording</p>
                               )}
                             </div>
-                            <Button variant="ghost" size="sm" onClick={() => setStep(2)} className="h-8 text-xs">
+                            <Button variant="ghost" size="sm" onClick={() => { setStep(2); setTimeout(() => scrollToBuilder(), 100) }} className="h-8 text-xs">
                               Edit
                             </Button>
                           </div>
@@ -559,7 +576,7 @@ export function BaliCartBuilderSection() {
                                 />
                               </div>
                             </div>
-                            <Button variant="ghost" size="sm" onClick={() => setStep(3)} className="h-8 text-xs">
+                            <Button variant="ghost" size="sm" onClick={() => { setStep(3); setTimeout(() => scrollToBuilder(), 100) }} className="h-8 text-xs">
                               Edit
                             </Button>
                           </div>
@@ -597,7 +614,7 @@ export function BaliCartBuilderSection() {
                                 <p className="text-lg text-amber-900">No</p>
                               )}
                             </div>
-                            <Button variant="ghost" size="sm" onClick={() => setStep(4)}>
+                            <Button variant="ghost" size="sm" onClick={() => { setStep(4); setTimeout(() => scrollToBuilder(), 100) }} className="h-8 text-xs">
                               Edit
                             </Button>
                           </div>
