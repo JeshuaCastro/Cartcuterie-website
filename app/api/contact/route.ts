@@ -6,7 +6,7 @@ const resend = new Resend(process.env.RESEND_API_KEY)
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json()
-    const { name, email, phone, eventType, eventDate, eventTime, location, message } = body
+    const { name, email, phone, eventType, eventDate, eventTime, location, message, siteLocation } = body
 
     // Validate required fields
     if (!name || !email || !eventType) {
@@ -29,11 +29,11 @@ export async function POST(req: NextRequest) {
     const businessEmail = await resend.emails.send({
       from: "Cartcuterie <noreply@cartcuterie.com>",
       to: "cartcuteriela@gmail.com",
-      subject: `New Cart Inquiry from ${name}`,
+      subject: `New Cart Inquiry from ${name}${siteLocation === 'bali' ? ' (BALI)' : ''}`,
       html: `
         <html>
           <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
-            <h2 style="color: #2c3e50;">New Cart Inquiry Submission</h2>
+            <h2 style="color: #2c3e50;">New Cart Inquiry Submission${siteLocation === 'bali' ? ' - 🌴 BALI LOCATION' : ''}</h2>
             <div style="background-color: #f5f5f5; padding: 20px; border-radius: 5px; margin: 20px 0;">
               <p><strong>Name:</strong> ${name}</p>
               <p><strong>Email:</strong> <a href="mailto:${email}">${email}</a></p>
@@ -42,6 +42,7 @@ export async function POST(req: NextRequest) {
               <p><strong>Event Date:</strong> ${eventDate || "Not provided"}</p>
               <p><strong>Event Time:</strong> ${eventTime || "Not provided"}</p>
               <p><strong>Location:</strong> ${location || "Not provided"}</p>
+              ${siteLocation === 'bali' ? '<p><strong>Site:</strong> <span style="color: #d97706; font-weight: bold;">BALI</span></p>' : ''}
             </div>
             <h3>Message:</h3>
             <p>${message || "No message provided"}</p>

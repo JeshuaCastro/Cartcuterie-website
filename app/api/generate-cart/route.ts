@@ -22,7 +22,7 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json()
-    const { cartType, cartTop, roofDecor, design, colors, logo, cateringItems } = body
+    const { cartType, cartTop, roofDecor, design, colors, logo, cateringItems, baseImage, location } = body
 
     log("=== AI CART GENERATION REQUEST (Gemini 3 Pro Image) ===")
     log("Cart Type:", cartType)
@@ -32,6 +32,8 @@ export async function POST(req: NextRequest) {
     log("Colors:", colors)
     log("Logo:", logo ? "Yes" : "No")
     log("Catering:", cateringItems)
+    log("Base Image:", baseImage)
+    log("Location:", location)
     log("=======================================================")
 
     // Validate cartType
@@ -50,19 +52,28 @@ export async function POST(req: NextRequest) {
     let baseImagePath: string
     let imageFileName: string
     
-    if (cartType === "classic") {
+    // If baseImage is provided (from Bali site), use it directly
+    if (baseImage) {
+      // Remove leading slash and 'images/' if present
+      imageFileName = baseImage.replace(/^\/?(images\/)?/, '')
+      baseImagePath = path.join(process.cwd(), "public", "images", imageFileName)
+      log("Using provided base image:", imageFileName)
+    } else if (cartType === "classic") {
       imageFileName = "Classic-cart-ai-base.jpg"
+      baseImagePath = path.join(process.cwd(), "public", "images", imageFileName)
     } else if (cartType === "ice-cream") {
       imageFileName = "ice-cream-cart.jpg"
+      baseImagePath = path.join(process.cwd(), "public", "images", imageFileName)
     } else if (cartType === "mobile") {
       imageFileName = "yellow-mobile-cart.jpg"
+      baseImagePath = path.join(process.cwd(), "public", "images", imageFileName)
     } else {
       // Default to mobile if unknown type
       logError(`Unknown cart type: ${cartType}, defaulting to mobile`)
       imageFileName = "yellow-mobile-cart.jpg"
+      baseImagePath = path.join(process.cwd(), "public", "images", imageFileName)
     }
 
-    baseImagePath = path.join(process.cwd(), "public", "images", imageFileName)
     log("Selected base image path:", baseImagePath)
 
     // Check if base image exists
@@ -158,17 +169,23 @@ export async function POST(req: NextRequest) {
     // Catering items
     if (cateringItems && cateringItems.length > 0) {
       const items: string[] = []
-      if (cateringItems.includes("charcuterie")) items.push("charcuterie boards")
-      if (cateringItems.includes("flower")) items.push("flower arrangements")
+      
+      // US site catering items
+      if (cateringItems.includes("charcuterie")) items.push("charcuterie boards with artisan meats and cheeses")
+      if (cateringItems.includes("flower")) items.push("beautiful tropical flower arrangements")
       if (cateringItems.includes("donut")) items.push("tiered donut displays")
-      if (cateringItems.includes("fruit")) items.push("fresh fruit platters")
+      if (cateringItems.includes("fruit")) items.push("fresh tropical fruit platters and displays")
       if (cateringItems.includes("popcorn")) items.push("popcorn containers")
       if (cateringItems.includes("candy")) items.push("candy jars")
       if (cateringItems.includes("crepe")) items.push("crepe station setup")
-      if (cateringItems.includes("juice")) items.push("juice dispensers")
+      if (cateringItems.includes("juice")) items.push("fresh-pressed tropical juice dispensers and drinks")
+      
+      // Bali site specific catering items
+      if (cateringItems.includes("coconut")) items.push("fresh whole coconuts with straws for drinking")
+      if (cateringItems.includes("matcha")) items.push("matcha tea service with traditional matcha drinks")
 
       if (items.length > 0) {
-        instructions.push(`Display ${items.join(", ")} on the cart shelves and counter.`)
+        instructions.push(`Display ${items.join(", ")} elegantly arranged on the cart shelves and counter.`)
       }
     }
 

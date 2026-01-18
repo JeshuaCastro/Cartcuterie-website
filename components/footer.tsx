@@ -1,5 +1,6 @@
 import { Instagram, Facebook, Mail } from "lucide-react"
 import Image from "next/image"
+import Link from "next/link"
 
 const footerLinks = [
   { name: "Home", href: "#hero" },
@@ -7,6 +8,15 @@ const footerLinks = [
   { name: "Pricing", href: "#pricing" },
   { name: "Build Your Cart", href: "#cart-builder" },
   { name: "Contact", href: "#contact" },
+]
+
+const legalLinks = [
+  { name: "Privacy Policy", href: "/privacy-policy" },
+  { name: "Terms & Conditions", href: "/terms-conditions" },
+  { name: "Cookie Policy", href: "/cookie-policy" },
+  { name: "Refund Policy", href: "/refund-policy" },
+  { name: "Accessibility", href: "/accessibility" },
+  { name: "Disclaimers", href: "/disclaimers" },
 ]
 
 const instagramImages = [
@@ -20,7 +30,7 @@ export function Footer() {
   return (
     <footer className="bg-foreground text-background py-16">
       <div className="container mx-auto px-4">
-        <div className="grid md:grid-cols-3 gap-12 mb-12">
+        <div className="grid md:grid-cols-4 gap-12 mb-12">
           <div className="space-y-4">
             <div className="relative h-16 w-48 mb-4">
               <Image
@@ -71,6 +81,20 @@ export function Footer() {
                   <a href={link.href} className="text-background/80 hover:text-accent transition-colors duration-300">
                     {link.name}
                   </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Legal Links */}
+          <div>
+            <h4 className="text-xl font-bold mb-4">Legal</h4>
+            <ul className="space-y-2">
+              {legalLinks.map((link) => (
+                <li key={link.name}>
+                  <Link href={link.href} className="text-background/80 hover:text-accent transition-colors duration-300">
+                    {link.name}
+                  </Link>
                 </li>
               ))}
             </ul>

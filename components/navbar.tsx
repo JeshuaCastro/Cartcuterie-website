@@ -2,12 +2,16 @@
 
 import { useState, useEffect } from "react"
 import Image from "next/image"
+import Link from "next/link"
+import { usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Menu, X } from "lucide-react"
 
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const pathname = usePathname()
+  const isBaliSite = pathname?.startsWith("/bali")
 
   useEffect(() => {
     const handleScroll = () => {
@@ -26,11 +30,13 @@ export function Navbar() {
     { name: "Home", id: "hero" },
     { name: "How It Works", id: "how-it-works" },
     { name: "Build Cart", id: "cart-builder" },
-    { name: "Dimensions", id: "dimensions" },
+    { name: "Dimensions", id: "dimensions", hideOnBali: true },
     { name: "Gallery", id: "gallery" },
     { name: "Pricing", id: "pricing" },
     { name: "Contact", id: "contact" },
   ]
+
+  const visibleNavLinks = navLinks.filter(link => !(isBaliSite && link.hideOnBali))
 
   return (
     <nav
@@ -66,7 +72,7 @@ export function Navbar() {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-8">
-            {navLinks.map((link) => (
+            {visibleNavLinks.map((link) => (
               <button
                 key={link.id}
                 onClick={() => scrollToSection(link.id)}
@@ -77,6 +83,38 @@ export function Navbar() {
                 {link.name}
               </button>
             ))}
+            
+            {/* Bali Location Link */}
+            {!isBaliSite && (
+              <Link href="/bali">
+                <Button
+                  variant="outline"
+                  className={`text-sm font-medium transition-colors duration-300 border-2 ${
+                    isScrolled 
+                      ? "border-amber-600 text-amber-600 hover:bg-amber-600 hover:text-white" 
+                      : "border-amber-600 bg-amber-600 text-white hover:bg-white hover:text-amber-600 backdrop-blur-sm"
+                  }`}
+                >
+                  🌴 Bali
+                </Button>
+              </Link>
+            )}
+            
+            {isBaliSite && (
+              <Link href="/">
+                <Button
+                  variant="outline"
+                  className={`text-sm font-medium transition-colors duration-300 border-2 ${
+                    isScrolled 
+                      ? "border-foreground text-foreground hover:bg-foreground hover:text-background" 
+                      : "border-white bg-white/90 text-foreground hover:bg-white hover:text-foreground backdrop-blur-sm"
+                  }`}
+                >
+                  LA / USA
+                </Button>
+              </Link>
+            )}
+            
             <Button
               onClick={() => scrollToSection("contact")}
               className="bg-accent text-foreground hover:bg-accent/90 rounded-xl"
@@ -98,7 +136,7 @@ export function Navbar() {
         {isMobileMenuOpen && (
           <div className="md:hidden py-4 bg-background/95 backdrop-blur-md border-t border-border">
             <div className="flex flex-col gap-4">
-              {navLinks.map((link) => (
+              {visibleNavLinks.map((link) => (
                 <button
                   key={link.id}
                   onClick={() => scrollToSection(link.id)}
@@ -107,7 +145,28 @@ export function Navbar() {
                   {link.name}
                 </button>
               ))}
-              <div className="px-4">
+              <div className="px-4 space-y-2">
+                {/* Location Switch */}
+                {!isBaliSite ? (
+                  <Link href="/bali">
+                    <Button
+                      variant="outline"
+                      className="w-full border-2 border-amber-600 text-amber-600 hover:bg-amber-600 hover:text-white"
+                    >
+                      🌴 Switch to Bali
+                    </Button>
+                  </Link>
+                ) : (
+                  <Link href="/">
+                    <Button
+                      variant="outline"
+                      className="w-full border-2 border-foreground text-foreground hover:bg-foreground hover:text-background"
+                    >
+                      Switch to LA / USA
+                    </Button>
+                  </Link>
+                )}
+                
                 <Button
                   onClick={() => scrollToSection("contact")}
                   className="w-full bg-accent text-foreground hover:bg-accent/90 rounded-xl"

@@ -205,10 +205,27 @@ html {
   will-change: transform, opacity;
 }
 
+.animate-slide-up {
+  animation: slideUp 0.4s ease-out forwards;
+  will-change: transform, opacity;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
 /* Remove will-change after animation completes for better performance */
 .animate-fade-in-up,
 .animate-slide-in-right,
-.animate-slide-in-left {
+.animate-slide-in-left,
+.animate-slide-up {
   animation-fill-mode: both;
 }
 
@@ -216,7 +233,8 @@ html {
   .animate-fade-in-up,
   .animate-float,
   .animate-slide-in-right,
-  .animate-slide-in-left {
+  .animate-slide-in-left,
+  .animate-slide-up {
     animation: none;
     will-change: auto;
   }
