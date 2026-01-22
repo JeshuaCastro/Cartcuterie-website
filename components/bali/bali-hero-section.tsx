@@ -17,6 +17,7 @@ export function BaliHeroSection() {
           alt="Tropical cart on beach in Bali" 
           fill 
           className="object-cover"
+          style={{ objectPosition: 'center 30%' }}
           priority
         />
         

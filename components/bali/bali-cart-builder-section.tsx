@@ -203,9 +203,6 @@ export function BaliCartBuilderSection() {
                             alt={cart.name}
                             fill
                             className="object-contain md:object-cover"
-                            style={{
-                              objectPosition: cart.id === 'plain' ? 'center left' : 'center center'
-                            }}
                           />
                         </div>
                         <div className="p-4 md:p-6 space-y-1 md:space-y-2">
