@@ -106,10 +106,6 @@ export default function DisclaimersPage() {
               <p>
                 In any event, Cartcuterie's total liability shall not exceed the total amount paid by the client for the specific event in question.
               </p>
-              
-              <p className="text-sm italic mt-4">
-                Note: Clients are strongly encouraged to obtain their own event insurance to protect against unforeseen circumstances.
-              </p>
             </section>
 
             <section className="space-y-4">
@@ -142,7 +138,6 @@ export default function DisclaimersPage() {
                   <li>We operate rain or shine unless extreme conditions exist</li>
                   <li>Light rain does not constitute grounds for cancellation</li>
                   <li>Clients should have backup plans for outdoor events</li>
-                  <li>We recommend event insurance for weather-related concerns</li>
                   <li>We will provide covered alternatives when possible but cannot guarantee weather protection</li>
                 </ul>
               </div>
@@ -189,19 +184,7 @@ export default function DisclaimersPage() {
             </section>
 
             <section className="space-y-4">
-              <h2 className="text-2xl font-bold text-foreground">10. Alcohol Service (Where Applicable)</h2>
-              <p>If alcohol service is included:</p>
-              <ul className="list-disc pl-6 space-y-2">
-                <li>We will not serve minors or intoxicated individuals</li>
-                <li>Valid ID may be required</li>
-                <li>Client is responsible for obtaining necessary alcohol licenses/permits</li>
-                <li>We are not liable for guest behavior related to alcohol consumption</li>
-                <li>Service may be discontinued if guests become unruly</li>
-              </ul>
-            </section>
-
-            <section className="space-y-4">
-              <h2 className="text-2xl font-bold text-foreground">11. Intellectual Property</h2>
+              <h2 className="text-2xl font-bold text-foreground">10. Intellectual Property</h2>
               <ul className="list-disc pl-6 space-y-2">
                 <li>Custom cart designs remain Cartcuterie's intellectual property</li>
                 <li>Clients may not reproduce our unique cart designs commercially</li>
@@ -211,7 +194,7 @@ export default function DisclaimersPage() {
             </section>
 
             <section className="space-y-4">
-              <h2 className="text-2xl font-bold text-foreground">12. No Medical or Legal Advice</h2>
+              <h2 className="text-2xl font-bold text-foreground">11. No Medical or Legal Advice</h2>
               <p>
                 Cartcuterie does not provide medical, legal, or professional advice. Information provided is for general purposes only. Consult appropriate professionals for:
               </p>
@@ -219,12 +202,11 @@ export default function DisclaimersPage() {
                 <li>Dietary restrictions and allergies (consult a physician)</li>
                 <li>Event permits and licenses (consult legal counsel)</li>
                 <li>Food safety for compromised immune systems (consult healthcare provider)</li>
-                <li>Event insurance (consult insurance agent)</li>
               </ul>
             </section>
 
             <section className="space-y-4">
-              <h2 className="text-2xl font-bold text-foreground">13. Accuracy of Information</h2>
+              <h2 className="text-2xl font-bold text-foreground">12. Accuracy of Information</h2>
               <p>
                 While we strive for accuracy:
               </p>
@@ -238,23 +220,7 @@ export default function DisclaimersPage() {
             </section>
 
             <section className="space-y-4">
-              <h2 className="text-2xl font-bold text-foreground">14. Insurance Recommendation</h2>
-              <div className="bg-accent/10 p-6 rounded-lg">
-                <p className="font-semibold text-foreground mb-3">💡 Strongly Recommended</p>
-                <p>
-                  We highly recommend that clients purchase event cancellation and liability insurance to protect against:
-                </p>
-                <ul className="list-disc pl-6 space-y-2 mt-3">
-                  <li>Weather-related cancellations</li>
-                  <li>Illness or emergency cancellations</li>
-                  <li>Property damage or personal injury claims</li>
-                  <li>Vendor no-shows (general coverage, not specific to us)</li>
-                </ul>
-              </div>
-            </section>
-
-            <section className="space-y-4">
-              <h2 className="text-2xl font-bold text-foreground">15. Contact for Questions</h2>
+              <h2 className="text-2xl font-bold text-foreground">13. Contact for Questions</h2>
               <p>
                 If you have questions about these disclaimers or need clarification:
               </p>

@@ -216,59 +216,9 @@ export function ContactSection() {
           </div>
         )}
 
-        <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-8 md:gap-12">
-          {/* Left Side - Info */}
-          <div className="space-y-8">
-            <div>
-              <h3 className="text-2xl font-bold text-foreground mb-4">Get in Touch</h3>
-              <p className="text-muted-foreground leading-relaxed">
-                Whether you're planning an intimate gathering or a grand celebration, we're here to bring your vision to
-                life with our luxury mobile carts.
-              </p>
-            </div>
-
-            <div className="space-y-6">
-              <div className="flex items-start gap-4">
-                <div className="w-12 h-12 rounded-full bg-accent/20 flex items-center justify-center flex-shrink-0">
-                  <Phone className="h-5 w-5 text-accent" />
-                </div>
-                <div>
-                  <p className="font-bold text-foreground mb-1">Phone</p>
-                  <a href="tel:8185726316" className="text-muted-foreground hover:text-accent transition-colors">
-                    (818) 572-6316
-                  </a>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-4">
-                <div className="w-12 h-12 rounded-full bg-accent/20 flex items-center justify-center flex-shrink-0">
-                  <Mail className="h-5 w-5 text-accent" />
-                </div>
-                <div>
-                  <p className="font-bold text-foreground mb-1">Email</p>
-                  <a
-                    href="mailto:cartcuteriela@gmail.com"
-                    className="text-muted-foreground hover:text-accent transition-colors"
-                  >
-                    cartcuteriela@gmail.com
-                  </a>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-4">
-                <div className="w-12 h-12 rounded-full bg-accent/20 flex items-center justify-center flex-shrink-0">
-                  <MapPin className="h-5 w-5 text-accent" />
-                </div>
-                <div>
-                  <p className="font-bold text-foreground mb-1">Service Area</p>
-                  <p className="text-muted-foreground">Los Angeles, Ventura & Orange County</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Right Side - Form */}
-          <Card className="border-none shadow-2xl bg-card">
+        <div className="max-w-5xl mx-auto">
+          {/* Contact Form */}
+          <Card className="border-none shadow-2xl bg-card mb-12">
             <CardContent className="p-6 md:p-8">
               {submitted ? (
                 <div className="text-center py-12 space-y-4 animate-fade-in-up">
@@ -324,43 +274,62 @@ export function ContactSection() {
                     <Input id="phone" name="phone" type="tel" className="rounded-lg min-h-[48px]" />
                   </div>
 
-                  <div className="grid md:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="event-type">Event Type *</Label>
-                      <Select name="event-type" required onValueChange={() => handleBlur('eventType')}>
-                        <SelectTrigger 
-                          id="event-type" 
-                          className={`rounded-lg min-h-[48px] ${touched.eventType && errors.eventType ? 'border-red-500' : ''}`}
-                        >
-                          <SelectValue placeholder="Select event type" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="wedding">Wedding</SelectItem>
-                          <SelectItem value="party">Party</SelectItem>
-                          <SelectItem value="corporate">Corporate</SelectItem>
-                          <SelectItem value="other">Other</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      {touched.eventType && errors.eventType && (
-                        <p className="text-xs text-red-500 mt-1">{errors.eventType}</p>
-                      )}
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="event-date">Event Date</Label>
-                      <Input id="event-date" name="event-date" type="date" className="rounded-lg min-h-[48px]" />
-                    </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="event-type">Event Type *</Label>
+                    <Select name="event-type" required onValueChange={() => handleBlur('eventType')}>
+                      <SelectTrigger 
+                        id="event-type" 
+                        className={`rounded-lg min-h-[48px] ${touched.eventType && errors.eventType ? 'border-red-500' : ''}`}
+                      >
+                        <SelectValue placeholder="Select event type" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="wedding">Wedding</SelectItem>
+                        <SelectItem value="party">Party</SelectItem>
+                        <SelectItem value="corporate">Corporate</SelectItem>
+                        <SelectItem value="other">Other</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    {touched.eventType && errors.eventType && (
+                      <p className="text-xs text-red-500 mt-1">{errors.eventType}</p>
+                    )}
                   </div>
 
                   <div className="grid md:grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="event-time">Event Time</Label>
-                      <Input id="event-time" name="event-time" type="time" className="rounded-lg min-h-[48px]" />
+                      <Label htmlFor="event-date">Event Date</Label>
+                      <Input id="event-date" name="event-date" type="date" className="rounded-lg min-h-[48px]" />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="location">Location</Label>
                       <Input id="location" name="location" placeholder="Event location" className="rounded-lg min-h-[48px]" />
                     </div>
                   </div>
+
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="event-start-time">Event Start Time</Label>
+                      <Input id="event-start-time" name="event-start-time" type="time" className="rounded-lg min-h-[48px]" />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="event-end-time">Event End Time</Label>
+                      <Input id="event-end-time" name="event-end-time" type="time" className="rounded-lg min-h-[48px]" />
+                    </div>
+                  </div>
+
+                  {cartData.catering.length > 0 && (
+                    <div className="space-y-2">
+                      <Label htmlFor="guest-count">Guest Count</Label>
+                      <Input 
+                        id="guest-count" 
+                        name="guest-count" 
+                        type="number" 
+                        min="1"
+                        placeholder="Number of guests" 
+                        className="rounded-lg min-h-[48px]" 
+                      />
+                    </div>
+                  )}
 
                   <div className="space-y-2">
                     <Label htmlFor="message">Message</Label>
@@ -386,6 +355,49 @@ export function ContactSection() {
               )}
             </CardContent>
           </Card>
+
+          {/* Get in Touch Section - Below Form */}
+          <div className="mt-12">
+            <h3 className="text-2xl font-bold text-foreground mb-6 text-center">Get in Touch</h3>
+            <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+              <div className="flex flex-col items-center text-center space-y-3">
+                <div className="w-12 h-12 rounded-full bg-accent/20 flex items-center justify-center">
+                  <Phone className="h-5 w-5 text-accent" />
+                </div>
+                <div>
+                  <p className="font-bold text-foreground mb-1">Phone</p>
+                  <a href="tel:8185726316" className="text-muted-foreground hover:text-accent transition-colors">
+                    (818) 572-6316
+                  </a>
+                </div>
+              </div>
+
+              <div className="flex flex-col items-center text-center space-y-3">
+                <div className="w-12 h-12 rounded-full bg-accent/20 flex items-center justify-center">
+                  <Mail className="h-5 w-5 text-accent" />
+                </div>
+                <div>
+                  <p className="font-bold text-foreground mb-1">Email</p>
+                  <a
+                    href="mailto:cartcuteriela@gmail.com"
+                    className="text-muted-foreground hover:text-accent transition-colors"
+                  >
+                    cartcuteriela@gmail.com
+                  </a>
+                </div>
+              </div>
+
+              <div className="flex flex-col items-center text-center space-y-3">
+                <div className="w-12 h-12 rounded-full bg-accent/20 flex items-center justify-center">
+                  <MapPin className="h-5 w-5 text-accent" />
+                </div>
+                <div>
+                  <p className="font-bold text-foreground mb-1">Service Area</p>
+                  <p className="text-muted-foreground">Los Angeles, Ventura & Orange County</p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>

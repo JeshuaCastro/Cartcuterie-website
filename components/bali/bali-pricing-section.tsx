@@ -43,16 +43,16 @@ export function BaliPricingSection() {
   }
 
   return (
-    <section id="pricing" className="py-24 md:py-32 bg-gradient-to-b from-amber-50 to-orange-50">
+    <section id="pricing" className="py-24 md:py-32 bg-white">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16 space-y-4">
-          <h2 className="font-serif text-4xl md:text-6xl font-bold text-amber-900 text-balance">
+          <h2 className="font-serif text-4xl md:text-6xl font-bold text-[#2E5A3B] text-balance">
             Bali Cart Packages
           </h2>
-          <p className="text-xl text-amber-800/80 max-w-2xl mx-auto text-pretty leading-relaxed">
+          <p className="text-xl text-[#2E5A3B]/80 max-w-2xl mx-auto text-pretty leading-relaxed">
             Choose the perfect package for your island celebration
           </p>
-          <div className="w-24 h-1 bg-amber-600 mx-auto rounded-full" />
+          <div className="w-24 h-1 bg-[#2E5A3B] mx-auto rounded-full" />
         </div>
 
         <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto mb-12">
@@ -61,20 +61,20 @@ export function BaliPricingSection() {
               key={index}
               className={`relative overflow-hidden transition-all duration-300 hover:shadow-2xl ${
                 pkg.popular
-                  ? "border-2 border-amber-600 shadow-xl scale-105 bg-gradient-to-br from-white to-amber-50"
-                  : "border border-amber-200 hover:border-amber-400 bg-white"
+                  ? "border-2 border-[#2E5A3B] shadow-xl scale-105 bg-gradient-to-br from-white to-green-50"
+                  : "border border-green-200 hover:border-[#4A7C59] bg-white"
               }`}
             >
               {pkg.popular && (
-                <div className="absolute top-0 right-0 bg-amber-600 text-white px-4 py-1 text-sm font-semibold rounded-bl-lg">
+                <div className="absolute top-0 right-0 bg-[#2E5A3B] text-white px-4 py-1 text-sm font-semibold rounded-bl-lg">
                   MOST POPULAR
                 </div>
               )}
 
               <CardHeader className="text-center space-y-4 pb-6">
-                <CardTitle className="font-serif text-3xl text-amber-900">{pkg.name}</CardTitle>
+                <CardTitle className="font-serif text-3xl text-[#2E5A3B]">{pkg.name}</CardTitle>
                 <div className="space-y-2">
-                  <div className="text-4xl font-bold text-amber-600">{pkg.price}</div>
+                  <div className="text-4xl font-bold text-[#4A7C59]">{pkg.price}</div>
                   <p className="text-sm text-muted-foreground">{pkg.description}</p>
                 </div>
               </CardHeader>
@@ -83,7 +83,7 @@ export function BaliPricingSection() {
                 <ul className="space-y-3">
                   {pkg.features.map((feature, idx) => (
                     <li key={idx} className="flex items-start gap-3">
-                      <Check className="h-5 w-5 text-amber-600 mt-0.5 flex-shrink-0" />
+                      <Check className="h-5 w-5 text-[#2E5A3B] mt-0.5 flex-shrink-0" />
                       <span className="text-muted-foreground">{feature}</span>
                     </li>
                   ))}
@@ -92,8 +92,8 @@ export function BaliPricingSection() {
                 <Button
                   className={`w-full ${
                     pkg.popular
-                      ? "bg-amber-600 hover:bg-amber-700 text-white"
-                      : "bg-amber-100 hover:bg-amber-200 text-amber-900"
+                      ? "bg-[#2E5A3B] hover:bg-[#254A2F] text-white"
+                      : "bg-green-100 hover:bg-green-200 text-[#2E5A3B]"
                   } transition-all duration-300`}
                   size="lg"
                   onClick={scrollToBuilder}
@@ -107,18 +107,18 @@ export function BaliPricingSection() {
 
         {/* Additional Info */}
         <div className="max-w-3xl mx-auto">
-          <Card className="bg-gradient-to-r from-amber-100 to-orange-100 border-amber-300">
+          <Card className="bg-gradient-to-r from-green-100 to-emerald-100 border-green-300">
             <CardContent className="p-8 text-center space-y-4">
-              <h3 className="font-serif text-2xl font-bold text-amber-900">
+              <h3 className="font-serif text-2xl font-bold text-[#2E5A3B]">
                 Need a Custom Quote?
               </h3>
-              <p className="text-amber-800/90 leading-relaxed">
+              <p className="text-[#2E5A3B]/90 leading-relaxed">
                 Every event is unique! Contact us for personalized pricing based on your specific needs, guest count, and catering preferences.
               </p>
               <Button
                 variant="outline"
                 size="lg"
-                className="border-amber-600 text-amber-900 hover:bg-amber-600 hover:text-white transition-all duration-300"
+                className="border-[#2E5A3B] text-[#2E5A3B] hover:bg-[#2E5A3B] hover:text-white transition-all duration-300"
                 onClick={scrollToContact}
               >
                 Get Custom Quote

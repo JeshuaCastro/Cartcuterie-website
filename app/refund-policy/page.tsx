@@ -22,9 +22,9 @@ export default function RefundPolicyPage() {
             </p>
 
             <section className="space-y-4">
-              <h2 className="text-2xl font-bold text-foreground">1. Deposit Policy</h2>
+              <h2 className="text-2xl font-bold text-foreground">1. Downpayment Policy</h2>
               <p>
-                All bookings require a deposit to secure your event date. This deposit is <strong>non-refundable</strong> under all circumstances, including:
+                All bookings require a 50% downpayment to secure your event date. This downpayment is <strong>non-refundable</strong> under all circumstances, including:
               </p>
               <ul className="list-disc pl-6 space-y-2">
                 <li>Client-initiated cancellations</li>
@@ -33,57 +33,18 @@ export default function RefundPolicyPage() {
                 <li>Force majeure events</li>
               </ul>
               <p>
-                The deposit amount varies by package and location but typically ranges from 25-50% of the total service cost.
+                If you need to cancel, the 50% downpayment is non-refundable, but we offer the option to reschedule your event (subject to availability).
               </p>
             </section>
 
             <section className="space-y-4">
-              <h2 className="text-2xl font-bold text-foreground">2. Cancellation Timeline</h2>
-              
-              <div className="bg-muted/30 p-6 rounded-lg space-y-4">
-                <h3 className="text-xl font-semibold text-foreground">More Than 60 Days Before Event</h3>
-                <ul className="list-disc pl-6 space-y-2">
-                  <li>Deposit is non-refundable</li>
-                  <li>Remaining balance: 75% refund</li>
-                  <li>Option to reschedule within 12 months (subject to availability)</li>
-                </ul>
-              </div>
-
-              <div className="bg-muted/30 p-6 rounded-lg space-y-4">
-                <h3 className="text-xl font-semibold text-foreground">30-60 Days Before Event</h3>
-                <ul className="list-disc pl-6 space-y-2">
-                  <li>Deposit is non-refundable</li>
-                  <li>Remaining balance: 50% refund</li>
-                  <li>Option to reschedule within 6 months (subject to availability and rescheduling fee)</li>
-                </ul>
-              </div>
-
-              <div className="bg-muted/30 p-6 rounded-lg space-y-4">
-                <h3 className="text-xl font-semibold text-foreground">15-29 Days Before Event</h3>
-                <ul className="list-disc pl-6 space-y-2">
-                  <li>Deposit is non-refundable</li>
-                  <li>Remaining balance: 25% refund</li>
-                  <li>Rescheduling subject to availability and 25% rescheduling fee</li>
-                </ul>
-              </div>
-
-              <div className="bg-muted/30 p-6 rounded-lg space-y-4">
-                <h3 className="text-xl font-semibold text-foreground">Less Than 15 Days Before Event</h3>
-                <ul className="list-disc pl-6 space-y-2">
-                  <li>No refund available</li>
-                  <li>Full payment is due regardless of cancellation</li>
-                  <li>No rescheduling options</li>
-                </ul>
-              </div>
-            </section>
-
-            <section className="space-y-4">
-              <h2 className="text-2xl font-bold text-foreground">3. Weather Policy</h2>
+              <h2 className="text-2xl font-bold text-foreground">2. Weather Policy</h2>
               <p>
                 We understand that weather can impact outdoor events. However, as a service business that blocks calendar dates:
               </p>
               <ul className="list-disc pl-6 space-y-2">
-                <li>Weather-related cancellations follow the same cancellation timeline above</li>
+                <li>The 50% downpayment is non-refundable for weather-related cancellations</li>
+                <li>We offer the option to reschedule (subject to availability)</li>
                 <li>We recommend purchasing event insurance to cover weather-related cancellations</li>
                 <li>We will work with you to provide covered alternatives when possible</li>
                 <li>Rain or wind does not automatically qualify for a refund</li>
@@ -93,25 +54,26 @@ export default function RefundPolicyPage() {
               <p>In cases of extreme weather (hurricanes, severe storms, government-issued warnings):</p>
               <ul className="list-disc pl-6 space-y-2">
                 <li>Full credit towards a future booking within 12 months</li>
-                <li>Or 50% refund of remaining balance (deposit non-refundable)</li>
+                <li>Or 50% refund of remaining balance (downpayment non-refundable)</li>
                 <li>Determination of "extreme weather" at Cartcuterie's discretion</li>
               </ul>
             </section>
 
             <section className="space-y-4">
-              <h2 className="text-2xl font-bold text-foreground">4. Changes to Booking</h2>
+              <h2 className="text-2xl font-bold text-foreground">3. Changes to Booking</h2>
               
               <h3 className="text-xl font-semibold text-foreground">Date Changes</h3>
               <ul className="list-disc pl-6 space-y-2">
-                <li>First date change: $100 rescheduling fee (subject to availability)</li>
-                <li>Subsequent date changes: $250 rescheduling fee</li>
-                <li>Must be requested at least 30 days before original event date</li>
+                <li>Date changes are free of charge (subject to availability)</li>
+                <li>Must be requested as soon as possible</li>
+                <li>We will do our best to accommodate your preferred new date</li>
               </ul>
 
               <h3 className="text-xl font-semibold text-foreground mt-4">Package Changes</h3>
               <ul className="list-disc pl-6 space-y-2">
-                <li>Upgrades: Price difference plus 10% fee</li>
-                <li>Downgrades: No refund on price difference; original deposit applied</li>
+                <li>We are happy to update your package and adjust the price accordingly</li>
+                <li>Upgrades: Price difference will be added to final payment</li>
+                <li>Downgrades: Price difference will be credited; original downpayment applied</li>
                 <li>Changes must be finalized at least 14 days before event</li>
               </ul>
 
@@ -124,7 +86,7 @@ export default function RefundPolicyPage() {
             </section>
 
             <section className="space-y-4">
-              <h2 className="text-2xl font-bold text-foreground">5. Service Issues and Refunds</h2>
+              <h2 className="text-2xl font-bold text-foreground">4. Service Issues and Refunds</h2>
               <p>
                 If we fail to provide the agreed-upon services due to our fault, we will:
               </p>
@@ -144,7 +106,7 @@ export default function RefundPolicyPage() {
             </section>
 
             <section className="space-y-4">
-              <h2 className="text-2xl font-bold text-foreground">6. Refund Processing</h2>
+              <h2 className="text-2xl font-bold text-foreground">5. Refund Processing</h2>
               <p>Approved refunds will be processed as follows:</p>
               <ul className="list-disc pl-6 space-y-2">
                 <li>Refunds issued to original payment method</li>
@@ -155,19 +117,19 @@ export default function RefundPolicyPage() {
             </section>
 
             <section className="space-y-4">
-              <h2 className="text-2xl font-bold text-foreground">7. Force Majeure</h2>
+              <h2 className="text-2xl font-bold text-foreground">6. Force Majeure</h2>
               <p>
                 In the event of circumstances beyond our reasonable control (pandemic, natural disaster, government restrictions, etc.):
               </p>
               <ul className="list-disc pl-6 space-y-2">
                 <li>We will work with you to reschedule within 18 months</li>
-                <li>Deposit will be transferred to new date</li>
-                <li>If rescheduling is not possible, 50% refund of total paid (deposit non-refundable)</li>
+                <li>Downpayment will be transferred to new date</li>
+                <li>If rescheduling is not possible, 50% refund of total paid (downpayment non-refundable)</li>
               </ul>
             </section>
 
             <section className="space-y-4">
-              <h2 className="text-2xl font-bold text-foreground">8. Client-Caused Issues</h2>
+              <h2 className="text-2xl font-bold text-foreground">7. Client-Caused Issues</h2>
               <p>No refunds will be issued for:</p>
               <ul className="list-disc pl-6 space-y-2">
                 <li>Incorrect venue information provided by client</li>
@@ -179,12 +141,12 @@ export default function RefundPolicyPage() {
             </section>
 
             <section className="space-y-4">
-              <h2 className="text-2xl font-bold text-foreground">9. International Services (Bali)</h2>
+              <h2 className="text-2xl font-bold text-foreground">8. International Services (Bali)</h2>
               <p>
                 Additional terms for Bali-based services:
               </p>
               <ul className="list-disc pl-6 space-y-2">
-                <li>Deposits for Bali services are strictly non-refundable due to import/preparation costs</li>
+                <li>Downpayments for Bali services are strictly non-refundable due to import/preparation costs</li>
                 <li>Currency exchange rate fluctuations may affect final pricing</li>
                 <li>Refunds processed in IDR may be subject to exchange rate at time of refund</li>
                 <li>Additional bank fees may apply for international refunds</li>
@@ -192,7 +154,7 @@ export default function RefundPolicyPage() {
             </section>
 
             <section className="space-y-4">
-              <h2 className="text-2xl font-bold text-foreground">10. Dispute Resolution</h2>
+              <h2 className="text-2xl font-bold text-foreground">9. Dispute Resolution</h2>
               <p>
                 If you disagree with our refund decision:
               </p>
@@ -209,10 +171,9 @@ export default function RefundPolicyPage() {
               <div className="bg-accent/10 p-6 rounded-lg">
                 <p className="font-semibold text-foreground mb-2">We Strongly Recommend:</p>
                 <ul className="list-disc pl-6 space-y-2">
-                  <li>Purchasing event cancellation insurance</li>
                   <li>Reading our full Terms & Conditions</li>
                   <li>Confirming all details at least 14 days before your event</li>
-                  <li>Understanding that deposits are investments in securing your date</li>
+                  <li>Understanding that downpayments are investments in securing your date</li>
                 </ul>
               </div>
             </section>

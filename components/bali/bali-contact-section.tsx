@@ -137,26 +137,26 @@ export function BaliContactSection() {
   }
 
   return (
-    <section id="contact" className="py-24 md:py-32 bg-gradient-to-b from-white to-amber-50">
+    <section id="contact" className="py-24 md:py-32 bg-gradient-to-b from-white to-green-50">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16 space-y-4">
-          <h2 className="font-serif text-4xl md:text-6xl font-bold text-amber-900 text-balance">
+          <h2 className="font-serif text-4xl md:text-6xl font-bold text-[#2E5A3B] text-balance">
             Let's Create Your Perfect Cart
           </h2>
-          <p className="text-xl text-amber-800/80 max-w-2xl mx-auto">
+          <p className="text-xl text-[#2E5A3B]/80 max-w-2xl mx-auto">
             Share your event details and we'll get back to you with a custom quote
           </p>
-          <div className="w-24 h-1 bg-amber-600 mx-auto rounded-full" />
+          <div className="w-24 h-1 bg-[#2E5A3B] mx-auto rounded-full" />
         </div>
 
         <div className="grid lg:grid-cols-2 gap-12 max-w-6xl mx-auto">
           {/* Contact Form */}
-          <Card className="border-2 border-amber-200 shadow-xl">
+          <Card className="border-2 border-green-200 shadow-xl">
             <CardContent className="p-8">
               {submitted ? (
                 <div className="text-center py-12 space-y-4">
                   <div className="text-6xl mb-4">🌴</div>
-                  <h3 className="text-3xl font-bold text-amber-900">Terima Kasih!</h3>
+                  <h3 className="text-3xl font-bold text-[#2E5A3B]">Terima Kasih!</h3>
                   <p className="text-lg text-muted-foreground">
                     We've received your inquiry and will get back to you within 24 hours.
                   </p>
@@ -202,8 +202,8 @@ export function BaliContactSection() {
 
                   <div className="grid md:grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="phone">Phone (WhatsApp preferred)</Label>
-                      <Input id="phone" name="phone" type="tel" placeholder="+62 xxx xxx xxxx" />
+                      <Label htmlFor="phone">Phone</Label>
+                      <Input id="phone" name="phone" type="tel" placeholder="+1 (818) 572-6316" />
                     </div>
 
                     <div className="space-y-2">
@@ -236,18 +236,25 @@ export function BaliContactSection() {
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="eventTime">Event Time</Label>
-                      <Input id="eventTime" name="eventTime" type="time" />
+                      <Label htmlFor="location">Event Location in Bali</Label>
+                      <Input
+                        id="location"
+                        name="location"
+                        placeholder="e.g., Seminyak, Ubud, Canggu..."
+                      />
                     </div>
                   </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="location">Event Location in Bali</Label>
-                    <Input
-                      id="location"
-                      name="location"
-                      placeholder="e.g., Seminyak, Ubud, Canggu..."
-                    />
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="eventStartTime">Event Start Time</Label>
+                      <Input id="eventStartTime" name="eventStartTime" type="time" />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="eventEndTime">Event End Time</Label>
+                      <Input id="eventEndTime" name="eventEndTime" type="time" />
+                    </div>
                   </div>
 
                   <div className="space-y-2">
@@ -270,7 +277,7 @@ export function BaliContactSection() {
                   <Button
                     type="submit"
                     size="lg"
-                    className="w-full bg-amber-600 hover:bg-amber-700 text-white text-lg py-6"
+                    className="w-full bg-[#2E5A3B] hover:bg-[#254A2F] text-white text-lg py-6"
                   >
                     Send Inquiry
                   </Button>
@@ -281,42 +288,44 @@ export function BaliContactSection() {
 
           {/* Contact Info */}
           <div className="space-y-8">
-            <Card className="border-2 border-amber-200 shadow-xl bg-gradient-to-br from-white to-amber-50">
+            <Card className="border-2 border-green-200 shadow-xl bg-gradient-to-br from-white to-green-50">
               <CardContent className="p-8 space-y-6">
-                <h3 className="text-2xl font-bold text-amber-900">Get in Touch</h3>
+                <h3 className="text-2xl font-bold text-[#2E5A3B]">Get in Touch</h3>
 
                 <div className="space-y-4">
                   <div className="flex items-start gap-4">
-                    <div className="p-3 bg-amber-100 rounded-lg">
-                      <Mail className="h-6 w-6 text-amber-600" />
+                    <div className="p-3 bg-green-100 rounded-lg">
+                      <Mail className="h-6 w-6 text-[#2E5A3B]" />
                     </div>
                     <div>
-                      <p className="font-semibold text-amber-900">Email</p>
+                      <p className="font-semibold text-[#2E5A3B]">Email</p>
                       <a
-                        href="mailto:cartcuteriela@gmail.com"
-                        className="text-muted-foreground hover:text-amber-600 transition-colors"
+                        href="mailto:cartcuteriebali@gmail.com"
+                        className="text-muted-foreground hover:text-[#2E5A3B] transition-colors"
                       >
-                        cartcuteriela@gmail.com
+                        cartcuteriebali@gmail.com
                       </a>
                     </div>
                   </div>
 
                   <div className="flex items-start gap-4">
-                    <div className="p-3 bg-amber-100 rounded-lg">
-                      <Phone className="h-6 w-6 text-amber-600" />
+                    <div className="p-3 bg-green-100 rounded-lg">
+                      <Phone className="h-6 w-6 text-[#2E5A3B]" />
                     </div>
                     <div>
-                      <p className="font-semibold text-amber-900">WhatsApp</p>
-                      <p className="text-muted-foreground">Available upon inquiry</p>
+                      <p className="font-semibold text-[#2E5A3B]">Phone</p>
+                      <a href="tel:8185726316" className="text-muted-foreground hover:text-[#2E5A3B] transition-colors">
+                        (818) 572-6316
+                      </a>
                     </div>
                   </div>
 
                   <div className="flex items-start gap-4">
-                    <div className="p-3 bg-amber-100 rounded-lg">
-                      <MapPin className="h-6 w-6 text-amber-600" />
+                    <div className="p-3 bg-green-100 rounded-lg">
+                      <MapPin className="h-6 w-6 text-[#2E5A3B]" />
                     </div>
                     <div>
-                      <p className="font-semibold text-amber-900">Location</p>
+                      <p className="font-semibold text-[#2E5A3B]">Location</p>
                       <p className="text-muted-foreground">Serving all of Bali</p>
                     </div>
                   </div>
@@ -324,7 +333,7 @@ export function BaliContactSection() {
               </CardContent>
             </Card>
 
-            <Card className="border-2 border-amber-200 shadow-xl bg-gradient-to-br from-amber-600 to-orange-600 text-white">
+            <Card className="border-2 border-green-200 shadow-xl bg-gradient-to-br from-[#2E5A3B] to-[#4A7C59] text-white">
               <CardContent className="p-8">
                 <h3 className="text-2xl font-bold mb-4">Why Choose Our Bali Carts?</h3>
                 <ul className="space-y-3">

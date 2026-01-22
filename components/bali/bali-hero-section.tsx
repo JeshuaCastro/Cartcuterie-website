@@ -29,7 +29,7 @@ export function BaliHeroSection() {
         <div className="max-w-4xl mx-auto space-y-8 animate-fade-in-up">
           {/* Bali Badge */}
           <div className="inline-block">
-            <span className="px-6 py-2 bg-white/90 backdrop-blur-sm text-amber-900 font-semibold rounded-full text-sm tracking-wider shadow-lg">
+            <span className="px-6 py-2 bg-white/90 backdrop-blur-sm text-[#2E5A3B] font-semibold rounded-full text-sm tracking-wider shadow-lg">
               🌴 BALI LOCATION
             </span>
           </div>
@@ -45,7 +45,7 @@ export function BaliHeroSection() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-4">
             <Button
               size="lg"
-              className="bg-amber-600 text-white hover:bg-amber-700 hover:shadow-[0_0_30px_rgba(217,119,6,0.5)] transition-all duration-300 text-lg px-8 py-6 rounded-xl"
+              className="bg-[#2E5A3B] text-white hover:bg-[#254A2F] hover:shadow-[0_0_30px_rgba(46,90,59,0.5)] transition-all duration-300 text-lg px-8 py-6 rounded-xl"
               onClick={() => scrollToSection("cart-builder")}
             >
               Build Your Bali Cart
@@ -53,7 +53,7 @@ export function BaliHeroSection() {
             <Button
               size="lg"
               variant="outline"
-              className="bg-white/90 backdrop-blur-sm text-amber-900 border-2 border-white hover:bg-white hover:shadow-[0_0_20px_rgba(255,255,255,0.3)] transition-all duration-300 text-lg px-8 py-6 rounded-xl"
+              className="bg-white/90 backdrop-blur-sm text-[#2E5A3B] border-2 border-white hover:bg-white hover:shadow-[0_0_20px_rgba(255,255,255,0.3)] transition-all duration-300 text-lg px-8 py-6 rounded-xl"
               onClick={() => scrollToSection("pricing")}
             >
               View Packages

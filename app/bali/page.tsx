@@ -2,10 +2,10 @@
 
 import { Navbar } from "@/components/navbar"
 import { BaliHeroSection } from "@/components/bali/bali-hero-section"
-import { HowItWorksSection } from "@/components/how-it-works-section"
 import { BaliCartBuilderSection } from "@/components/bali/bali-cart-builder-section"
 import { GallerySection } from "@/components/gallery-section"
 import { BaliPricingSection } from "@/components/bali/bali-pricing-section"
+import { BaliDimensionsSection } from "@/components/bali/bali-dimensions-section"
 import { TestimonialsSection } from "@/components/testimonials-section"
 import { BaliContactSection } from "@/components/bali/bali-contact-section"
 import { Footer } from "@/components/footer"
@@ -19,10 +19,10 @@ export default function BaliPage() {
         <main className="min-h-screen">
           <Navbar />
           <BaliHeroSection />
-          <HowItWorksSection />
           <BaliCartBuilderSection />
           <GallerySection />
           <BaliPricingSection />
+          <BaliDimensionsSection />
           <TestimonialsSection />
           <BaliContactSection />
           <Footer />

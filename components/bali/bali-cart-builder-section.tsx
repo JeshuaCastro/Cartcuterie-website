@@ -8,7 +8,6 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { ColorPicker } from "@/components/ui/color-picker"
 import Image from "next/image"
 import { ChevronRight, ChevronLeft, Upload, Sparkles } from "lucide-react"
 import { useBaliCartBuilder } from "@/components/bali/bali-cart-builder-context"
@@ -76,10 +75,8 @@ const cateringOptions = [
 export function BaliCartBuilderSection() {
   const [step, setStep] = useState(1)
   const { cartData, updateCartData, generateAICart, isGenerating } = useBaliCartBuilder()
-  const [primaryColor, setPrimaryColor] = useState(cartData.colors?.primary || "#ffffff")
-  const [secondaryColor, setSecondaryColor] = useState(cartData.colors?.secondary || "#D97706")
 
-  const totalSteps = 5 // cart, wording, colors, catering, review
+  const totalSteps = 4 // cart, wording, catering, review
 
   const scrollToBuilder = () => {
     const builder = document.getElementById("cart-builder")
@@ -130,25 +127,25 @@ export function BaliCartBuilderSection() {
     <section id="cart-builder" className="py-16 md:py-24 bg-white">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12 md:mb-16 space-y-3 md:space-y-4">
-          <h2 className="font-serif text-3xl md:text-5xl lg:text-6xl font-bold text-amber-900 text-balance">
+          <h2 className="font-serif text-3xl md:text-5xl lg:text-6xl font-bold text-[#2E5A3B] text-balance">
             Build Your Bali Cart
           </h2>
-          <p className="text-lg md:text-xl text-amber-800/80 max-w-2xl mx-auto">
+          <p className="text-lg md:text-xl text-[#2E5A3B]/80 max-w-2xl mx-auto">
             Customize your perfect cart experience in just a few steps
           </p>
-          <div className="w-20 md:w-24 h-1 bg-amber-600 mx-auto rounded-full" />
+          <div className="w-20 md:w-24 h-1 bg-[#2E5A3B] mx-auto rounded-full" />
         </div>
 
         {/* Progress Steps */}
         <div className="max-w-3xl md:max-w-4xl mx-auto mb-8 md:mb-12">
           <div className="flex items-center justify-between">
-            {[1, 2, 3, 4, 5].map((stepNum) => (
+            {[1, 2, 3, 4].map((stepNum) => (
               <div key={stepNum} className="flex items-center flex-1">
                 <div className="flex flex-col items-center flex-1">
                   <div
                     className={`w-8 h-8 md:w-12 md:h-12 rounded-full flex items-center justify-center text-sm md:text-base font-semibold transition-all duration-300 ${
                       step >= stepNum
-                        ? "bg-amber-600 text-white shadow-lg"
+                        ? "bg-[#2E5A3B] text-white shadow-lg"
                         : "bg-gray-200 text-gray-500"
                     }`}
                   >
@@ -157,15 +154,14 @@ export function BaliCartBuilderSection() {
                   <p className="text-[10px] md:text-xs mt-1 md:mt-2 text-center font-medium hidden sm:block">
                     {stepNum === 1 && "Choose Cart"}
                     {stepNum === 2 && "Custom Wording"}
-                    {stepNum === 3 && "Colors"}
-                    {stepNum === 4 && "Add Catering"}
-                    {stepNum === 5 && "Review"}
+                    {stepNum === 3 && "Add Catering"}
+                    {stepNum === 4 && "Review"}
                   </p>
                 </div>
-                {stepNum < 5 && (
+                {stepNum < 4 && (
                   <div
                     className={`h-0.5 md:h-1 flex-1 mx-1 md:mx-2 transition-all duration-300 ${
-                      step > stepNum ? "bg-amber-600" : "bg-gray-200"
+                      step > stepNum ? "bg-[#2E5A3B]" : "bg-gray-200"
                     }`}
                   />
                 )}
@@ -176,13 +172,13 @@ export function BaliCartBuilderSection() {
 
         {/* Step Content */}
         <div className="max-w-4xl md:max-w-5xl mx-auto">
-          <Card className="border-2 border-amber-200 shadow-xl">
+          <Card className="border-2 border-green-200 shadow-xl">
             <CardContent className="p-4 md:p-8 lg:p-12">
               {/* Step 1: Choose Cart Type */}
               {step === 1 && (
                 <div className="space-y-8">
                   <div className="text-center space-y-2">
-                    <h3 className="text-3xl font-serif font-bold text-amber-900">
+                    <h3 className="text-3xl font-serif font-bold text-[#2E5A3B]">
                       💡 Choose Your Cart
                     </h3>
                     <p className="text-muted-foreground">
@@ -196,8 +192,8 @@ export function BaliCartBuilderSection() {
                         key={cart.id}
                         className={`cursor-pointer transition-all duration-300 hover:shadow-xl overflow-hidden ${
                           cartData.cartType === cart.id
-                            ? "ring-4 ring-amber-600 shadow-lg scale-105"
-                            : "hover:ring-2 hover:ring-amber-300"
+                            ? "ring-4 ring-[#2E5A3B] shadow-lg scale-105"
+                            : "hover:ring-2 hover:ring-[#4A7C59]"
                         }`}
                         onClick={() => handleCartTypeSelect(cart.id)}
                       >
@@ -206,11 +202,14 @@ export function BaliCartBuilderSection() {
                             src={cart.image}
                             alt={cart.name}
                             fill
-                            className="object-contain md:object-cover"
+                            className="object-cover"
+                            style={{
+                              objectPosition: cart.id === 'plain' ? 'center left' : 'center center'
+                            }}
                           />
                         </div>
                         <div className="p-4 md:p-6 space-y-1 md:space-y-2">
-                          <h4 className="font-bold text-lg md:text-xl text-amber-900">{cart.name}</h4>
+                          <h4 className="font-bold text-lg md:text-xl text-[#2E5A3B]">{cart.name}</h4>
                           <p className="text-xs md:text-sm text-muted-foreground">{cart.description}</p>
                         </div>
                       </Card>
@@ -223,7 +222,7 @@ export function BaliCartBuilderSection() {
               {step === 2 && (
                 <div className="space-y-8">
                   <div className="text-center space-y-2">
-                    <h3 className="text-3xl font-serif font-bold text-amber-900">
+                    <h3 className="text-3xl font-serif font-bold text-[#2E5A3B]">
                       💡 Add Custom Wording?
                     </h3>
                     <p className="text-muted-foreground">
@@ -239,8 +238,8 @@ export function BaliCartBuilderSection() {
                         size="lg"
                         className={
                           cartData.hasCustomWording
-                            ? "bg-amber-600 hover:bg-amber-700"
-                            : "border-amber-300 hover:border-amber-500"
+                            ? "bg-[#2E5A3B] hover:bg-[#254A2F]"
+                            : "border-[#4A7C59] hover:border-[#2E5A3B]"
                         }
                         onClick={() => updateCartData({ hasCustomWording: true })}
                       >
@@ -278,8 +277,8 @@ export function BaliCartBuilderSection() {
 
                         <div className="space-y-3">
                           <Label className="text-lg font-semibold">Or attach your logo</Label>
-                          <div className="border-2 border-dashed border-amber-300 rounded-lg p-8 text-center hover:border-amber-500 transition-colors cursor-pointer">
-                            <Upload className="mx-auto h-12 w-12 text-amber-600 mb-3" />
+                          <div className="border-2 border-dashed border-[#4A7C59] rounded-lg p-8 text-center hover:border-[#2E5A3B] transition-colors cursor-pointer">
+                            <Upload className="mx-auto h-12 w-12 text-[#2E5A3B] mb-3" />
                             <p className="text-sm text-muted-foreground">
                               Click to upload your logo (Coming soon)
                             </p>
@@ -291,74 +290,11 @@ export function BaliCartBuilderSection() {
                 </div>
               )}
 
-              {/* Step 3: Colors */}
+              {/* Step 3: Add Catering */}
               {step === 3 && (
                 <div className="space-y-8">
                   <div className="text-center space-y-2">
-                    <h3 className="text-3xl font-serif font-bold text-amber-900">
-                      🎨 Customize Colors
-                    </h3>
-                    <p className="text-muted-foreground">
-                      Choose your cart's color palette to match your event theme
-                    </p>
-                  </div>
-
-                  <div className="space-y-8 max-w-2xl mx-auto">
-                    <ColorPicker
-                      id="primary-color-bali"
-                      label="Primary Cart Body Color"
-                      value={primaryColor}
-                      onChange={(color) => {
-                        setPrimaryColor(color)
-                        updateCartData({
-                          colors: { ...cartData.colors, primary: color },
-                        })
-                      }}
-                    />
-
-                    <ColorPicker
-                      id="secondary-color-bali"
-                      label="Secondary/Accent Color (Trim & Details)"
-                      value={secondaryColor}
-                      onChange={(color) => {
-                        setSecondaryColor(color)
-                        updateCartData({
-                          colors: { ...cartData.colors, secondary: color },
-                        })
-                      }}
-                    />
-
-                    <div className="pt-6 border-t border-border">
-                      <div className="flex items-center justify-between p-4 bg-muted/30 rounded-xl">
-                        <div>
-                          <p className="font-medium text-foreground">Selected Color Palette</p>
-                          <p className="text-sm text-muted-foreground">
-                            Preview your custom colors below
-                          </p>
-                        </div>
-                        <div className="flex gap-3">
-                          <div
-                            className="w-12 h-12 rounded-lg border-2 border-border shadow-sm"
-                            style={{ backgroundColor: primaryColor }}
-                            title="Primary Color"
-                          />
-                          <div
-                            className="w-12 h-12 rounded-lg border-2 border-border shadow-sm"
-                            style={{ backgroundColor: secondaryColor }}
-                            title="Secondary Color"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* Step 4: Add Catering */}
-              {step === 4 && (
-                <div className="space-y-8">
-                  <div className="text-center space-y-2">
-                    <h3 className="text-3xl font-serif font-bold text-amber-900">
+                    <h3 className="text-3xl font-serif font-bold text-[#2E5A3B]">
                       💡 Add Catering?
                     </h3>
                     <p className="text-muted-foreground">
@@ -374,8 +310,8 @@ export function BaliCartBuilderSection() {
                         size="lg"
                         className={
                           cartData.hasCatering
-                            ? "bg-amber-600 hover:bg-amber-700"
-                            : "border-amber-300 hover:border-amber-500"
+                            ? "bg-[#2E5A3B] hover:bg-[#254A2F]"
+                            : "border-[#4A7C59] hover:border-[#2E5A3B]"
                         }
                         onClick={() => handleCateringToggle(true)}
                       >
@@ -408,8 +344,8 @@ export function BaliCartBuilderSection() {
                               key={option.id}
                               className={`cursor-pointer transition-all duration-300 ${
                                 cartData.cateringTypes?.includes(option.id)
-                                  ? "ring-2 ring-amber-600 bg-amber-50"
-                                  : "hover:ring-2 hover:ring-amber-300"
+                                  ? "ring-2 ring-[#2E5A3B] bg-green-50"
+                                  : "hover:ring-2 hover:ring-[#4A7C59]"
                               }`}
                               onClick={() => handleCateringTypeToggle(option.id)}
                             >
@@ -421,7 +357,7 @@ export function BaliCartBuilderSection() {
                                 <div className="flex-1">
                                   <div className="flex items-center gap-2 mb-1">
                                     <span className="text-2xl">{option.emoji}</span>
-                                    <h4 className="font-bold text-amber-900">{option.name}</h4>
+                                    <h4 className="font-bold text-[#2E5A3B]">{option.name}</h4>
                                   </div>
                                   <p className="text-sm text-muted-foreground">
                                     {option.description}
@@ -434,7 +370,7 @@ export function BaliCartBuilderSection() {
 
                         {/* Guest Count */}
                         {cartData.cateringTypes && cartData.cateringTypes.length > 0 && (
-                          <div className="bg-amber-50 rounded-lg p-6 space-y-3">
+                          <div className="bg-green-50 rounded-lg p-6 space-y-3">
                             <Label htmlFor="guestCount" className="text-lg font-semibold">
                               How many people would you like to cater to?
                             </Label>
@@ -457,11 +393,11 @@ export function BaliCartBuilderSection() {
                 </div>
               )}
 
-              {/* Step 5: Review */}
-              {step === 5 && (
+              {/* Step 4: Review */}
+              {step === 4 && (
                 <div className="space-y-8">
                   <div className="text-center space-y-2">
-                    <h3 className="text-3xl font-serif font-bold text-amber-900">
+                    <h3 className="text-3xl font-serif font-bold text-[#2E5A3B]">
                       Review Your Cart
                     </h3>
                     <p className="text-muted-foreground">
@@ -480,7 +416,7 @@ export function BaliCartBuilderSection() {
                           }
                         }}
                         disabled={isGenerating}
-                        className="w-full bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white font-bold rounded-xl min-h-[56px] text-lg shadow-lg hover:shadow-xl transition-all duration-300"
+                        className="w-full bg-gradient-to-r from-[#2E5A3B] to-[#4A7C59] hover:from-[#254A2F] hover:to-[#3D6349] text-white font-bold rounded-xl min-h-[56px] text-lg shadow-lg hover:shadow-xl transition-all duration-300"
                         size="lg"
                       >
                         {isGenerating ? (
@@ -502,8 +438,8 @@ export function BaliCartBuilderSection() {
 
                     {/* AI Rendered Preview */}
                     {cartData.aiGeneratedImage && (
-                      <div className="relative w-full max-w-2xl mx-auto aspect-square rounded-xl overflow-hidden shadow-2xl mb-8 border-4 border-amber-600/30">
-                        <div className="absolute top-4 left-4 z-30 bg-amber-600/90 text-white text-xs font-bold px-3 py-1.5 rounded-full backdrop-blur-md shadow-sm flex items-center gap-2">
+                      <div className="relative w-full max-w-2xl mx-auto aspect-square rounded-xl overflow-hidden shadow-2xl mb-8 border-4 border-[#2E5A3B]/30">
+                        <div className="absolute top-4 left-4 z-30 bg-[#2E5A3B]/90 text-white text-xs font-bold px-3 py-1.5 rounded-full backdrop-blur-md shadow-sm flex items-center gap-2">
                           <span className="relative flex h-2 w-2">
                             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
                             <span className="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
@@ -521,14 +457,14 @@ export function BaliCartBuilderSection() {
                     )}
 
                     {/* Cart Summary */}
-                    <Card className="bg-gradient-to-br from-amber-50 to-orange-50">
+                    <Card className="bg-gradient-to-br from-green-50 to-emerald-50">
                       <CardContent className="p-4 md:p-6 space-y-3 md:space-y-4">
                         <div className="flex items-start justify-between">
                           <div>
                             <h4 className="font-semibold text-xs md:text-sm text-muted-foreground">
                               Cart Type
                             </h4>
-                            <p className="text-lg md:text-xl font-bold text-amber-900 capitalize">
+                            <p className="text-lg md:text-xl font-bold text-[#2E5A3B] capitalize">
                               {cartData.cartType || "Not selected"}
                             </p>
                           </div>
@@ -537,18 +473,18 @@ export function BaliCartBuilderSection() {
                           </Button>
                         </div>
 
-                        <div className="border-t border-amber-200 pt-3 md:pt-4">
+                        <div className="border-t border-green-200 pt-3 md:pt-4">
                           <div className="flex items-start justify-between">
                             <div>
                               <h4 className="font-semibold text-xs md:text-sm text-muted-foreground">
                                 Custom Wording
                               </h4>
                               {cartData.hasCustomWording ? (
-                                <p className="text-sm md:text-lg text-amber-900">
+                                <p className="text-sm md:text-lg text-[#2E5A3B]">
                                   {cartData.customWording || "Not specified yet"}
                                 </p>
                               ) : (
-                                <p className="text-sm md:text-lg text-amber-900 italic">No custom wording</p>
+                                <p className="text-sm md:text-lg text-[#2E5A3B] italic">No custom wording</p>
                               )}
                             </div>
                             <Button variant="ghost" size="sm" onClick={() => { setStep(2); setTimeout(() => scrollToBuilder(), 100) }} className="h-8 text-xs">
@@ -557,32 +493,7 @@ export function BaliCartBuilderSection() {
                           </div>
                         </div>
 
-                        <div className="border-t border-amber-200 pt-3 md:pt-4">
-                          <div className="flex items-start justify-between">
-                            <div>
-                              <h4 className="font-semibold text-xs md:text-sm text-muted-foreground mb-1 md:mb-2">
-                                Colors
-                              </h4>
-                              <div className="flex gap-2">
-                                <div
-                                  className="w-6 h-6 md:w-8 md:h-8 rounded-md border-2 border-border shadow-sm"
-                                  style={{ backgroundColor: cartData.colors?.primary || "#ffffff" }}
-                                  title="Primary Color"
-                                />
-                                <div
-                                  className="w-6 h-6 md:w-8 md:h-8 rounded-md border-2 border-border shadow-sm"
-                                  style={{ backgroundColor: cartData.colors?.secondary || "#D97706" }}
-                                  title="Secondary Color"
-                                />
-                              </div>
-                            </div>
-                            <Button variant="ghost" size="sm" onClick={() => { setStep(3); setTimeout(() => scrollToBuilder(), 100) }} className="h-8 text-xs">
-                              Edit
-                            </Button>
-                          </div>
-                        </div>
-
-                        <div className="border-t border-amber-200 pt-3 md:pt-4">
+                        <div className="border-t border-green-200 pt-3 md:pt-4">
                           <div className="flex items-start justify-between">
                             <div className="flex-1">
                               <h4 className="font-semibold text-sm text-muted-foreground">
@@ -590,7 +501,7 @@ export function BaliCartBuilderSection() {
                               </h4>
                               {cartData.hasCatering ? (
                                 <div className="space-y-2">
-                                  <p className="text-lg font-bold text-amber-900">Yes</p>
+                                  <p className="text-lg font-bold text-[#2E5A3B]">Yes</p>
                                   {cartData.cateringTypes && cartData.cateringTypes.length > 0 && (
                                     <ul className="text-sm space-y-1">
                                       {cartData.cateringTypes.map((type) => {
@@ -611,23 +522,23 @@ export function BaliCartBuilderSection() {
                                   )}
                                 </div>
                               ) : (
-                                <p className="text-lg text-amber-900">No</p>
+                                <p className="text-lg text-[#2E5A3B]">No</p>
                               )}
                             </div>
-                            <Button variant="ghost" size="sm" onClick={() => { setStep(4); setTimeout(() => scrollToBuilder(), 100) }} className="h-8 text-xs">
+                            <Button variant="ghost" size="sm" onClick={() => { setStep(3); setTimeout(() => scrollToBuilder(), 100) }} className="h-8 text-xs">
                               Edit
                             </Button>
                           </div>
                         </div>
 
-                        <div className="border-t border-amber-200 pt-4">
+                        <div className="border-t border-green-200 pt-4">
                           <h4 className="font-semibold text-sm text-muted-foreground mb-2">
                             Estimated Package
                           </h4>
-                          <p className="text-2xl font-bold text-amber-900">
+                          <p className="text-2xl font-bold text-[#2E5A3B]">
                             {cartData.hasCatering ? "Premium Package" : "Basic Package"}
                           </p>
-                          <p className="text-xl font-semibold text-amber-600">
+                          <p className="text-xl font-semibold text-[#4A7C59]">
                             {cartData.hasCatering ? "6M+ IDR" : "4.2M IDR"}
                           </p>
                         </div>
@@ -638,7 +549,7 @@ export function BaliCartBuilderSection() {
                     <div className="text-center space-y-4">
                       <Button
                         size="lg"
-                        className="bg-amber-600 hover:bg-amber-700 text-white text-xl px-12 py-6"
+                        className="bg-[#2E5A3B] hover:bg-[#254A2F] text-white text-xl px-12 py-6"
                         onClick={scrollToContact}
                       >
                         Get Your Custom Quote
@@ -652,12 +563,12 @@ export function BaliCartBuilderSection() {
               )}
 
               {/* Navigation Buttons */}
-              <div className="flex items-center justify-between mt-12 pt-8 border-t border-amber-200">
+              <div className="flex items-center justify-between mt-12 pt-8 border-t border-green-200">
                 <Button
                   variant="outline"
                   onClick={handlePrevious}
                   disabled={step === 1}
-                  className="border-amber-300"
+                  className="border-[#4A7C59]"
                 >
                   <ChevronLeft className="mr-2 h-4 w-4" />
                   Previous
@@ -670,7 +581,7 @@ export function BaliCartBuilderSection() {
                 {step < totalSteps ? (
                   <Button
                     onClick={handleNext}
-                    className="bg-amber-600 hover:bg-amber-700"
+                    className="bg-[#2E5A3B] hover:bg-[#254A2F]"
                     disabled={step === 1 && !cartData.cartType}
                   >
                     Next

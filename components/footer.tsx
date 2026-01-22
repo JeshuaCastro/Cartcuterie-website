@@ -23,7 +23,7 @@ const instagramImages = [
   "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/catering-3-Z1iLYpJv7q3ql92lsrH55yYLzcZChh.jpg",
   "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/floral%20design-9KpOs1iAgKfujQCVjKb8L0OOwjM7eI.jpg",
   "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/custom-cart-design-bAOEOJaWGztDUDNkFf5pbvBByokm2t.jpg",
-  "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Catering-2-m7P1lYQu7A8VtxpGuBGiTSnoLXM9xj.jpeg",
+  "/images/yellow-mobile-cart.jpg",
 ]
 
 export function Footer() {

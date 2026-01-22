@@ -49,17 +49,17 @@ export default function TermsConditionsPage() {
                 All quotes are estimates and may be subject to change based on final event details, guest count, and specific requirements.
               </p>
 
-              <h3 className="text-xl font-semibold text-foreground mt-4">Deposits</h3>
+              <h3 className="text-xl font-semibold text-foreground mt-4">Downpayments</h3>
               <p>
-                A non-refundable deposit is required to secure your booking. The deposit amount will be communicated during the booking process.
+                A non-refundable 50% downpayment is required to secure your booking.
               </p>
 
               <h3 className="text-xl font-semibold text-foreground mt-4">Payment Terms</h3>
               <ul className="list-disc pl-6 space-y-2">
-                <li>Deposits are due upon booking confirmation</li>
-                <li>Final payment is due 7 days before the event date</li>
+                <li>Downpayments (50%) are due upon booking confirmation</li>
+                <li>Final payment (remaining 50%) is due after setup at your event</li>
                 <li>Accepted payment methods: credit card, bank transfer, or as otherwise agreed</li>
-                <li>Late payments may result in cancellation of services</li>
+                <li>Late downpayments may result in cancellation of services</li>
               </ul>
             </section>
 
@@ -69,9 +69,8 @@ export default function TermsConditionsPage() {
               
               <h3 className="text-xl font-semibold text-foreground">General Guidelines:</h3>
               <ul className="list-disc pl-6 space-y-2">
-                <li>Deposits are non-refundable</li>
-                <li>Cancellations more than 30 days before the event may receive a partial refund</li>
-                <li>Cancellations less than 30 days before the event are non-refundable</li>
+                <li>Downpayments (50%) are non-refundable</li>
+                <li>You may reschedule your event (subject to availability)</li>
                 <li>Weather-related cancellations will be handled on a case-by-case basis</li>
               </ul>
             </section>
