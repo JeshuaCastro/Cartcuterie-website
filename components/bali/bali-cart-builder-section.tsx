@@ -197,12 +197,12 @@ export function BaliCartBuilderSection() {
                         }`}
                         onClick={() => handleCartTypeSelect(cart.id)}
                       >
-                        <div className="relative h-40 md:h-48 bg-gray-100">
+                        <div className="relative h-48 md:h-48 bg-gray-100">
                           <Image
                             src={cart.image}
                             alt={cart.name}
                             fill
-                            className="object-cover"
+                            className="object-contain md:object-cover"
                             style={{
                               objectPosition: cart.id === 'plain' ? 'center left' : 'center center'
                             }}
