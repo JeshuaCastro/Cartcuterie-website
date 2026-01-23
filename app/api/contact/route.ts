@@ -26,9 +26,12 @@ export async function POST(req: NextRequest) {
     }
 
     // Send email to business owner
+    // Route to appropriate email based on site location
+    const recipientEmail = siteLocation === 'bali' ? 'cartcuteriebali@gmail.com' : 'cartcuteriela@gmail.com'
+    
     const businessEmail = await resend.emails.send({
       from: "Cartcuterie <noreply@cartcuterie.com>",
-      to: "cartcuteriela@gmail.com",
+      to: recipientEmail,
       subject: `New Cart Inquiry from ${name}${siteLocation === 'bali' ? ' (BALI)' : ''}`,
       html: `
         <html>

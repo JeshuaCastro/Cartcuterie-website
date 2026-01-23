@@ -13,7 +13,7 @@ export function BaliHeroSection() {
       {/* Background Image */}
       <div className="absolute inset-0 z-0">
         <Image 
-          src="/images/bali-hero.PNG" 
+          src="/images/hero.jpg" 
           alt="Tropical cart on beach in Bali" 
           fill 
           className="object-cover"
@@ -35,11 +35,19 @@ export function BaliHeroSection() {
             </span>
           </div>
 
-          <h1 className="font-serif text-5xl md:text-7xl lg:text-8xl font-bold text-white text-balance leading-tight drop-shadow-2xl">
+          <h1 className="font-serif text-5xl md:text-7xl lg:text-8xl font-bold text-white text-balance leading-tight" 
+              style={{ 
+                textShadow: '0 0 20px rgba(0,0,0,0.8), 0 0 40px rgba(0,0,0,0.6), 2px 2px 4px rgba(0,0,0,0.9), -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000'
+              }}>
             Tropical Cart Experiences in Bali
           </h1>
 
-          <p className="text-xl md:text-2xl text-white/90 max-w-2xl mx-auto text-pretty leading-relaxed drop-shadow-lg">
+          <p className="text-xl md:text-2xl text-white max-w-2xl mx-auto text-pretty leading-relaxed px-4 py-2 rounded-lg" 
+             style={{ 
+               textShadow: '0 0 15px rgba(0,0,0,0.9), 0 0 30px rgba(0,0,0,0.7), 2px 2px 4px rgba(0,0,0,1), -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000',
+               backgroundColor: 'rgba(0,0,0,0.2)',
+               backdropFilter: 'blur(4px)'
+             }}>
             Luxury mobile carts with island flair, designed and catered for your special event in paradise.
           </p>
 

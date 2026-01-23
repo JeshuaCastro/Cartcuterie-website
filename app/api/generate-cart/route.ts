@@ -192,7 +192,17 @@ export async function POST(req: NextRequest) {
     instructions.push("CRITICAL: Do NOT modify, alter, hollow out, or change the cart body structure in any way.")
     instructions.push("CRITICAL: Do NOT make the cart transparent or see-through.")
     instructions.push("CRITICAL: The cart body, shelves, wheels, and frame must remain completely solid and intact.")
-    instructions.push("ONLY apply color changes to the cart paint - structure must be preserved exactly.")
+    
+    // For Bali location, preserve original cart colors and body design
+    if (location === "bali") {
+      instructions.push("CRITICAL: Do NOT alter the cart's original color scheme or paint colors whatsoever.")
+      instructions.push("CRITICAL: Do NOT modify the physical design, body, or structure of the cart.")
+      instructions.push("ONLY add custom wording/text and food/product displays as requested.")
+      instructions.push("Preserve the exact original cart appearance - maintain all existing colors, finishes, and design elements.")
+    } else {
+      instructions.push("ONLY apply color changes to the cart paint - structure must be preserved exactly.")
+    }
+    
     instructions.push("Maintain the original cart structure, wheels, and proportions perfectly.")
     instructions.push("Render as bright, upscale event photography with professional lighting.")
     instructions.push("Make colors vivid and vibrant for a premium look.")
