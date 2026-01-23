@@ -37,15 +37,15 @@ export function HeroSection() {
         <div className="max-w-4xl mx-auto space-y-8 animate-fade-in-up">
           <h1 className="font-serif text-5xl md:text-7xl lg:text-8xl font-bold text-white text-balance leading-tight"
               style={{ 
-                textShadow: '0 0 20px rgba(0,0,0,0.8), 0 0 40px rgba(0,0,0,0.6), 2px 2px 4px rgba(0,0,0,0.9), -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000'
+                textShadow: '0 0 4px rgba(0,0,0,0.7)'
               }}>
             We Bring the Cart to Your Celebration.
           </h1>
 
           <p className="text-xl md:text-2xl text-white max-w-2xl mx-auto text-pretty leading-relaxed px-4 py-2 rounded-lg"
              style={{ 
-               textShadow: '0 0 15px rgba(0,0,0,0.9), 0 0 30px rgba(0,0,0,0.7), 2px 2px 4px rgba(0,0,0,1), -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000',
-               backgroundColor: 'rgba(0,0,0,0.2)',
+               textShadow: '0 0 4px rgba(0,0,0,0.7)',
+               backgroundColor: 'rgba(255,255,255,0.15)',
                backdropFilter: 'blur(4px)'
              }}>
             Luxury mobile carts, designed and catered for any event across Los Angeles.
