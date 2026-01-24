@@ -115,7 +115,6 @@ export function BaliCartBuilderProvider({ children }: { children: ReactNode }) {
           cartType: cartTypeMapping[cartData.cartType] || cartData.cartType,
           baseImage: baseImageMapping[cartData.cartType],
           customWording: cartData.hasCustomWording ? cartData.customWording : undefined,
-          colors: cartData.colors,
           logo: cartData.logoFile,
           cateringItems: cartData.cateringTypes,
           location: "bali",

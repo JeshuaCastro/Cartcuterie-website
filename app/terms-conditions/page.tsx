@@ -57,7 +57,6 @@ export default function TermsConditionsPage() {
               <h3 className="text-xl font-semibold text-foreground mt-4">Payment Terms</h3>
               <ul className="list-disc pl-6 space-y-2">
                 <li>Downpayments (50%) are due upon booking confirmation</li>
-                <li>Final payment (remaining 50%) is due after setup at your event</li>
                 <li>Accepted payment methods: credit card, bank transfer, or as otherwise agreed</li>
                 <li>Late downpayments may result in cancellation of services</li>
               </ul>

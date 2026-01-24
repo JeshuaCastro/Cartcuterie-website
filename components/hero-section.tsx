@@ -42,11 +42,9 @@ export function HeroSection() {
             We Bring the Cart to Your Celebration.
           </h1>
 
-          <p className="text-xl md:text-2xl text-white max-w-2xl mx-auto text-pretty leading-relaxed px-4 py-2 rounded-lg"
+          <p className="text-xl md:text-2xl text-white max-w-2xl mx-auto text-pretty leading-relaxed"
              style={{ 
-               textShadow: '0 0 4px rgba(0,0,0,0.7)',
-               backgroundColor: 'rgba(255,255,255,0.15)',
-               backdropFilter: 'blur(4px)'
+               textShadow: '0 0 4px rgba(0,0,0,0.7)'
              }}>
             Luxury mobile carts, designed and catered for any event across Los Angeles.
           </p>

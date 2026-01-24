@@ -120,11 +120,12 @@ export async function POST(req: NextRequest) {
       "Generate a professional product photo of this catering cart with the following customizations:",
     ]
 
-    // Skip all color customizations if plain roof is selected
+    // Skip all color customizations if plain roof is selected OR if Bali location
     const isPlainRoof = roofDecor === "plain"
+    const isBaliLocation = location === "bali"
 
-    if (!isPlainRoof) {
-      // Color instructions
+    if (!isPlainRoof && !isBaliLocation) {
+      // Color instructions - ONLY for non-Bali locations
       if (primaryColor !== "#FFFFFF") {
         instructions.push(`Paint the main cart body in ${primaryColor}.`)
       }
@@ -145,10 +146,12 @@ export async function POST(req: NextRequest) {
           instructions.push(`Add a custom-designed canopy featuring ${roofColor} and ${secondaryColor}.`)
         }
       }
-    } else {
-      // Plain roof selected - keep cart in its natural state
+    } else if (isPlainRoof && !isBaliLocation) {
+      // Plain roof selected - keep cart in its natural state (non-Bali only)
       instructions.push("Keep the cart in its clean, natural finish without color customization.")
     }
+    
+    // For Bali, we skip ALL color instructions above - no colors should be added at all
 
     // Design/decoration instructions
     if (design === "floral") {
@@ -192,14 +195,23 @@ export async function POST(req: NextRequest) {
     instructions.push("CRITICAL: Do NOT modify, alter, hollow out, or change the cart body structure in any way.")
     instructions.push("CRITICAL: Do NOT make the cart transparent or see-through.")
     instructions.push("CRITICAL: The cart body, shelves, wheels, and frame must remain completely solid and intact.")
+    instructions.push("CRITICAL: Do NOT add any external furniture, extra tables, hanging tables, side tables, or structures outside the cart body.")
+    instructions.push("CRITICAL: Do NOT add side tables or attachments to the sides of the cart under any circumstances.")
+    instructions.push("CRITICAL: Only use risers and setups that work within the cart's original body and shelves.")
+    instructions.push("CRITICAL: Do NOT add shelving, tables, or furnishings that are not part of the original cart structure.")
     
     // For Bali location, preserve original cart colors and body design
     if (location === "bali") {
-      instructions.push("CRITICAL: Do NOT alter the cart's original color scheme or paint colors whatsoever.")
-      instructions.push("CRITICAL: Do NOT modify the physical design, body, or structure of the cart.")
-      instructions.push("ONLY add custom wording/text and food/product displays as requested.")
-      instructions.push("Preserve the exact original cart appearance - maintain all existing colors, finishes, and design elements.")
+      instructions.push("CRITICAL: NEVER, UNDER ANY CIRCUMSTANCES, change the cart's color from white. The cart must remain WHITE.")
+      instructions.push("CRITICAL: Do NOT alter, paint, or modify any colors on the cart whatsoever.")
+      instructions.push("CRITICAL: Do NOT add any coloring, shading, or tinting that changes the cart's appearance.")
+      instructions.push("CRITICAL: Keep the cart in its exact original WHITE color and finish at all times.")
+      instructions.push("CRITICAL: Do NOT modify the physical design, body, structure, or appearance of the cart.")
+      instructions.push("CRITICAL: Do NOT add any furnishings, tables, side tables, or structures to the cart.")
+      instructions.push("ONLY add custom wording/text and food/product displays that fit within the cart's original design.")
+      instructions.push("Preserve the exact original cart appearance - maintain all existing colors, finishes, design elements, and structure.")
     } else {
+      instructions.push("CRITICAL: Do NOT add any external furniture, tables, side tables, or structures outside the cart body.")
       instructions.push("ONLY apply color changes to the cart paint - structure must be preserved exactly.")
     }
     
