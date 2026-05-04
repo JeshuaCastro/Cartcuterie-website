@@ -19,46 +19,50 @@ export function ContactSection() {
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [touched, setTouched] = useState<Record<string, boolean>>({})
 
-  useEffect(() => {
-    if (cartData.cartType || cartData.cartTop || cartData.design || cartData.catering.length > 0) {
-      setShowCartSummary(true)
+  const cartTypeNames: Record<string, string> = {
+    classic: "Classic Cart",
+    mobile: "Mobile Cart",
+    "ice-cream": "Ice Cream Cart",
+  }
+  const addOnNames: Record<string, string> = {
+    "stripe-cloth": "Stripe Cloth Roof",
+    "stripe-vinyl": "Stripe Vinyl Roof",
+    floral: "Floral Arrangement",
+    "custom-wrap": "Custom Booth Wrap",
+    none: "No Add Ons",
+  }
+  const cateringNames: Record<string, string> = {
+    charcuterie: "Charcuterie/Graze Cart",
+    flower: "Flower Cart",
+    donut: "Donut Cart",
+    fruit: "Fruit Cart",
+    popcorn: "Popcorn Cart",
+    candy: "Candy Cart",
+    crepe: "Crepe Cart",
+    juice: "Juice Cart",
+    "custom-catering": "Custom Catering",
+  }
 
-      const cartTypeNames: Record<string, string> = {
-        classic: "Classic Cart",
-        mobile: "Mobile Cart",
-      }
-      const cartTopNames: Record<string, string> = {
-        classic: "Classic",
-        umbrella: "Umbrella",
-        "bar-top": "Bar Top",
-      }
-      const designNames: Record<string, string> = {
-        floral: "Floral",
-        boho: "Boho",
-        modern: "Modern",
-        custom: "Custom",
-      }
-      const cateringNames: Record<string, string> = {
-        charcuterie: "Charcuterie Board",
-        dessert: "Dessert Bar",
-        beverage: "Beverage Cart",
-        "custom-catering": "Custom Catering",
-      }
+  useEffect(() => {
+    if (cartData.cartType || cartData.addOn || cartData.hasCatering || cartData.catering.length > 0) {
+      setShowCartSummary(true)
 
       let summary = ""
       if (cartData.cartType) summary += `Cart Type: ${cartTypeNames[cartData.cartType]}`
-      if (cartData.cartTop) summary += ` · Top: ${cartTopNames[cartData.cartTop]}`
-      if (cartData.design) summary += ` · Design: ${designNames[cartData.design]}`
-      if (cartData.catering.length > 0) {
+      if (cartData.addOn) summary += ` · Add Ons: ${addOnNames[cartData.addOn] || cartData.addOn}`
+      if (cartData.hasCatering && cartData.catering.length > 0) {
         summary += ` · Add-ons: ${cartData.catering.map((id) => cateringNames[id] || id).join(", ")}`
+      } else if (cartData.hasCatering === false) {
+        summary += " · Catering: No Catering"
       }
 
       let message = "I'm interested in the following cart configuration:\n\n"
       if (cartData.cartType) message += `Cart Type: ${cartTypeNames[cartData.cartType] || cartData.cartType}\n`
-      if (cartData.cartTop) message += `Cart Top: ${cartTopNames[cartData.cartTop] || cartData.cartTop}\n`
-      if (cartData.design) message += `Design Style: ${designNames[cartData.design] || cartData.design}\n`
-      if (cartData.catering.length > 0) {
+      if (cartData.addOn) message += `Add Ons: ${addOnNames[cartData.addOn] || cartData.addOn}\n`
+      if (cartData.hasCatering && cartData.catering.length > 0) {
         message += `Catering Options: ${cartData.catering.map((id) => cateringNames[id] || id).join(", ")}\n`
+      } else if (cartData.hasCatering === false) {
+        message += "Catering Options: No Catering\n"
       }
       message += "\nPlease provide more details about pricing and availability."
 
@@ -189,25 +193,31 @@ export function ContactSection() {
                   {cartData.cartType && (
                     <div className="text-center">
                       <p className="text-xs text-muted-foreground mb-1">Cart Type</p>
-                      <p className="font-bold text-sm">{cartData.cartType === "classic" ? "Classic" : "Mobile"}</p>
+                      <p className="font-bold text-sm">{cartTypeNames[cartData.cartType] || cartData.cartType}</p>
                     </div>
                   )}
-                  {cartData.cartTop && (
+                  {cartData.addOn && (
                     <div className="text-center">
-                      <p className="text-xs text-muted-foreground mb-1">Cart Top</p>
-                      <p className="font-bold text-sm capitalize">{cartData.cartTop}</p>
+                      <p className="text-xs text-muted-foreground mb-1">Add Ons</p>
+                      <p className="font-bold text-sm">{addOnNames[cartData.addOn] || cartData.addOn}</p>
                     </div>
                   )}
-                  {cartData.design && (
+                  {cartData.hasCatering && (
                     <div className="text-center">
-                      <p className="text-xs text-muted-foreground mb-1">Design</p>
-                      <p className="font-bold text-sm capitalize">{cartData.design}</p>
+                      <p className="text-xs text-muted-foreground mb-1">Catering</p>
+                      <p className="font-bold text-sm">Yes</p>
                     </div>
                   )}
-                  {cartData.catering.length > 0 && (
+                  {cartData.hasCatering && cartData.catering.length > 0 && (
                     <div className="text-center">
                       <p className="text-xs text-muted-foreground mb-1">Add-ons</p>
                       <p className="font-bold text-sm">{cartData.catering.length} selected</p>
+                    </div>
+                  )}
+                  {cartData.hasCatering === false && (
+                    <div className="text-center">
+                      <p className="text-xs text-muted-foreground mb-1">Catering</p>
+                      <p className="font-bold text-sm">No Catering</p>
                     </div>
                   )}
                 </div>

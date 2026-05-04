@@ -112,46 +112,65 @@ export async function POST(req: NextRequest) {
     log("✓ Base image converted to base64, size:", base64Image.length, "bytes")
 
     // Build the prompt for Gemini 3 Pro Image
-    const primaryColor = colors?.primary || "#FFFFFF"
-    const secondaryColor = colors?.secondary || "#FFD700"
-    const roofColor = colors?.roofColor || "#FFFFFF"
+    const primaryColor = typeof colors?.primary === "string" && colors.primary.trim() ? colors.primary.trim() : null
+    const secondaryColor = typeof colors?.secondary === "string" && colors.secondary.trim() ? colors.secondary.trim() : null
+    const roofColor = typeof colors?.roofColor === "string" && colors.roofColor.trim() ? colors.roofColor.trim() : null
 
     const instructions: string[] = [
       "Generate a professional product photo of this catering cart with the following customizations:",
     ]
 
-    // Skip all color customizations if plain roof is selected OR if Bali location
-    const isPlainRoof = roofDecor === "plain"
+    // Skip all color customizations for Bali. US color instructions only run when explicit colors are provided.
+    const isPlainRoof = !roofDecor || roofDecor === "plain"
     const isBaliLocation = location === "bali"
+    const hasColorCustomization = Boolean(primaryColor || secondaryColor || roofColor)
 
-    if (!isPlainRoof && !isBaliLocation) {
-      // Color instructions - ONLY for non-Bali locations
-      if (primaryColor !== "#FFFFFF") {
+    if (!isBaliLocation && hasColorCustomization) {
+      if (primaryColor && primaryColor !== "#FFFFFF") {
         instructions.push(`Paint the main cart body in ${primaryColor}.`)
       }
-      instructions.push(`Add ${secondaryColor} accents on trim, moulding, and decorative elements.`)
+      if (secondaryColor) {
+        instructions.push(`Add ${secondaryColor} accents on trim, moulding, and decorative elements.`)
+      }
+    }
 
-      // Roof/canopy instructions
+    if (!isBaliLocation) {
       if (cartType === "classic" || cartType === "ice-cream") {
         if (roofDecor === "stripe-cloth" || roofDecor === "stripe-vinyl") {
-          instructions.push(`Add a striped canopy with alternating ${roofColor} and ${secondaryColor} stripes.`)
-        } else if (roofDecor !== "plain") {
-          instructions.push(`Add a decorative canopy in ${roofColor} with ${secondaryColor} accents.`)
+          if (roofColor && secondaryColor) {
+            instructions.push(`Add a striped canopy with alternating ${roofColor} and ${secondaryColor} stripes.`)
+          } else {
+            instructions.push(
+              `Add a ${roofDecor === "stripe-cloth" ? "striped cloth" : "striped vinyl"} canopy while keeping the cart body unchanged and avoiding any added side tables or external structures.`
+            )
+          }
+        } else if (!isPlainRoof) {
+          if (roofColor && secondaryColor) {
+            instructions.push(`Add a decorative canopy in ${roofColor} with ${secondaryColor} accents.`)
+          } else {
+            instructions.push("Add the selected canopy style while preserving the cart's existing body color and structure.")
+          }
         }
-      } else {
-        // Mobile cart
+      } else if (cartType === "mobile") {
         if (roofDecor === "striped-roof") {
-          instructions.push(`Add a modern striped canopy with ${roofColor} and ${secondaryColor} stripes.`)
+          if (roofColor && secondaryColor) {
+            instructions.push(`Add a modern striped canopy with ${roofColor} and ${secondaryColor} stripes.`)
+          } else {
+            instructions.push("Add a modern striped canopy while keeping the cart body color and footprint unchanged.")
+          }
         } else if (roofDecor === "custom") {
-          instructions.push(`Add a custom-designed canopy featuring ${roofColor} and ${secondaryColor}.`)
+          if (roofColor && secondaryColor) {
+            instructions.push(`Add a custom-designed canopy featuring ${roofColor} and ${secondaryColor}.`)
+          } else {
+            instructions.push("Add the selected canopy treatment while keeping the original cart body unchanged.")
+          }
         }
       }
-    } else if (isPlainRoof && !isBaliLocation) {
-      // Plain roof selected - keep cart in its natural state (non-Bali only)
-      instructions.push("Keep the cart in its clean, natural finish without color customization.")
+
+      if (isPlainRoof && !hasColorCustomization) {
+        instructions.push("Keep the cart in its clean, natural finish without color customization.")
+      }
     }
-    
-    // For Bali, we skip ALL color instructions above - no colors should be added at all
 
     // Design/decoration instructions
     if (design === "floral") {
@@ -163,8 +182,10 @@ export async function POST(req: NextRequest) {
         `Keep 95% of the cart completely clean and visible. ` +
         `The cart structure must remain the focal point, not the flowers.`
       )
-    } else if (design === "custom") {
-      instructions.push("Include a centered branding panel area for custom artwork.")
+    } else if (design === "custom" || design === "custom-wrap") {
+      instructions.push(
+        "Add a custom booth wrap or centered branding panel for artwork while preserving the cart's original body, proportions, and footprint."
+      )
     } else if (design === "none") {
       instructions.push("Keep the cart clean and minimal with no additional decorative elements.")
     }
