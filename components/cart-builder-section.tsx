@@ -227,13 +227,6 @@ export function CartBuilderSection() {
     setSelectedAddOn("")
     setUploadedLogo(null)
     if (fileInputRef.current) fileInputRef.current.value = ""
-    updateCartData({
-      addOn: "",
-      roofDecor: "plain",
-      design: "none",
-      logo: null,
-      aiGeneratedImage: null,
-    })
   }
 
   const handleCateringMode = (enabled: boolean) => {
