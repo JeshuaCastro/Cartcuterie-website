@@ -1,6 +1,6 @@
 "use client"
 
-import { createContext, useContext, useState, useEffect, type ReactNode } from "react"
+import { createContext, useContext, useState, useEffect, useRef, type ReactNode } from "react"
 
 export interface BaliCartBuilderData {
   cartType: string // plain, stripe, tropical
@@ -30,6 +30,7 @@ interface BaliCartBuilderContextType {
 }
 
 const BaliCartBuilderContext = createContext<BaliCartBuilderContextType | undefined>(undefined)
+const BALI_CART_STORAGE_KEY = "cartcuterie_bali_builder"
 
 const initialCartData: BaliCartBuilderData = {
   cartType: "",
@@ -47,15 +48,42 @@ const initialCartData: BaliCartBuilderData = {
   location: "bali",
 }
 
+function readStoredCartData(): string | null {
+  try {
+    return localStorage.getItem(BALI_CART_STORAGE_KEY)
+  } catch {
+    return null
+  }
+}
+
+function persistCartData(data: BaliCartBuilderData): void {
+  try {
+    localStorage.setItem(BALI_CART_STORAGE_KEY, JSON.stringify(data))
+  } catch (error) {
+    console.warn("Cart selections could not be saved to local storage; continuing with in-memory state.", error)
+  }
+}
+
+function clearStoredCartData(): void {
+  try {
+    localStorage.removeItem(BALI_CART_STORAGE_KEY)
+  } catch {
+    // In-memory state is still reset when browser storage is unavailable.
+  }
+}
+
 export function BaliCartBuilderProvider({ children }: { children: ReactNode }) {
   const [cartData, setCartData] = useState<BaliCartBuilderData>(initialCartData)
+  const cartDataRef = useRef<BaliCartBuilderData>(initialCartData)
   const [isGenerating, setIsGenerating] = useState(false)
 
   useEffect(() => {
-    const stored = localStorage.getItem("cartcuterie_bali_builder")
+    const stored = readStoredCartData()
     if (stored) {
       try {
-        setCartData(JSON.parse(stored))
+        const restored = JSON.parse(stored)
+        cartDataRef.current = restored
+        setCartData(restored)
       } catch (e) {
         // Failed to parse stored data
       }
@@ -63,23 +91,25 @@ export function BaliCartBuilderProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const updateCartData = (data: Partial<BaliCartBuilderData>) => {
-    setCartData((prev) => {
-      const updated = { ...prev, ...data }
-      localStorage.setItem("cartcuterie_bali_builder", JSON.stringify(updated))
-      return updated
-    })
+    const updated = { ...cartDataRef.current, ...data }
+    cartDataRef.current = updated
+    setCartData(updated)
+    persistCartData(updated)
   }
 
   const resetCartData = () => {
+    cartDataRef.current = initialCartData
     setCartData(initialCartData)
-    localStorage.removeItem("cartcuterie_bali_builder")
+    clearStoredCartData()
   }
 
   const loadFromStorage = () => {
-    const stored = localStorage.getItem("cartcuterie_bali_builder")
+    const stored = readStoredCartData()
     if (stored) {
       try {
-        setCartData(JSON.parse(stored))
+        const restored = JSON.parse(stored)
+        cartDataRef.current = restored
+        setCartData(restored)
       } catch (e) {
         // Failed to parse stored data
       }
@@ -87,12 +117,14 @@ export function BaliCartBuilderProvider({ children }: { children: ReactNode }) {
   }
 
   const saveToStorage = () => {
-    localStorage.setItem("cartcuterie_bali_builder", JSON.stringify(cartData))
+    persistCartData(cartDataRef.current)
   }
 
   const generateAICart = async (): Promise<string | null> => {
     setIsGenerating(true)
     try {
+      const requestCartData = cartDataRef.current
+
       // Map Bali cart types to descriptive names for AI and base images
       const cartTypeMapping: Record<string, string> = {
         plain: "Plain white cart with clean minimalist design",
@@ -106,17 +138,18 @@ export function BaliCartBuilderProvider({ children }: { children: ReactNode }) {
         tropical: "/images/tropical-cart.jpg",
       }
 
-      const response = await fetch("/api/generate-cart", {
+      const response = await fetch("/generate-cart-image", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          cartType: cartTypeMapping[cartData.cartType] || cartData.cartType,
-          baseImage: baseImageMapping[cartData.cartType],
-          customWording: cartData.hasCustomWording ? cartData.customWording : undefined,
-          logo: cartData.logoFile,
-          cateringItems: cartData.cateringTypes,
+          cartType: cartTypeMapping[requestCartData.cartType] || requestCartData.cartType,
+          baseImage: baseImageMapping[requestCartData.cartType],
+          customWording: requestCartData.hasCustomWording ? requestCartData.customWording : undefined,
+          logo: requestCartData.logoFile,
+          colors: requestCartData.colors,
+          cateringItems: requestCartData.cateringTypes,
           location: "bali",
         }),
       })

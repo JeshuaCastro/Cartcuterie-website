@@ -7,11 +7,11 @@ import { Instagram, X, ChevronLeft, ChevronRight } from "lucide-react"
 
 const galleryImages = [
   {
-    src: "/images/yellow-mobile-cart.jpg",
-    title: "Yellow Mobile Cart",
-    caption: "Yellow Mobile Cart",
-    category: "Mobile Carts",
-    location: "Los Angeles, CA",
+    src: "/images/mate-juice-cart.jpg",
+    title: "Mate Juice Cart",
+    caption: "Mate Juice Cart",
+    category: "Corporate",
+    location: "Venice, CA",
   },
   {
     src: "/images/catering-3.jpg",
@@ -28,11 +28,53 @@ const galleryImages = [
     location: "Santa Monica, CA",
   },
   {
-    src: "/images/mate-juice-cart.jpg",
-    title: "Mate Juice Cart",
-    caption: "Mate Juice Cart",
+    src: "/images/yellow-mobile-cart.jpg",
+    title: "Yellow Mobile Cart",
+    caption: "Yellow Mobile Cart",
+    category: "Mobile Carts",
+    location: "Los Angeles, CA",
+  },
+  {
+    src: "/images/laneige-cart.JPG",
+    title: "Donut Cart",
+    caption: "Laneige Donut Shop - Premium Pastry Cart",
+    category: "Catering",
+    location: "Event Venue, CA",
+  },
+  {
+    src: "/images/petals-cart.JPG",
+    title: "Flower Cart",
+    caption: "Layla's Petals - Luxury Flower Display Cart",
+    category: "Catering",
+    location: "Indoor Event, CA",
+  },
+  {
+    src: "/images/tommy-cart.JPEG",
+    title: "Tommy Hilfiger Holiday Cart",
+    caption: "Tommy Hilfiger Holiday Pop-Up Experience",
     category: "Corporate",
-    location: "Venice, CA",
+    location: "Retail Pop-Up",
+  },
+  {
+    src: "/images/nudestix.jpg",
+    title: "Nudestix Event",
+    caption: "Nudestix Event",
+    category: "Beauty",
+    location: "Los Angeles, CA",
+  },
+  {
+    src: "/images/Charcuterie.JPG",
+    title: "Charcuterie Spread",
+    caption: "Charcuterie Spread",
+    category: "Catering",
+    location: "Los Angeles, CA",
+  },
+  {
+    src: "/images/malibu-event.jpg",
+    title: "Private Event",
+    caption: "Private Event",
+    category: "Parties",
+    location: "Malibu, CA",
   },
   {
     src: "/images/Better-me-cart.JPG",
@@ -77,52 +119,10 @@ const galleryImages = [
     location: "Hollywood, CA",
   },
   {
-    src: "/images/laneige-cart.JPG",
-    title: "Donut Cart",
-    caption: "Laneige Donut Shop - Premium Pastry Cart",
-    category: "Catering",
-    location: "Event Venue, CA",
-  },
-  {
-    src: "/images/petals-cart.JPG",
-    title: "Flower Cart",
-    caption: "Layla's Petals - Luxury Flower Display Cart",
-    category: "Catering",
-    location: "Indoor Event, CA",
-  },
-  {
-    src: "/images/tommy-cart.JPEG",
-    title: "Tommy Hilfiger Holiday Cart",
-    caption: "Tommy Hilfiger Holiday Pop-Up Experience",
-    category: "Corporate",
-    location: "Retail Pop-Up",
-  },
-  {
-    src: "/images/nudestix.jpg",
-    title: "Nudestix Event",
-    caption: "Nudestix Event",
-    category: "Beauty",
-    location: "Los Angeles, CA",
-  },
-  {
     src: "/images/sendero-cart.jpg",
     title: "Sendero Event",
     caption: "Sendero Event",
     category: "Corporate",
-    location: "Los Angeles, CA",
-  },
-  {
-    src: "/images/malibu-event.jpg",
-    title: "Private Event",
-    caption: "Private Event",
-    category: "Parties",
-    location: "Malibu, CA",
-  },
-  {
-    src: "/images/Charcuterie.JPG",
-    title: "Charcuterie Spread",
-    caption: "Charcuterie Spread",
-    category: "Catering",
     location: "Los Angeles, CA",
   },
   {
@@ -156,16 +156,16 @@ export function GallerySection() {
   }
 
   return (
-    <section id="gallery" className="py-24 md:py-32 bg-background">
+    <section id="gallery" className="py-12 md:py-16 bg-[#fcfbf8]">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-16 space-y-4">
-          <h2 className="font-serif text-4xl md:text-6xl font-bold text-foreground text-balance">
+        <div className="relative top-8 text-center mb-13 md:mb-16 space-y-2 md:space-y-3">
+          <h2 className="font-serif text-[28px] leading-[1.05] md:text-[44px] lg:text-[56px] font-bold text-foreground text-balance">
             Events We've Done
           </h2>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto text-pretty leading-relaxed">
+          <div className="w-16 md:w-24 h-1 bg-accent mx-auto rounded-full" />
+          <p className="text-base text-muted-foreground max-w-2xl mx-auto text-pretty leading-relaxed">
             From intimate weddings to grand celebrations
           </p>
-          <div className="w-24 h-1 bg-accent mx-auto rounded-full" />
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-2 max-w-7xl mx-auto">

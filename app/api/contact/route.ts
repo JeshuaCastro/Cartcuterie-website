@@ -1,12 +1,53 @@
 import { NextRequest, NextResponse } from "next/server"
 import { Resend } from "resend"
+import { escapeEmailHtml, renderInquiryDetails } from "@/lib/inquiry-email"
 
-const resend = new Resend(process.env.RESEND_API_KEY)
+const attachmentNames = {
+  logo: "uploaded-logo",
+  decalDesignImage: "uploaded-decal",
+  aiGeneratedImage: "ai-visualization",
+} as const
+
+function getAttachment(value: unknown, baseName: string) {
+  if (typeof value !== "string" || !value) return null
+
+  const match = /^data:(image\/(?:png|jpeg|webp|gif|svg\+xml));base64,([\s\S]+)$/i.exec(value)
+  if (!match) return null
+
+  const contentType = match[1].toLowerCase()
+  const extension =
+    contentType === "image/jpeg"
+      ? "jpg"
+      : contentType === "image/svg+xml"
+        ? "svg"
+        : contentType.split("/")[1]
+  const content = Buffer.from(match[2].replace(/\s/g, ""), "base64")
+  if (content.length === 0 || content.length > 10 * 1024 * 1024) return null
+
+  return {
+    filename: `${baseName}.${extension}`,
+    content,
+    contentType,
+  }
+}
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json()
-    const { name, email, phone, eventType, eventDate, eventTime, location, message, siteLocation } = body
+    const {
+      name,
+      email,
+      phone,
+      eventType,
+      eventDate,
+      eventTime,
+      location,
+      message,
+      siteLocation,
+      logo,
+      decalDesignImage,
+      aiGeneratedImage,
+    } = body
 
     // Validate required fields
     if (!name || !email || !eventType) {
@@ -25,9 +66,17 @@ export async function POST(req: NextRequest) {
       )
     }
 
+    const resend = new Resend(process.env.RESEND_API_KEY)
+    const inquiryDetails = renderInquiryDetails(body)
+
     // Send email to business owner
     // Route to appropriate email based on site location
     const recipientEmail = siteLocation === 'bali' ? 'cartcuteriebali@gmail.com' : 'cartcuteriela@gmail.com'
+    const attachments = [
+      getAttachment(logo, attachmentNames.logo),
+      getAttachment(decalDesignImage, attachmentNames.decalDesignImage),
+      getAttachment(aiGeneratedImage, attachmentNames.aiGeneratedImage),
+    ].filter((attachment): attachment is NonNullable<typeof attachment> => Boolean(attachment))
     
     const businessEmail = await resend.emails.send({
       from: "Cartcuterie <noreply@cartcuterie.com>",
@@ -37,18 +86,7 @@ export async function POST(req: NextRequest) {
         <html>
           <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
             <h2 style="color: #2c3e50;">New Cart Inquiry Submission${siteLocation === 'bali' ? ' - 🌴 BALI LOCATION' : ''}</h2>
-            <div style="background-color: #f5f5f5; padding: 20px; border-radius: 5px; margin: 20px 0;">
-              <p><strong>Name:</strong> ${name}</p>
-              <p><strong>Email:</strong> <a href="mailto:${email}">${email}</a></p>
-              <p><strong>Phone:</strong> ${phone || "Not provided"}</p>
-              <p><strong>Event Type:</strong> ${eventType}</p>
-              <p><strong>Event Date:</strong> ${eventDate || "Not provided"}</p>
-              <p><strong>Event Time:</strong> ${eventTime || "Not provided"}</p>
-              <p><strong>Location:</strong> ${location || "Not provided"}</p>
-              ${siteLocation === 'bali' ? '<p><strong>Site:</strong> <span style="color: #d97706; font-weight: bold;">BALI</span></p>' : ''}
-            </div>
-            <h3>Message:</h3>
-            <p>${message || "No message provided"}</p>
+            ${inquiryDetails}
             <hr style="border: none; border-top: 1px solid #ddd; margin: 20px 0;">
             <p style="font-size: 12px; color: #999;">
               Submitted at: ${new Date().toLocaleString("en-US", { timeZone: "America/Los_Angeles" })}
@@ -57,6 +95,7 @@ export async function POST(req: NextRequest) {
         </html>
       `,
       replyTo: email,
+      attachments,
     })
 
     if (businessEmail.error) {
@@ -73,15 +112,9 @@ export async function POST(req: NextRequest) {
         <html>
           <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
             <h2 style="color: #2c3e50;">Thank You for Your Inquiry!</h2>
-            <p>Hi ${name},</p>
+            <p>Hi ${escapeEmailHtml(name)},</p>
             <p>We've received your cart inquiry and really appreciate your interest in Cartcuterie. Our team will review your request and get back to you shortly with a personalized quote and more details.</p>
-            <div style="background-color: #f5f5f5; padding: 20px; border-radius: 5px; margin: 20px 0;">
-              <h3 style="margin-top: 0;">Your Inquiry Details:</h3>
-              <p><strong>Event Type:</strong> ${eventType}</p>
-              <p><strong>Event Date:</strong> ${eventDate || "TBD"}</p>
-              <p><strong>Event Time:</strong> ${eventTime || "TBD"}</p>
-              <p><strong>Location:</strong> ${location || "TBD"}</p>
-            </div>
+            ${inquiryDetails}
             <p style="color: #666;">If you have any questions in the meantime, feel free to reply to this email or contact us directly.</p>
             <p>Best regards,<br><strong>Cartcuterie Team</strong></p>
             <hr style="border: none; border-top: 1px solid #ddd; margin: 20px 0;">

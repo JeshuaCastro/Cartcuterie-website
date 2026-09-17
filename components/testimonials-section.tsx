@@ -36,42 +36,42 @@ export function TestimonialsSection() {
   }, [])
 
   return (
-    <section className="py-24 md:py-32 bg-background relative overflow-hidden">
+    <section className="py-10 md:py-32 bg-[#fcfbf8] relative overflow-hidden">
       {/* Decorative Quote Mark */}
-      <div className="absolute top-12 left-1/2 -translate-x-1/2 text-accent/10 text-[200px] leading-none pointer-events-none">
+      <div className="absolute top-4 md:top-12 left-1/2 -translate-x-1/2 text-accent/10 text-[100px] md:text-[200px] leading-none pointer-events-none">
         "
       </div>
 
       <div className="container mx-auto px-4 relative z-10">
-        <div className="text-center mb-16 space-y-4">
-          <h2 className="font-serif text-4xl md:text-6xl font-bold text-foreground text-balance">
+        <div className="text-center mb-6 md:mb-16 space-y-2 md:space-y-4">
+          <h2 className="font-serif text-2xl md:text-6xl font-bold text-foreground text-balance">
             What Our Clients Say
           </h2>
           <div className="w-24 h-1 bg-accent mx-auto rounded-full" />
         </div>
 
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-[340px] md:max-w-4xl mx-auto">
           <Card className="border-none shadow-2xl bg-card">
-            <CardContent className="p-8 md:p-12">
-              <div className="space-y-6 animate-fade-in-up" key={currentIndex}>
-                <div className="flex justify-center gap-1 mb-4">
+            <CardContent className="p-4 md:p-12">
+              <div className="space-y-3 md:space-y-6 animate-fade-in-up" key={currentIndex}>
+                <div className="flex justify-center gap-1 mb-2 md:mb-4">
                   {[...Array(testimonials[currentIndex].rating)].map((_, i) => (
-                    <Star key={i} className="h-6 w-6 fill-accent text-accent" />
+                    <Star key={i} className="h-4 w-4 md:h-6 md:w-6 fill-accent text-accent" />
                   ))}
                 </div>
 
-                <blockquote className="text-xl md:text-2xl text-center text-foreground italic leading-relaxed">
+                <blockquote className="text-sm md:text-2xl text-center text-foreground italic leading-relaxed">
                   "{testimonials[currentIndex].text}"
                 </blockquote>
 
-                <div className="text-center pt-4">
-                  <p className="font-bold text-foreground text-lg">{testimonials[currentIndex].name}</p>
-                  <p className="text-muted-foreground text-sm">{testimonials[currentIndex].event}</p>
+                <div className="text-center pt-2 md:pt-4">
+                  <p className="font-bold text-foreground text-base md:text-lg">{testimonials[currentIndex].name}</p>
+                  <p className="text-muted-foreground text-xs md:text-sm">{testimonials[currentIndex].event}</p>
                 </div>
               </div>
 
               {/* Carousel Indicators */}
-              <div className="flex justify-center gap-2 mt-8">
+              <div className="flex justify-center gap-2 mt-4 md:mt-8">
                 {testimonials.map((_, index) => (
                   <button
                     key={index}

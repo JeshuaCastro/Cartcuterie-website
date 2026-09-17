@@ -3,6 +3,11 @@ const nextConfig = {
   // Production-ready configuration
   productionBrowserSourceMaps: false,
   reactStrictMode: true,
+  allowedDevOrigins: [
+    '127.0.0.1',
+    'localhost',
+    ...(process.env.REPLIT_DEV_DOMAIN ? [process.env.REPLIT_DEV_DOMAIN] : []),
+  ],
   
   typescript: {
     ignoreBuildErrors: true,

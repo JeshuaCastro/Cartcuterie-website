@@ -15,8 +15,8 @@ import { ErrorBoundary } from "@/components/error-boundary"
 
 export default function Home() {
   return (
-    <ErrorBoundary>
-      <CartBuilderProvider>
+    <CartBuilderProvider>
+      <ErrorBoundary>
         <main className="min-h-screen">
           <Navbar />
           <HeroSection />
@@ -29,7 +29,7 @@ export default function Home() {
           <ContactSection />
           <Footer />
         </main>
-      </CartBuilderProvider>
-    </ErrorBoundary>
+      </ErrorBoundary>
+    </CartBuilderProvider>
   )
 }

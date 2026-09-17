@@ -78,7 +78,6 @@ export class ErrorBoundary extends Component<Props, State> {
                 <Button
                   onClick={() => {
                     this.setState({ hasError: false, error: null })
-                    window.location.reload()
                   }}
                   className="flex-1 bg-foreground text-background hover:bg-foreground/90"
                 >

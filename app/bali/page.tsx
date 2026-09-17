@@ -14,8 +14,8 @@ import { ErrorBoundary } from "@/components/error-boundary"
 
 export default function BaliPage() {
   return (
-    <ErrorBoundary>
-      <BaliCartBuilderProvider>
+    <BaliCartBuilderProvider>
+      <ErrorBoundary>
         <main className="min-h-screen">
           <Navbar />
           <BaliHeroSection />
@@ -27,7 +27,7 @@ export default function BaliPage() {
           <BaliContactSection />
           <Footer />
         </main>
-      </BaliCartBuilderProvider>
-    </ErrorBoundary>
+      </ErrorBoundary>
+    </BaliCartBuilderProvider>
   )
 }

@@ -35,24 +35,25 @@ export function HeroSection() {
       {/* Content */}
       <div className="relative z-10 container mx-auto px-4 text-center pt-20">
         <div className="max-w-4xl mx-auto space-y-8 animate-fade-in-up">
-          <h1 className="font-serif text-5xl md:text-7xl lg:text-8xl font-bold text-white text-balance leading-tight"
+          <h1 className="font-serif text-[2.4rem] md:text-[4rem] lg:text-[4.75rem] font-bold text-white leading-tight"
               style={{ 
                 textShadow: '0 0 4px rgba(0,0,0,0.7)'
               }}>
-            We Bring the Cart to Your Celebration.
+            <span className="block">Where every cart</span>
+            <span className="block">tells a story...</span>
           </h1>
 
-          <p className="text-xl md:text-2xl text-white max-w-2xl mx-auto text-pretty leading-relaxed"
+          <p className="-mt-2 text-center text-base md:text-lg text-white max-w-2xl mx-auto text-pretty leading-relaxed"
              style={{ 
                textShadow: '0 0 4px rgba(0,0,0,0.7)'
              }}>
             Luxury mobile carts, designed and catered for any event across Los Angeles.
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-4">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-4 -translate-y-8">
             <Button
               size="lg"
-              className="bg-foreground text-background hover:bg-foreground/90 hover:shadow-[0_0_30px_rgba(203,182,130,0.5)] transition-all duration-300 text-lg px-8 py-6 rounded-xl"
+              className="w-56 bg-[#FFF078] text-[#780014] border-2 border-white hover:bg-[#FFF078]/90 hover:shadow-[0_0_30px_rgba(203,182,130,0.5)] transition-all duration-300 text-sm font-normal px-8 py-6 rounded-xl"
               onClick={() => scrollToSection("cart-builder")}
             >
               Build Your Cart
@@ -61,7 +62,7 @@ export function HeroSection() {
             <Button
               size="lg"
               variant="outline"
-              className="border-2 border-white text-white hover:bg-white hover:text-foreground transition-all duration-300 text-lg px-8 py-6 rounded-xl backdrop-blur-sm bg-transparent"
+              className="w-56 border-2 border-white text-[#780014] hover:bg-[#FFF078]/90 hover:text-[#780014] transition-all duration-300 text-sm font-normal px-8 py-6 rounded-xl backdrop-blur-sm bg-[#FFF078]"
               onClick={() => scrollToSection("gallery")}
             >
               View Gallery

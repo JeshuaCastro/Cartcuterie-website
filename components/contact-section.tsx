@@ -1,21 +1,26 @@
 "use client"
 
 import type React from "react"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useLayoutEffect, useRef } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Phone, Mail, MapPin, Edit2, X } from "lucide-react"
+import { ArrowLeft, Phone, Mail, MapPin } from "lucide-react"
 import { useCartBuilder } from "@/components/cart-builder-context"
 
 export function ContactSection() {
   const [submitted, setSubmitted] = useState(false)
+  const confirmationRef = useRef<HTMLDivElement>(null)
+  useLayoutEffect(() => {
+    if (submitted) {
+      confirmationRef.current?.scrollIntoView({ behavior: "instant", block: "center" })
+    }
+  }, [submitted])
   const { cartData, resetCartData } = useCartBuilder()
   const [formMessage, setFormMessage] = useState("")
-  const [showCartSummary, setShowCartSummary] = useState(false)
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [touched, setTouched] = useState<Record<string, boolean>>({})
 
@@ -28,6 +33,7 @@ export function ContactSection() {
     "stripe-cloth": "Stripe Cloth Roof",
     "stripe-vinyl": "Stripe Vinyl Roof",
     floral: "Floral Arrangement",
+    "custom-decal": "Custom Decal",
     "custom-wrap": "Custom Booth Wrap",
     none: "No Add Ons",
   }
@@ -42,27 +48,100 @@ export function ContactSection() {
     juice: "Juice Cart",
     "custom-catering": "Custom Catering",
   }
+  const iceCreamColorNames: Record<string, string> = {
+    "yellow-stripe": "Yellow & White Stripe",
+    "orange-stripe": "Orange & White Stripe",
+    "forest-green-solid": "Forest Green",
+    "burgundy-solid": "Burgundy",
+    "black-solid": "Black",
+    "ivory-solid": "Ivory",
+    "black-white-stripe": "Black & White Stripe",
+    "white-solid": "White",
+    "tan-solid": "Tan",
+    "pink-solid": "Pink",
+  }
+  const iceCreamColorAliases: Array<[string, string]> = [
+    ["#ffffff", "white-solid"],
+    ["#fff", "white-solid"],
+    ["#fffdd0", "ivory-solid"],
+    ["#fffff0", "ivory-solid"],
+    ["#228b22", "forest-green-solid"],
+    ["#800020", "burgundy-solid"],
+    ["#1a1a1a", "black-solid"],
+    ["#ffd700", "yellow-stripe"],
+    ["#f7e7ce", "tan-solid"],
+    ["#e2725b", "orange-stripe"],
+    ["#ffb6c1", "pink-solid"],
+    ["#dcae96", "tan-solid"],
+    ["black-white-stripe", "black-white-stripe"],
+    ["black and white", "black-white-stripe"],
+    ["black/white", "black-white-stripe"],
+    ["black", "black-solid"],
+    ["charcoal", "black-solid"],
+    ["ivory", "ivory-solid"],
+    ["cream", "ivory-solid"],
+    ["off-white", "ivory-solid"],
+    ["white", "white-solid"],
+    ["forest green", "forest-green-solid"],
+    ["dark green", "forest-green-solid"],
+    ["green", "forest-green-solid"],
+    ["burgundy", "burgundy-solid"],
+    ["maroon", "burgundy-solid"],
+    ["wine", "burgundy-solid"],
+    ["red", "burgundy-solid"],
+    ["yellow", "yellow-stripe"],
+    ["gold", "yellow-stripe"],
+    ["mustard", "yellow-stripe"],
+    ["orange", "orange-stripe"],
+    ["terracotta", "orange-stripe"],
+    ["coral", "orange-stripe"],
+    ["tan", "tan-solid"],
+    ["beige", "tan-solid"],
+    ["champagne", "tan-solid"],
+    ["dusty rose", "tan-solid"],
+    ["pink", "pink-solid"],
+    ["blush", "pink-solid"],
+    ["rose", "pink-solid"],
+  ]
+  const getIceCreamColorName = (value: string | undefined) => {
+    if (!value?.trim()) return "White"
+
+    const normalized = value.trim().toLowerCase().replace(/\s+/g, " ")
+    const directName = iceCreamColorNames[normalized]
+    if (directName) return directName
+
+    const labelName = Object.entries(iceCreamColorNames).find(([, name]) => name.toLowerCase() === normalized)?.[1]
+    if (labelName) return labelName
+
+    const alias = iceCreamColorAliases.find(([name]) => normalized.includes(name))?.[1]
+    return iceCreamColorNames[alias || "white-solid"] || "White"
+  }
+  const getAddOnName = (id: string) =>
+    id === "stripe-vinyl" && cartData.colors?.roofColor?.trim()
+      ? `${addOnNames[id]} - ${cartData.colors.roofColor.trim()}`
+      : addOnNames[id] || id
 
   useEffect(() => {
     if (cartData.cartType || cartData.addOn || cartData.hasCatering || cartData.catering.length > 0) {
-      setShowCartSummary(true)
-
-      let summary = ""
-      if (cartData.cartType) summary += `Cart Type: ${cartTypeNames[cartData.cartType]}`
-      if (cartData.addOn) summary += ` · Add Ons: ${addOnNames[cartData.addOn] || cartData.addOn}`
-      if (cartData.hasCatering && cartData.catering.length > 0) {
-        summary += ` · Add-ons: ${cartData.catering.map((id) => cateringNames[id] || id).join(", ")}`
-      } else if (cartData.hasCatering === false) {
-        summary += " · Catering: No Catering"
-      }
-
       let message = "I'm interested in the following cart configuration:\n\n"
-      if (cartData.cartType) message += `Cart Type: ${cartTypeNames[cartData.cartType] || cartData.cartType}\n`
-      if (cartData.addOn) message += `Add Ons: ${addOnNames[cartData.addOn] || cartData.addOn}\n`
+      if (cartData.cartType) message += `♥ Cart Type: ${cartTypeNames[cartData.cartType] || cartData.cartType}\n`
+      if (cartData.cartType === "ice-cream") {
+        message += `♥ Canopy Color: ${getIceCreamColorName(cartData.colors?.roofColor)}\n`
+      }
+      message +=
+        cartData.addOns.length > 0
+          ? `♥ Add Ons:\n${cartData.addOns.map((id) => `   - ${getAddOnName(id)}`).join("\n")}\n`
+          : "♥ Add Ons: No Add Ons\n"
+      if (cartData.addOns.includes("custom-decal") && cartData.decalText.trim()) {
+        message += `♥ Custom Decal Text: ${cartData.decalText.trim()}\n`
+      }
       if (cartData.hasCatering && cartData.catering.length > 0) {
-        message += `Catering Options: ${cartData.catering.map((id) => cateringNames[id] || id).join(", ")}\n`
+        message += `♥ Catering:\n${cartData.catering.map((id) => `   - ${cateringNames[id] || id}`).join("\n")}\n`
+        if (cartData.catering.includes("custom-catering") && cartData.customCateringDetails) {
+          message += `♥ Custom Catering Details: ${cartData.customCateringDetails}\n`
+        }
       } else if (cartData.hasCatering === false) {
-        message += "Catering Options: No Catering\n"
+        message += "♥ Catering: No Catering\n"
       }
       message += "\nPlease provide more details about pricing and availability."
 
@@ -81,7 +160,9 @@ export function ContactSection() {
     const eventType = formData.get("event-type") as string
     const phone = formData.get("phone") as string
     const eventDate = formData.get("event-date") as string
-    const eventTime = formData.get("event-time") as string
+    const eventStartTime = formData.get("event-start-time") as string
+    const eventEndTime = formData.get("event-end-time") as string
+    const guestCount = formData.get("guest-count") as string | null
     const location = formData.get("location") as string
     const message = formData.get("message") as string
 
@@ -106,7 +187,7 @@ export function ContactSection() {
     
     try {
       // Send form data to Brevo API via our backend
-      const response = await fetch("/api/contact", {
+      const response = await fetch("/finish-inquiry", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -117,9 +198,15 @@ export function ContactSection() {
           phone,
           eventType,
           eventDate,
-          eventTime,
+          eventStartTime,
+          eventEndTime,
+          guestCount,
           location,
           message,
+          siteLocation: "la",
+          logo: cartData.logo,
+          decalDesignImage: cartData.decalDesignImage,
+          aiGeneratedImage: cartData.aiGeneratedImage,
         }),
       })
 
@@ -131,19 +218,19 @@ export function ContactSection() {
       }
 
       setSubmitted(true)
+      resetCartData()
       
       // Store form reference before timeout
       const form = e.currentTarget
       
       setTimeout(() => {
         setSubmitted(false)
-        resetCartData()
-        setShowCartSummary(false)
         if (form) {
           form.reset()
         }
         setFormMessage("")
         setTouched({})
+        document.getElementById("hero")?.scrollIntoView({ behavior: "smooth", block: "start" })
       }, 5000)
     } catch (error) {
       console.error("Form submission error:", error)
@@ -155,83 +242,15 @@ export function ContactSection() {
     setTouched({ ...touched, [field]: true })
   }
 
-  const scrollToBuilder = () => {
-    document.getElementById("cart-builder")?.scrollIntoView({ behavior: "smooth" })
-  }
-
   return (
-    <section id="contact" className="py-12 md:py-24 lg:py-32 bg-muted/30">
+    <section id="contact" className="py-6 md:py-24 lg:py-32 bg-[#fcfbf8]">
       <div className="container mx-auto px-5 md:px-8 lg:px-12">
-        <div className="text-center mb-8 md:mb-12 lg:mb-16 space-y-3 md:space-y-4">
-          <h2 className="font-serif text-3xl md:text-5xl lg:text-6xl font-bold text-foreground text-balance">
-            Let's Start Planning Your Cart
-          </h2>
-          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto text-pretty leading-relaxed">
-            Tell us about your event, and we'll make it unforgettable
-          </p>
-          <div className="w-24 h-1 bg-accent mx-auto rounded-full" />
-        </div>
-
-        {showCartSummary && (
-          <div className="max-w-3xl mx-auto mb-8">
-            <Card className="border-2 border-accent/50 bg-accent/5">
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-xl font-bold text-foreground">Your Cart Summary</h3>
-                  <div className="flex gap-2">
-                    <Button variant="ghost" size="sm" onClick={scrollToBuilder} className="flex items-center gap-2">
-                      <Edit2 className="h-4 w-4" />
-                      Edit
-                    </Button>
-                    <Button variant="ghost" size="sm" onClick={() => setShowCartSummary(false)}>
-                      <X className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  {cartData.cartType && (
-                    <div className="text-center">
-                      <p className="text-xs text-muted-foreground mb-1">Cart Type</p>
-                      <p className="font-bold text-sm">{cartTypeNames[cartData.cartType] || cartData.cartType}</p>
-                    </div>
-                  )}
-                  {cartData.addOn && (
-                    <div className="text-center">
-                      <p className="text-xs text-muted-foreground mb-1">Add Ons</p>
-                      <p className="font-bold text-sm">{addOnNames[cartData.addOn] || cartData.addOn}</p>
-                    </div>
-                  )}
-                  {cartData.hasCatering && (
-                    <div className="text-center">
-                      <p className="text-xs text-muted-foreground mb-1">Catering</p>
-                      <p className="font-bold text-sm">Yes</p>
-                    </div>
-                  )}
-                  {cartData.hasCatering && cartData.catering.length > 0 && (
-                    <div className="text-center">
-                      <p className="text-xs text-muted-foreground mb-1">Add-ons</p>
-                      <p className="font-bold text-sm">{cartData.catering.length} selected</p>
-                    </div>
-                  )}
-                  {cartData.hasCatering === false && (
-                    <div className="text-center">
-                      <p className="text-xs text-muted-foreground mb-1">Catering</p>
-                      <p className="font-bold text-sm">No Catering</p>
-                    </div>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        )}
-
         <div className="max-w-5xl mx-auto">
           {/* Contact Form */}
-          <Card className="border-none shadow-2xl bg-card mb-12">
-            <CardContent className="p-6 md:p-8">
+          <Card className="border-none shadow-2xl bg-card mb-6 md:mb-12">
+            <CardContent className="p-4 md:p-8">
               {submitted ? (
-                <div className="text-center py-12 space-y-4 animate-fade-in-up">
+                <div ref={confirmationRef} className="text-center py-12 space-y-4 animate-fade-in-up">
                   <div className="w-16 h-16 bg-accent/20 rounded-full flex items-center justify-center mx-auto mb-4">
                     <svg className="w-8 h-8 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
@@ -243,34 +262,36 @@ export function ContactSection() {
                   </p>
                 </div>
               ) : (
-                <form onSubmit={handleSubmit} className="space-y-6">
+                <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
                   {errors.submit && (
                     <div className="bg-red-50 border border-red-200 rounded-lg p-4">
                       <p className="text-sm text-red-800">{errors.submit}</p>
                     </div>
                   )}
-                  <div className="grid md:grid-cols-2 gap-4">
-                    <div className="space-y-2">
+                  <h3 className="font-serif text-xl md:text-2xl font-bold text-foreground">Inquiry Form</h3>
+
+                  <div className="grid md:grid-cols-2 gap-3 md:gap-4">
+                    <div className="space-y-1.5 md:space-y-2">
                       <Label htmlFor="name">Name *</Label>
                       <Input 
                         id="name" 
                         name="name"
                         required 
-                        className={`rounded-lg min-h-[48px] ${touched.name && errors.name ? 'border-red-500' : ''}`}
+                        className={`rounded-lg min-h-[42px] md:min-h-[48px] ${touched.name && errors.name ? 'border-red-500' : ''}`}
                         onBlur={() => handleBlur('name')}
                       />
                       {touched.name && errors.name && (
                         <p className="text-xs text-red-500 mt-1">{errors.name}</p>
                       )}
                     </div>
-                    <div className="space-y-2">
+                    <div className="space-y-1.5 md:space-y-2">
                       <Label htmlFor="email">Email *</Label>
                       <Input 
                         id="email" 
                         name="email"
                         type="email" 
                         required 
-                        className={`rounded-lg min-h-[48px] ${touched.email && errors.email ? 'border-red-500' : ''}`}
+                        className={`rounded-lg min-h-[42px] md:min-h-[48px] ${touched.email && errors.email ? 'border-red-500' : ''}`}
                         onBlur={() => handleBlur('email')}
                       />
                       {touched.email && errors.email && (
@@ -279,17 +300,17 @@ export function ContactSection() {
                     </div>
                   </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="phone">Phone</Label>
-                    <Input id="phone" name="phone" type="tel" className="rounded-lg min-h-[48px]" />
+                  <div className="space-y-1.5 md:space-y-2">
+                      <Label htmlFor="phone">Phone *</Label>
+                      <Input id="phone" name="phone" type="tel" required className="rounded-lg min-h-[42px] md:min-h-[48px]" />
                   </div>
 
-                  <div className="space-y-2">
+                  <div className="space-y-1.5 md:space-y-2">
                     <Label htmlFor="event-type">Event Type *</Label>
                     <Select name="event-type" required onValueChange={() => handleBlur('eventType')}>
                       <SelectTrigger 
                         id="event-type" 
-                        className={`rounded-lg min-h-[48px] ${touched.eventType && errors.eventType ? 'border-red-500' : ''}`}
+                        className={`rounded-lg min-h-[42px] md:min-h-[48px] ${touched.eventType && errors.eventType ? 'border-red-500' : ''}`}
                       >
                         <SelectValue placeholder="Select event type" />
                       </SelectTrigger>
@@ -305,62 +326,76 @@ export function ContactSection() {
                     )}
                   </div>
 
-                  <div className="grid md:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="event-date">Event Date</Label>
-                      <Input id="event-date" name="event-date" type="date" className="rounded-lg min-h-[48px]" />
+                  <div className="grid md:grid-cols-2 gap-3 md:gap-4">
+                    <div className="space-y-1.5 md:space-y-2">
+                      <Label htmlFor="event-date">Event Date *</Label>
+                      <Input id="event-date" name="event-date" type="date" required className="rounded-lg min-h-[42px] md:min-h-[48px]" />
                     </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="location">Location</Label>
-                      <Input id="location" name="location" placeholder="Event location" className="rounded-lg min-h-[48px]" />
+                    <div className="space-y-1.5 md:space-y-2">
+                      <Label htmlFor="location">Location *</Label>
+                      <Input id="location" name="location" placeholder="Event location" required className="rounded-lg min-h-[42px] md:min-h-[48px]" />
                     </div>
                   </div>
 
-                  <div className="grid md:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="event-start-time">Event Start Time</Label>
-                      <Input id="event-start-time" name="event-start-time" type="time" className="rounded-lg min-h-[48px]" />
+                  <div className="grid md:grid-cols-2 gap-3 md:gap-4">
+                    <div className="space-y-1.5 md:space-y-2">
+                      <Label htmlFor="event-start-time">Event Start Time *</Label>
+                      <Input id="event-start-time" name="event-start-time" type="time" required className="rounded-lg min-h-[42px] md:min-h-[48px]" />
                     </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="event-end-time">Event End Time</Label>
-                      <Input id="event-end-time" name="event-end-time" type="time" className="rounded-lg min-h-[48px]" />
+                    <div className="space-y-1.5 md:space-y-2">
+                      <Label htmlFor="event-end-time">Event End Time *</Label>
+                      <Input id="event-end-time" name="event-end-time" type="time" required className="rounded-lg min-h-[42px] md:min-h-[48px]" />
                     </div>
                   </div>
 
                   {cartData.catering.length > 0 && (
-                    <div className="space-y-2">
-                      <Label htmlFor="guest-count">Guest Count</Label>
+                    <div className="space-y-1.5 md:space-y-2">
+                      <Label htmlFor="guest-count">Guest Count *</Label>
                       <Input 
                         id="guest-count" 
                         name="guest-count" 
                         type="number" 
                         min="1"
+                        required
                         placeholder="Number of guests" 
-                        className="rounded-lg min-h-[48px]" 
+                        className="rounded-lg min-h-[42px] md:min-h-[48px]"
                       />
                     </div>
                   )}
 
-                  <div className="space-y-2">
-                    <Label htmlFor="message">Message</Label>
+                  <div className="space-y-1.5 md:space-y-2">
+                    <Label htmlFor="message">Message *</Label>
                     <Textarea
                       id="message"
                       name="message"
                       placeholder="Tell us about your event vision..."
-                      rows={6}
+                      rows={4}
+                      required
                       className="rounded-lg resize-none"
                       value={formMessage}
                       onChange={(e) => setFormMessage(e.target.value)}
                     />
                   </div>
 
+                  <div className="flex items-center gap-2 mt-4 md:mt-6">
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      className="shrink-0"
+                      aria-label="Back to cart review"
+                      onClick={() => document.getElementById("cart-builder")?.scrollIntoView({ behavior: "smooth" })}
+                    >
+                      <ArrowLeft className="h-5 w-5" />
+                    </Button>
                   <Button
                     type="submit"
                     size="lg"
-                    className="w-full bg-foreground text-background hover:bg-foreground/90 hover:shadow-[0_0_30px_rgba(203,182,130,0.5)] transition-all duration-300 text-lg rounded-xl min-h-[56px] mt-6"
+                    className="flex-1 bg-foreground text-background hover:bg-foreground/90 hover:shadow-[0_0_30px_rgba(203,182,130,0.5)] transition-all duration-300 text-base md:text-lg rounded-xl min-h-[48px] md:min-h-[56px]"
                   >
-                    Send Inquiry
+                    Finish Inquiry
                   </Button>
+                  </div>
                 </form>
               )}
             </CardContent>
