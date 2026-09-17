@@ -30,7 +30,6 @@ export function Navbar() {
 
   const navLinks = [
     { name: "Home", id: "hero" },
-    { name: "How It Works", id: "how-it-works" },
     { name: "Build Cart", id: "cart-builder" },
     { name: "Dimensions", id: "dimensions", hideOnBali: true },
     { name: "Gallery", id: "gallery" },
