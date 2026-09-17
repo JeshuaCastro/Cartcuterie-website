@@ -37,14 +37,14 @@ export function LocationSelector() {
 
   return (
     <div
-      className="fixed inset-0 z-[100] flex items-start pt-20 md:items-center md:pt-0 justify-center bg-black/60 backdrop-blur-sm animate-in fade-in duration-300"
+      className="fixed inset-0 z-[100] flex justify-center overflow-y-auto bg-black/60 p-4 backdrop-blur-sm animate-in fade-in duration-300"
       data-location-selector
       role="dialog"
       aria-modal="true"
       style={{ opacity: 1, visibility: "visible" }}
     >
       <div
-        className="relative bg-background rounded-xl shadow-2xl max-w-md w-full mx-4 p-6 animate-in zoom-in-95 duration-300"
+        className="relative m-auto bg-background rounded-xl shadow-2xl max-w-md w-full p-6 animate-in zoom-in-95 duration-300"
         style={{ opacity: 1, visibility: "visible" }}
       >
         {/* Header */}

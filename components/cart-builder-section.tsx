@@ -636,9 +636,6 @@ export function CartBuilderSection() {
               {step === 1 && (
                 <div className="cart-step-enter">
                   <div className="text-center space-y-2 mb-2 md:mb-3">
-                    <div className="inline-flex items-center rounded-full border border-border bg-muted/40 px-3.5 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground md:px-4 md:text-[11px] md:tracking-[0.22em]">
-                      Step 1 of 4
-                    </div>
                     <h3 className="text-[22px] md:text-2xl lg:text-[28px] font-serif font-bold text-foreground">Choose Your Cart</h3>
                     <p className="text-sm md:text-base text-muted-foreground max-w-xl mx-auto leading-relaxed">
                       Start with the cart silhouette that best fits your event footprint, service style, and overall look.
@@ -680,7 +677,7 @@ export function CartBuilderSection() {
                               )}
                             </div>
                           </div>
-                          <div className="px-3 py-1.5 md:p-6 space-y-2 md:space-y-4 flex-1 flex flex-col justify-center">
+                          <div className="px-3 py-1.5 md:p-6 space-y-1.5 md:space-y-4 flex-1 flex flex-col justify-center">
                             <div className="flex items-start justify-between gap-3">
                               <div className="space-y-1.5">
                                 <h4 className="font-bold text-base md:text-xl text-foreground">{cart.name}</h4>
@@ -804,9 +801,6 @@ export function CartBuilderSection() {
               {step === 2 && (
                 <div className="space-y-5 md:space-y-6 cart-step-enter">
                   <div className="text-center space-y-3">
-                    <div className="inline-flex items-center rounded-full border border-border bg-muted/40 px-3.5 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground md:px-4 md:text-[11px] md:tracking-[0.22em]">
-                      Step 2 of 4
-                    </div>
                     <h3 className="text-[22px] md:text-2xl lg:text-[28px] font-serif font-bold text-foreground">Add Ons</h3>
                   </div>
 
@@ -1027,9 +1021,6 @@ export function CartBuilderSection() {
               {step === 3 && (
                 <div className="space-y-5 md:space-y-6 cart-step-enter">
                   <div className="text-center space-y-3">
-                    <div className="inline-flex items-center rounded-full border border-border bg-muted/40 px-3.5 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground md:px-4 md:text-[11px] md:tracking-[0.22em]">
-                      Step 3 of 4
-                    </div>
                     <h3 className="text-[22px] md:text-2xl lg:text-[28px] font-serif font-bold text-foreground">Add Catering?</h3>
                   </div>
 

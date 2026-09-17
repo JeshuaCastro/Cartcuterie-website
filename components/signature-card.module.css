@@ -106,7 +106,7 @@
   overflow-wrap: break-word;
   word-break: normal;
   text-wrap: balance;
-  padding-bottom: 6px;
+  padding-bottom: 4px;
   margin-right: 0;
   max-width: 100%;
 }
@@ -126,7 +126,7 @@
 .horizontal.horizontal > div:last-of-type p {
   font-family: var(--font-serif), Georgia, serif;
   font-size: 13px;
-  line-height: 1.55;
+  line-height: 1.45;
   margin-top: 2px;
   width: 100%;
   max-width: 42ch;
@@ -149,7 +149,7 @@
 .horizontal.horizontal > div:last-of-type > div:last-child {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 4px;
   margin-top: 8px;
 }
 
@@ -164,7 +164,7 @@
   background: none;
   font-family: var(--font-serif), Georgia, serif;
   font-size: 12.5px;
-  line-height: 1.5;
+  line-height: 1.4;
   color: #49443d;
   white-space: normal;
   overflow-wrap: break-word;
