@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
@@ -10,6 +10,8 @@ import { Menu, X } from "lucide-react"
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const logoTouchStartY = useRef<number | null>(null)
+  const logoTouchMoved = useRef(false)
   const pathname = usePathname()
   const isBaliSite = pathname?.startsWith("/bali")
 
@@ -50,24 +52,48 @@ export function Navbar() {
         >
           {/* Logo */}
           <button
-            onClick={() => scrollToSection("hero")}
+            type="button"
+            onTouchStart={(event) => {
+              logoTouchStartY.current = event.touches[0]?.clientY ?? null
+              logoTouchMoved.current = false
+            }}
+            onTouchMove={(event) => {
+              const currentY = event.touches[0]?.clientY
+              if (
+                logoTouchStartY.current !== null &&
+                currentY !== undefined &&
+                Math.abs(currentY - logoTouchStartY.current) > 8
+              ) {
+                logoTouchMoved.current = true
+              }
+            }}
+            onTouchCancel={() => {
+              logoTouchStartY.current = null
+              logoTouchMoved.current = false
+            }}
+            onClick={(event) => {
+              if (logoTouchMoved.current) {
+                event.preventDefault()
+                logoTouchStartY.current = null
+                logoTouchMoved.current = false
+                return
+              }
+
+              logoTouchStartY.current = null
+              scrollToSection("hero")
+            }}
             className="flex-shrink-0 transition-all duration-300"
           >
-            <div className="text-center">
-              <div className={`font-bold tracking-widest transition-all duration-300 ${
-                isScrolled ? "text-base md:text-lg" : "text-lg md:text-xl"
-              } ${isScrolled ? "text-foreground" : "text-white"}`}>
-                CARTCUTERIE
-              </div>
-              <div className={`border-t transition-all duration-300 ${
-                isScrolled ? "border-foreground/30" : "border-white/30"
-              } my-1`}></div>
-              <div className={`font-serif text-xs tracking-tight transition-all duration-300 ${
-                isScrolled ? "text-muted-foreground" : "text-white/80"
-              }`}>
-                catering & rentals
-              </div>
-            </div>
+            <Image
+              src="/images/cartcuterie-header-logo.png"
+              alt="Cartcuterie Catering & Rentals"
+              width={1022}
+              height={400}
+              priority
+              className={`h-auto transition-all duration-300 ${
+                isScrolled ? "w-[102px] md:w-[112px]" : "w-[116px] md:w-[126px]"
+              } ${isScrolled ? "" : "brightness-0 invert"}`}
+            />
           </button>
 
           {/* Desktop Navigation */}
@@ -89,10 +115,10 @@ export function Navbar() {
               <Link href="/bali">
                 <Button
                   variant="outline"
-                  className={`text-sm font-medium transition-colors duration-300 border-2 ${
+                  className={`text-sm font-medium transition-colors duration-300 border-2 bg-transparent ${
                     isScrolled 
-                      ? "border-amber-600 text-amber-600 hover:bg-amber-600 hover:text-white" 
-                      : "border-amber-600 bg-amber-600 text-white hover:bg-white hover:text-amber-600 backdrop-blur-sm"
+                      ? "border-[#780014] text-[#780014] hover:bg-[#780014] hover:text-white" 
+                      : "border-white text-white hover:bg-white hover:text-[#780014] backdrop-blur-sm"
                   }`}
                 >
                   🌴 Bali
@@ -134,24 +160,15 @@ export function Navbar() {
 
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
-          <div className="md:hidden py-4 bg-background/95 backdrop-blur-md border-t border-border">
-            <div className="flex flex-col gap-4">
-              {visibleNavLinks.map((link) => (
-                <button
-                  key={link.id}
-                  onClick={() => scrollToSection(link.id)}
-                  className="text-left px-4 py-2 text-foreground hover:text-accent transition-colors"
-                >
-                  {link.name}
-                </button>
-              ))}
-              <div className="px-4 space-y-2">
-                {/* Location Switch */}
+          <div className="md:hidden rounded-[28px] overflow-hidden p-3 bg-white/95 backdrop-blur-md border border-accent/30 shadow-xl">
+            <div className="flex flex-col gap-2 rounded-2xl border border-[#780014] bg-[#780014]/95 p-3 shadow-sm">
+              <div className="px-4 pb-2">
+                {/* Location Switch at Top */}
                 {!isBaliSite ? (
                   <Link href="/bali">
                     <Button
                       variant="outline"
-                      className="w-full border-2 border-amber-600 text-amber-600 hover:bg-amber-600 hover:text-white"
+                      className="w-full border-2 border-white bg-transparent text-white hover:bg-white hover:text-[#780014]"
                     >
                       🌴 Switch to Bali
                     </Button>
@@ -166,7 +183,19 @@ export function Navbar() {
                     </Button>
                   </Link>
                 )}
-                
+              </div>
+              <div className="h-px bg-accent/30 mx-4 my-1" />
+              {visibleNavLinks.map((link) => (
+                <button
+                  key={link.id}
+                  onClick={() => scrollToSection(link.id)}
+                  className="text-center px-5 py-3 rounded-xl bg-[#FFF078] text-[#780014] border-2 border-white text-sm font-normal shadow-sm hover:bg-[#FFF078]/90 hover:shadow-md transition-all"
+                >
+                  {link.name}
+                </button>
+              ))}
+              <div className="h-px bg-accent/30 mx-4 my-1" />
+              <div className="px-4 pt-1">
                 <Button
                   onClick={() => scrollToSection("contact")}
                   className="w-full bg-accent text-foreground hover:bg-accent/90 rounded-xl"

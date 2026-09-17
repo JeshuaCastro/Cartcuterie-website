@@ -234,10 +234,73 @@ html {
   .animate-float,
   .animate-slide-in-right,
   .animate-slide-in-left,
-  .animate-slide-up {
-    animation: none;
+  .animate-slide-up,
+  .cart-step-enter,
+  .cart-collapse {
+    animation: none !important;
+    transition: none !important;
     will-change: auto;
   }
+  .cart-collapse {
+    display: none;
+  }
+  .cart-collapse[data-open="true"] {
+    display: grid;
+  }
+}
+
+/* ---- Cart builder flow transitions (expand/collapse + step changes) ---- */
+@keyframes cartStepIn {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.cart-step-enter {
+  animation: cartStepIn 0.4s ease-out both;
+  will-change: transform, opacity;
+}
+
+/* Smooth expand AND collapse for conditional panels (grid-rows technique).
+   Usage: <div className="cart-collapse" data-open={bool} aria-hidden={!bool}>
+            <div className="cart-collapse-inner"><div className="pt-...">…</div></div>
+          </div>
+   Spacing must live INSIDE the inner wrapper (e.g. pt-*) so the closed
+   state truly collapses to zero height with no leftover gaps. */
+.cart-collapse {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    grid-template-rows 0.38s cubic-bezier(0.32, 0.72, 0.35, 1),
+    opacity 0.28s ease,
+    visibility 0s linear 0.38s;
+}
+
+.cart-collapse[data-open="true"] {
+  grid-template-rows: 1fr;
+  opacity: 1;
+  visibility: visible;
+  transition:
+    grid-template-rows 0.42s cubic-bezier(0.32, 0.72, 0.35, 1),
+    opacity 0.32s ease 0.06s,
+    visibility 0s;
+}
+
+.cart-collapse-inner {
+  overflow: hidden;
+  min-height: 0;
+  min-width: 0;
+}
+
+.cart-collapse[data-open="true"] > .cart-collapse-inner > div {
+  animation: cartStepIn 0.38s ease-out 0.05s both;
 }
 
 /* Added smooth touch interactions for mobile */
